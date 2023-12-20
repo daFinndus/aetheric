@@ -10,21 +10,16 @@ class ChatPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: ListView(
-        children: [
+        children: const [
           ContactTile(
-            imageUrl: 'https://picsum.photos/300/300',
             name: 'John Doe',
-            lastMessage: 'Hello, World!',
-            time: DateTime.now().toString(),
-            readMessage: false,
-          ),
-          ContactTile(
-            imageUrl: 'https://picsum.photos/300/300',
-            name: 'Max Mustermann',
-            lastMessage: 'Moin, Welt!',
-            time: DateTime.now().toString(),
+            email: 'john.doe@gmail.com',
+            id: '1',
+            imageUrl: 'https://picsum.photos/200',
+            lastMessage: 'Hello, world!',
+            time: '2021-10-10 10:10:10',
             readMessage: true,
-          )
+          ),
         ],
       ),
     );
