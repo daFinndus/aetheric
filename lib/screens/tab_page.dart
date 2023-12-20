@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/screens/chat_page.dart';
@@ -21,9 +23,14 @@ class TabPage extends StatelessWidget {
 }
 
 Widget _buildTabBar() {
-  return const TabBar(
-    padding: EdgeInsets.all(8.0),
-    tabs: [
+  return TabBar(
+    padding: EdgeInsets.only(
+      top: 8.0,
+      left: 16.0,
+      right: 16.0,
+      bottom: Platform.isIOS ? 32.0 : 8.0,
+    ),
+    tabs: const [
       Tab(
         icon: Icon(Icons.chat),
         text: 'Chat',

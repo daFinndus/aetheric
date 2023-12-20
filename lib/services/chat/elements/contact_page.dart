@@ -17,24 +17,23 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 64.0,
-        title: ListTile(
-          contentPadding: const EdgeInsets.all(0),
-          leading: InkWell(
-            onTap: () => _routeProfilePicture(context),
-            child: CircleAvatar(
-              radius: 24.0,
+        title: InkWell(
+          onTap: () => _routeContactInfo(context),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(0),
+            leading: CircleAvatar(
+              radius: 20.0,
               backgroundColor: Colors.transparent,
               foregroundImage: NetworkImage(receiverImageUrl),
               child: const CircularProgressIndicator(),
             ),
-          ),
-          title: Text(
-            receiverName,
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+            title: Text(
+              receiverName,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+              ),
             ),
           ),
         ),
@@ -42,23 +41,19 @@ class ContactPage extends StatelessWidget {
     );
   }
 
-  void _routeProfilePicture(BuildContext context) {
-    Navigator.push(
-      context,
+  // TODO: Implement a contact info page with certain user details, etc.
+  void _routeContactInfo(BuildContext context) {
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Profile Picture',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-          body: Center(
-            child: CircleAvatar(
-              radius: 124.0,
-              backgroundColor: Colors.transparent,
-              foregroundImage: NetworkImage(receiverImageUrl),
-              child: const CircularProgressIndicator(),
+            title: Text(
+              'Contact Info',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+              ),
             ),
           ),
         ),
