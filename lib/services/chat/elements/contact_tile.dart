@@ -3,46 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 class ContactTile extends StatelessWidget {
-  final String name;
-  final String email;
-  final String id;
-  final String imageUrl;
-  final String lastMessage;
-  final String time;
-  final bool readMessage;
+  final String username; // This is the username
+  final String firstName; // This is the first name
+  final String lastName; // This is the last name
+  final String email; // This is the email
+  final String id; // This is the user id
+  final String imageUrl; // This is the image url of the profile picture
+  final String timeMessage; // This is the time of the last message
+  final String lastMessage; // This is the last message
+  final bool readMessage; // This is the read message status
 
-  const ContactTile(
-      {super.key,
-      required this.name,
-      required this.email,
-      required this.id,
-      required this.imageUrl,
-      required this.lastMessage,
-      required this.time,
-      required this.readMessage});
+  const ContactTile({
+    super.key,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.id,
+    required this.imageUrl,
+    required this.timeMessage,
+    required this.lastMessage,
+    required this.readMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => _routeContactPage(
-        context,
-        name,
-        email,
-        id,
-        imageUrl,
-      ),
+      onTap: () => _routeContactPage(context),
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         foregroundImage: NetworkImage(imageUrl),
         child: const CircularProgressIndicator(),
       ),
-      title: Text(name),
+      title: Text(username),
       subtitle: Text(lastMessage),
       trailing: SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(time.substring(11, 16)),
+            Text(timeMessage.substring(11, 16)),
             // Text
             readMessage
                 ? const Icon(Icons.mark_email_read)
@@ -53,21 +52,20 @@ class ContactTile extends StatelessWidget {
     );
   }
 
-  void _routeContactPage(
-    BuildContext context,
-    String receiverName,
-    String receiverMail,
-    String receiverId,
-    String receiverImageUrl,
-  ) {
+  void _routeContactPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          receiverName: receiverName,
-          receiverMail: receiverMail,
-          receiverId: receiverId,
-          receiverImageUrl: receiverImageUrl,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          id: id,
+          imageUrl: imageUrl,
+          timeMessage: timeMessage,
+          lastMessage: lastMessage,
+          readMessage: readMessage,
         ),
       ),
     );

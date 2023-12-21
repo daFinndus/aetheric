@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 
 class ContactPage extends StatelessWidget {
-  final String receiverName;
-  final String receiverMail;
-  final String receiverId;
-  final String receiverImageUrl;
+  final String username; // This is the username
+  final String firstName; // This is the first name
+  final String lastName; // This is the last name
+  final String email; // This is the email
+  final String id; // This is the user id
+  final String imageUrl; // This is the image url of the profile picture
+  final String timeMessage; // This is the time of the last message
+  final String lastMessage; // This is the last message
+  final bool readMessage; // This is the read message status
 
-  const ContactPage(
-      {super.key,
-      required this.receiverName,
-      required this.receiverMail,
-      required this.receiverId,
-      required this.receiverImageUrl});
+  const ContactPage({
+    super.key,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.id,
+    required this.imageUrl,
+    required this.timeMessage,
+    required this.lastMessage,
+    required this.readMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +35,13 @@ class ContactPage extends StatelessWidget {
             leading: CircleAvatar(
               radius: 20.0,
               backgroundColor: Colors.transparent,
-              foregroundImage: NetworkImage(receiverImageUrl),
+              foregroundImage: NetworkImage(
+                imageUrl,
+              ),
               child: const CircularProgressIndicator(),
             ),
             title: Text(
-              receiverName,
+              username,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -55,6 +68,55 @@ class ContactPage extends StatelessWidget {
                 color: Theme.of(context).appBarTheme.titleTextStyle!.color,
               ),
             ),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 64.0,
+                backgroundColor: Colors.transparent,
+                foregroundImage: NetworkImage(
+                  imageUrl,
+                ),
+                child: const CircularProgressIndicator(),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                username,
+                style: TextStyle(
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                '$firstName $lastName',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                email,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                id,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+                ),
+              ),
+            ],
           ),
         ),
       ),
