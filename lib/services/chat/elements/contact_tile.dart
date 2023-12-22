@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
+// This is the tile displayed for each contact in the chat page
 class ContactTile extends StatelessWidget {
   final String name;
-  final String email;
-  final String id;
+  final String status;
   final String imageUrl;
   final String lastMessage;
-  final String time;
+  final String timeMessage;
   final bool readMessage;
 
-  const ContactTile(
-      {super.key,
-      required this.name,
-      required this.email,
-      required this.id,
-      required this.imageUrl,
-      required this.lastMessage,
-      required this.time,
-      required this.readMessage});
+  const ContactTile({
+    super.key,
+    required this.name,
+    required this.status,
+    required this.imageUrl,
+    required this.lastMessage,
+    required this.timeMessage,
+    required this.readMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,6 @@ class ContactTile extends StatelessWidget {
       onTap: () => _routeContactPage(
         context,
         name,
-        email,
-        id,
         imageUrl,
       ),
       leading: CircleAvatar(
@@ -42,7 +40,7 @@ class ContactTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(time.substring(11, 16)),
+            Text(timeMessage.substring(11, 16)),
             // Text
             readMessage
                 ? const Icon(Icons.mark_email_read)
@@ -55,19 +53,16 @@ class ContactTile extends StatelessWidget {
 
   void _routeContactPage(
     BuildContext context,
-    String receiverName,
-    String receiverMail,
-    String receiverId,
-    String receiverImageUrl,
+    String name,
+    String imageUrl,
   ) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          receiverName: receiverName,
-          receiverMail: receiverMail,
-          receiverId: receiverId,
-          receiverImageUrl: receiverImageUrl,
+          name: name,
+          status: status,
+          imageUrl: imageUrl,
         ),
       ),
     );

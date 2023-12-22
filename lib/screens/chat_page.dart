@@ -13,11 +13,10 @@ class ChatPage extends StatelessWidget {
         children: const [
           ContactTile(
             name: 'John Doe',
-            email: 'john.doe@gmail.com',
-            id: '1',
+            status: 'This is an application by daFinndus',
             imageUrl: 'https://picsum.photos/200',
             lastMessage: 'Hello, world!',
-            time: '2021-10-10 10:10:10',
+            timeMessage: '2021-10-10 10:10:10',
             readMessage: true,
           ),
         ],

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ContactPage extends StatelessWidget {
-  final String receiverName;
-  final String receiverMail;
-  final String receiverId;
-  final String receiverImageUrl;
+import 'package:aetheric/services/chat/elements/contact_info_page.dart';
 
-  const ContactPage(
-      {super.key,
-      required this.receiverName,
-      required this.receiverMail,
-      required this.receiverId,
-      required this.receiverImageUrl});
+// This is the page where you can chat with a certain contact
+class ContactPage extends StatelessWidget {
+  final String name;
+  final String status;
+  final String imageUrl;
+
+  const ContactPage({
+    super.key,
+    required this.name,
+    required this.status,
+    required this.imageUrl,
+  });
+
+  // TODO: Fix the appbar, backwards arrow too far apart from picture
 
   @override
   Widget build(BuildContext context) {
@@ -19,22 +23,38 @@ class ContactPage extends StatelessWidget {
       appBar: AppBar(
         title: InkWell(
           onTap: () => _routeContactInfo(context),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(0),
-            leading: CircleAvatar(
-              radius: 20.0,
-              backgroundColor: Colors.transparent,
-              foregroundImage: NetworkImage(receiverImageUrl),
-              child: const CircularProgressIndicator(),
-            ),
-            title: Text(
-              receiverName,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).appBarTheme.titleTextStyle!.color,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+                foregroundImage: NetworkImage(imageUrl),
+                child: const CircularProgressIndicator(),
               ),
-            ),
+              const SizedBox(width: 24.0),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    status,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -42,20 +62,14 @@ class ContactPage extends StatelessWidget {
   }
 
   // TODO: Implement a contact info page with certain user details, etc.
+
   void _routeContactInfo(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Contact Info',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).appBarTheme.titleTextStyle!.color,
-              ),
-            ),
-          ),
+        builder: (context) => ContactInfoPage(
+          name: name,
+          status: status,
+          imageUrl: imageUrl,
         ),
       ),
     );
