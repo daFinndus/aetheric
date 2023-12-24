@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 // A container which executes a function when pressed
+// Mainly used on the settings page right now
 class CustomFieldButton extends StatelessWidget {
   final IconData icon;
   final String text;

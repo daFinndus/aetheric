@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Welcome back, $name!',
+              'Welcome back, $name.',
               style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,

@@ -16,7 +16,7 @@ class SettingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Settings.',
+              'Change the app on your needs.',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
