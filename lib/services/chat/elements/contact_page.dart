@@ -15,8 +15,6 @@ class ContactPage extends StatelessWidget {
     required this.imageUrl,
   });
 
-  // TODO: Fix the appbar, backwards arrow too far apart from picture
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,9 +37,9 @@ class ContactPage extends StatelessWidget {
                   Text(
                     name,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                   const SizedBox(height: 4.0),
@@ -49,7 +47,7 @@ class ContactPage extends StatelessWidget {
                     status,
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ],

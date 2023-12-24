@@ -1,5 +1,5 @@
 name: aetheric
-description: "A new Flutter project."
+description: "This is a simple and easy to use messenger application."
 publish_to: 'none'
 version: 0.1.0
 
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

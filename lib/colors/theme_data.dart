@@ -10,9 +10,10 @@ class ThemeColors {
   // This is what the user sees when light mode is enabled
   static ThemeData lightThemeData = ThemeData(
     primaryColor: _themeColors.lightPrimaryColor,
-    colorScheme: const ColorScheme.light().copyWith(
+    secondaryHeaderColor: _themeColors.darkPrimaryColor,
+    colorScheme: ColorScheme.light(
       primary: _themeColors.lightPrimaryColor,
-      secondary: _themeColors.darkPrimaryColor,
+      onPrimary: _themeColors.darkPrimaryColor,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: _themeColors.lightPrimaryColor,
@@ -37,9 +38,10 @@ class ThemeColors {
   // This here is what the user sees when enabling dark mode
   static ThemeData darkThemeData = ThemeData(
     primaryColor: _themeColors.darkPrimaryColor,
-    colorScheme: const ColorScheme.dark().copyWith(
+    secondaryHeaderColor: _themeColors.lightPrimaryColor,
+    colorScheme: ColorScheme.dark(
       primary: _themeColors.darkPrimaryColor,
-      secondary: _themeColors.lightPrimaryColor,
+      onPrimary: _themeColors.lightPrimaryColor,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: _themeColors.darkPrimaryColor,

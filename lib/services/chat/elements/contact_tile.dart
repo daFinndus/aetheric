@@ -34,7 +34,7 @@ class ContactTile extends StatelessWidget {
         foregroundImage: NetworkImage(imageUrl),
         child: const CircularProgressIndicator(),
       ),
-      title: Text(name),
+      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(lastMessage),
       trailing: SizedBox(
         child: Column(
