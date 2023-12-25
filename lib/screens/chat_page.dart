@@ -34,6 +34,7 @@ class ChatPage extends StatelessWidget {
       body: ListView(
         children: [
           ContactTile(
+            id: '1',
             name: 'John Doe',
             image: 'https://picsum.photos/100',
             status: 'Yo, I am Doe!',
@@ -47,6 +48,7 @@ class ChatPage extends StatelessWidget {
             timeMessage: DateTime(2023, 5, 17, 12, 39, 24),
           ),
           ContactTile(
+            id: '2',
             name: 'Max Mustermann',
             image: 'https://picsum.photos/100',
             status: 'Max ist im Haus.',
@@ -65,7 +67,6 @@ class ChatPage extends StatelessWidget {
   }
 
   // Function for showing a modal bottom sheet with certain features
-  // Features here are adding a contact and searching through contacts
   _showMoreSettings(BuildContext context) {
     showModalBottomSheet(
       context: context,

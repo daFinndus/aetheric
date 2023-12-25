@@ -14,6 +14,8 @@ class ThemeColors {
     colorScheme: ColorScheme.light(
       primary: _themeColors.lightPrimaryColor,
       onPrimary: _themeColors.darkPrimaryColor,
+      secondary: _themeColors.darkPrimaryColor,
+      onSecondary: _themeColors.lightPrimaryColor,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: _themeColors.lightPrimaryColor,
@@ -42,6 +44,8 @@ class ThemeColors {
     colorScheme: ColorScheme.dark(
       primary: _themeColors.darkPrimaryColor,
       onPrimary: _themeColors.lightPrimaryColor,
+      secondary: _themeColors.lightPrimaryColor,
+      onSecondary: _themeColors.darkPrimaryColor,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: _themeColors.darkPrimaryColor,

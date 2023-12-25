@@ -26,11 +26,12 @@ class CustomEditTextField extends StatelessWidget {
         cursorColor: Theme.of(context).colorScheme.onPrimary,
         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         decoration: InputDecoration(
-          iconColor: Theme.of(context).colorScheme.onPrimary,
-          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          contentPadding: const EdgeInsets.only(bottom: 2.0),
           border: InputBorder.none,
-          icon: Icon(icon),
           hintText: hintText,
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          iconColor: Theme.of(context).colorScheme.onPrimary,
+          icon: Icon(icon),
         ),
       ),
     );

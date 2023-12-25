@@ -133,10 +133,6 @@ class ContactInfoPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.9,
                   margin: const EdgeInsets.all(16.0),
                   padding: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.backgroundColor,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
                   child: Column(
                     children: [
                       CustomProfileTextBox(
@@ -177,10 +173,6 @@ class ContactInfoPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.9,
                   margin: const EdgeInsets.all(16.0),
                   padding: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.backgroundColor,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
                   child: Column(
                     children: [
                       CustomProfileTextBox(

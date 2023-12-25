@@ -4,6 +4,7 @@ import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
 class ContactTile extends StatelessWidget {
+  final String id;
   final String name;
   final String image;
   final String status;
@@ -20,6 +21,7 @@ class ContactTile extends StatelessWidget {
 
   const ContactTile({
     super.key,
+    required this.id,
     required this.name,
     required this.image,
     required this.status,
@@ -54,8 +56,14 @@ class ContactTile extends StatelessWidget {
             ),
             // Text
             readMessage
-                ? const Icon(Icons.mark_email_read)
-                : const Icon(Icons.mark_email_unread),
+                ? Icon(
+                    Icons.mark_email_read,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                : Icon(
+                    Icons.mark_email_unread,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
           ],
         ),
       ),
@@ -67,6 +75,7 @@ class ContactTile extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
+          id: id,
           name: name,
           image: image,
           status: status,

@@ -24,18 +24,30 @@ class CustomProfileTextBox extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(4.0),
+        border: Border.all(),
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           const SizedBox(width: 8.0),
-          Text(hintText, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(': $labelText')
+          Text(
+            hintText,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+          Text(
+            ': $labelText',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          )
         ],
       ),
     );

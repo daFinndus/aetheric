@@ -62,10 +62,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 16.0),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 128.0,
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.only(left: 8.0),
             child: Row(
               children: [
                 ClipRRect(
@@ -80,6 +81,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Expanded(
                   flex: 1,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       CustomFieldButton(
                         icon: Icons.camera_alt_rounded,
