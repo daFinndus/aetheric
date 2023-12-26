@@ -47,7 +47,7 @@ class SettingPage extends StatelessWidget {
           CustomFieldButton(
             icon: Icons.door_back_door_rounded,
             text: 'Sign out',
-            function: () => print('Sign out'),
+            function: () => debugPrint('Sign out'),
           )
         ],
       ),

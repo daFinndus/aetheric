@@ -127,7 +127,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // Function to write our data to the database
   _saveData(BuildContext context) {
-    print('Saving data...');
+    debugPrint('Saving data...');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Saving data...',

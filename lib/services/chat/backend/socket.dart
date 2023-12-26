@@ -18,9 +18,8 @@ class WebSocket with ChangeNotifier {
 
   void connectClient(String id) {
     socket.connect();
-    socket.onConnect((data) => print('Successfully connected!'));
+    socket.onConnect((data) => debugPrint('Successfully connected!'));
     socket.emit("/id", id);
-    print(socket.connected);
 
     // Every received message is added to the message list
     socket.on('/message', (data) => setMessage('target', data));

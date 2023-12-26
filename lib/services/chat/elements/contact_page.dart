@@ -48,7 +48,6 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     socket.connectClient(widget.id);
   }
