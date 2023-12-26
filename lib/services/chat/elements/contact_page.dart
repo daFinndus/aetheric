@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:aetheric/services/chat/backend/socket.dart';
 import 'package:aetheric/services/chat/backend/message_model.dart';
@@ -5,6 +7,8 @@ import 'package:aetheric/services/chat/elements/message_sender.dart';
 import 'package:aetheric/services/chat/elements/message_receiver.dart';
 import 'package:aetheric/services/chat/elements/contact_info_page.dart';
 import 'package:aetheric/elements/custom_field_button.dart';
+
+// TODO: Fix page, messages appearing out of sight
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {
@@ -102,7 +106,9 @@ class _ContactPageState extends State<ContactPage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.75,
+              height: Platform.isIOS
+                  ? MediaQuery.of(context).size.height * 0.75
+                  : MediaQuery.of(context).size.height * 0.8,
               margin: const EdgeInsets.all(8.0),
               child: ListView.builder(
                 shrinkWrap: true,
@@ -151,8 +157,9 @@ class _ContactPageState extends State<ContactPage> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(top: 6.0),
                   border: InputBorder.none,

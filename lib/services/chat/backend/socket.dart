@@ -5,12 +5,13 @@ import 'package:aetheric/services/chat/backend/message_model.dart';
 
 // Pass the _messageList as a parameter
 class WebSocket with ChangeNotifier {
-  List<MessageModel> _messageList;
+  final List<MessageModel> _messageList;
 
   WebSocket({required List<MessageModel> messageList})
       : _messageList = messageList;
 
-  io.Socket socket = io.io("http://192.168.178.34:3000", <String, dynamic>{
+  // While developing, the IP address is local - afterwards change it to the render server
+  io.Socket socket = io.io("http://192.168.178.67:3000", <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
   });
