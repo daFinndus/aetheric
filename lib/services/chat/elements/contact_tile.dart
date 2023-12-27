@@ -2,28 +2,37 @@ import 'package:flutter/material.dart';
 
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
+// This is the tile displayed for each contact in the chat page
 class ContactTile extends StatelessWidget {
-  final String username; // This is the username
-  final String firstName; // This is the first name
-  final String lastName; // This is the last name
-  final String email; // This is the email
-  final String id; // This is the user id
-  final String imageUrl; // This is the image url of the profile picture
-  final String timeMessage; // This is the time of the last message
-  final String lastMessage; // This is the last message
-  final bool readMessage; // This is the read message status
+  final String id;
+  final String name;
+  final String image;
+  final String status;
+  final String website;
+  final String location;
+
+  final int contacts;
+  final int messagesSent;
+  final DateTime joined;
+
+  final bool readMessage;
+  final String lastMessage;
+  final DateTime timeMessage;
 
   const ContactTile({
     super.key,
-    required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
     required this.id,
-    required this.imageUrl,
-    required this.timeMessage,
-    required this.lastMessage,
+    required this.name,
+    required this.image,
+    required this.status,
+    required this.website,
+    required this.location,
+    required this.contacts,
+    required this.messagesSent,
+    required this.joined,
     required this.readMessage,
+    required this.lastMessage,
+    required this.timeMessage,
   });
 
   @override
@@ -31,21 +40,31 @@ class ContactTile extends StatelessWidget {
     return ListTile(
       onTap: () => _routeContactPage(context),
       leading: CircleAvatar(
+        radius: 24.0,
         backgroundColor: Colors.transparent,
-        foregroundImage: NetworkImage(imageUrl),
+        foregroundImage: NetworkImage(image),
         child: const CircularProgressIndicator(),
       ),
-      title: Text(username),
+      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(lastMessage),
       trailing: SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(timeMessage.substring(11, 16)),
+            Text(
+              '${timeMessage.hour < 10 ? '0' : ''}${timeMessage.hour}:${timeMessage.minute < 10 ? '0' : ''}${timeMessage.minute}',
+              style: const TextStyle(fontSize: 12.0),
+            ),
             // Text
             readMessage
-                ? const Icon(Icons.mark_email_read)
-                : const Icon(Icons.mark_email_unread),
+                ? Icon(
+                    Icons.mark_email_read,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                : Icon(
+                    Icons.mark_email_unread,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
           ],
         ),
       ),
@@ -57,15 +76,15 @@ class ContactTile extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          username: username,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
           id: id,
-          imageUrl: imageUrl,
-          timeMessage: timeMessage,
-          lastMessage: lastMessage,
-          readMessage: readMessage,
+          name: name,
+          image: image,
+          status: status,
+          website: website,
+          location: location,
+          contacts: contacts,
+          messagesSent: messagesSent,
+          joined: joined,
         ),
       ),
     );
