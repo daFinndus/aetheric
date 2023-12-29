@@ -1,11 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:aetheric/services/chat/backend/socket.dart';
-import 'package:aetheric/services/chat/backend/message_model.dart';
-import 'package:aetheric/services/chat/elements/message_sender.dart';
-import 'package:aetheric/services/chat/elements/message_receiver.dart';
-import 'package:aetheric/services/chat/elements/contact_info_page.dart';
+
 import 'package:aetheric/elements/custom_field_button.dart';
 
 // TODO: Fix page, messages appearing out of sight
@@ -42,14 +38,10 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   final TextEditingController _messageController = TextEditingController();
-  final List<MessageModel> _messageList = [];
-
-  late final WebSocket socket = WebSocket(messageList: _messageList);
 
   @override
   void initState() {
     super.initState();
-    socket.connectClient(widget.id);
   }
 
   @override
@@ -57,7 +49,6 @@ class _ContactPageState extends State<ContactPage> {
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
-          onTap: () => _routeContactInfo(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -109,22 +100,8 @@ class _ContactPageState extends State<ContactPage> {
                   ? MediaQuery.of(context).size.height * 0.75
                   : MediaQuery.of(context).size.height * 0.8,
               margin: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _messageList.length,
-                itemBuilder: (context, index) {
-                  // If the message is from the source, it will be displayed on the right side
-                  if (_messageList[index].type == 'source') {
-                    return MessageSender(
-                      message: _messageList[index].message,
-                    );
-                  } else {
-                    return MessageReceiver(
-                      message: _messageList[index].message,
-                    );
-                  }
-                },
-              ),
+              child:
+                  ListView(), // TODO: Implement ListView.builder for messages
             ),
             _buildMessageInput(context),
           ],
@@ -184,32 +161,9 @@ class _ContactPageState extends State<ContactPage> {
   // Function for building MessageSender with the messageController.text everytime you click on the IconButton
   _sendMessage(BuildContext context) {
     if (_messageController.text.isNotEmpty) {
-      setState(() {
-        // Send the message to the server - message, source and target id
-        socket.sendMessage(_messageController.text, '0', widget.id);
-      });
-
       // Clear the messageController
       _messageController.clear();
     }
-  }
-
-  // Function for routing to the contact details page
-  _routeContactInfo(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ContactInfoPage(
-          name: widget.name,
-          status: widget.status,
-          image: widget.image,
-          website: widget.website,
-          location: widget.location,
-          contacts: widget.contacts,
-          messagesSent: widget.messagesSent,
-          joined: widget.joined,
-        ),
-      ),
-    );
   }
 
   // Function for showing a modal bottom sheet with certain features

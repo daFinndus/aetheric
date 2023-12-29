@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "950127373298",
+    "firebase_url": "https://aetheric-e793e-default-rtdb.firebaseio.com",
+    "project_id": "aetheric-e793e",
+    "storage_bucket": "aetheric-e793e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950127373298:android:cee45b7b2abb6f8365d96b",
+        "android_client_info": {
+          "package_name": "com.example.aetheric"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950127373298-ioubq158mq3e5r5cbemoeeo3iknau4tv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCCiduhy2bJwMNBy2VfYXN15QJjs5XGyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950127373298-ioubq158mq3e5r5cbemoeeo3iknau4tv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

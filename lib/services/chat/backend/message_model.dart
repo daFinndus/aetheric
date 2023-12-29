@@ -1,9 +1,9 @@
 class MessageModel {
-  String type;
   String message;
+  String datetime;
 
   MessageModel({
-    required this.type,
     required this.message,
+    required this.datetime,
   });
 }
