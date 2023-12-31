@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/services/auth/elements/auth_button.dart';
+import 'package:aetheric/services/auth/model/auth_expections.dart';
 import 'package:aetheric/services/auth/elements/auth_text_field.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -25,6 +28,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _cfrmPasswordController = TextEditingController();
 
   final Auth _auth = Auth();
+  final AuthExceptions _authExceptions = AuthExceptions();
 
   @override
   void initState() {
@@ -141,16 +145,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // Check if the password is long enough and if the passwords match
     if (!_checkPassword()) return;
 
-    // Trying to sign up the user via firebase auth
-    await _auth.signUp(context, email, password);
-
-    if (context.mounted) {
-      Navigator.pop(context);
+    try {
+      // Trying to sign up the user via firebase auth
+      await _auth.signUp(context, email, password);
+      if (context.mounted) Navigator.of(context).pop();
+    } on FirebaseAuthException catch (e) {
+      // Only catch auth errors, other errors will be sent to firestore
+      // This is done to prevent the user from getting a flushbar for every error
+      if (context.mounted) {
+        if (_authExceptions.errors.containsKey(e.code)) {
+          _showErrorFlushbar(context, _authExceptions.errors[e.code]!);
+        }
+      }
     }
   }
 
-  // This is way cooler than the snackbar
-  void _showErrorFlushbar(BuildContext context, String message) {
+  _showErrorFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
       duration: const Duration(seconds: 5),

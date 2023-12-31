@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:another_flushbar/flushbar.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:aetheric/services/auth/model/auth_expections.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // This class contains all the functions for authentication
 class Auth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final AuthExceptions _authExceptions = AuthExceptions();
-
-  // TODO: Right now the register page triggers everytime an error occurs
-  // FIXME: This is not the best solution and should be fixed asap
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference _errorColl = _firestore.collection('errors');
 
   // Function for signing in the user
   Future signIn(BuildContext context, String email, String password) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      debugPrint('Error: $e');
-      if (context.mounted) {
-        if (e.code == 'invalid-credential') {
-          throw 'user-not-registered';
-        } else {
-          _showErrorFlushbar(context, e.code, e.code.toString());
-        }
+    } catch (e) {
+      debugPrint("${e.runtimeType} - ${e.toString()}");
+      if (e.runtimeType != FirebaseAuthException) {
+        _errorColl.add({
+          'type': e.runtimeType.toString(),
+          'code': e.toString(),
+        });
+      } else if (e.runtimeType == FirebaseAuthException) {
+        rethrow;
       }
     }
   }
@@ -35,14 +32,19 @@ class Auth {
   // Function for signing up the user
   Future signUp(BuildContext context, String email, String password) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      if (context.mounted) {
-        debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.code, e.toString());
+    } catch (e) {
+      debugPrint("${e.runtimeType} - ${e.toString()}");
+      if (e.runtimeType != FirebaseAuthException) {
+        _errorColl.add({
+          'type': e.runtimeType.toString(),
+          'code': e.toString(),
+        });
+      } else if (e.runtimeType == FirebaseAuthException) {
+        rethrow;
       }
     }
   }
@@ -50,11 +52,16 @@ class Auth {
   // Function for signing out the user
   Future signOut(BuildContext context) async {
     try {
-      await _firebaseAuth.signOut();
-    } on FirebaseAuthException catch (e) {
-      if (context.mounted) {
-        debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.code, e.toString());
+      await _auth.signOut();
+    } catch (e) {
+      debugPrint("${e.runtimeType} - ${e.toString()}");
+      if (e.runtimeType != FirebaseAuthException) {
+        _errorColl.add({
+          'type': e.runtimeType.toString(),
+          'code': e.toString(),
+        });
+      } else if (e.runtimeType == FirebaseAuthException) {
+        rethrow;
       }
     }
   }
@@ -62,24 +69,17 @@ class Auth {
   // Function for sending a password reset email
   Future resetPassword(BuildContext context, String email) async {
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      if (context.mounted) {
-        debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.code, e.toString());
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      debugPrint("${e.runtimeType} - ${e.toString()}");
+      if (e.runtimeType != FirebaseAuthException) {
+        _errorColl.add({
+          'type': e.runtimeType.toString(),
+          'code': e.toString(),
+        });
+      } else if (e.runtimeType == FirebaseAuthException) {
+        rethrow;
       }
     }
-  }
-
-  // Function for showing a flushbar with an error message
-  void _showErrorFlushbar(
-      BuildContext context, String errorCode, String errorMessage) {
-    Flushbar(
-      message: _authExceptions.errors.containsKey(errorCode)
-          ? _authExceptions.errors[errorCode]
-          : errorMessage,
-      duration: const Duration(seconds: 5),
-      backgroundColor: const Color.fromRGBO(230, 50, 50, 0.8),
-    ).show(context);
   }
 }

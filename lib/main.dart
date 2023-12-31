@@ -9,6 +9,8 @@ import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/colors/theme_data.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 
+// TODO: Implement a details page, so the user can add certain details about themselves
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
