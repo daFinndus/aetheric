@@ -13,6 +13,7 @@ import 'package:aetheric/services/auth/screens/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // FIXME: This here doesnt work on web
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MainApp());
 }
