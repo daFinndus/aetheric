@@ -1,0 +1,10 @@
+Dieses Mal beachtet:
+
+HCI (Usability und UX)
+Firebase - Error handling
+Multiple Plattformen
+
+Auch gelernt:
+
+Arbeit mit render.com
+Wie funktionieren Web Sockets?

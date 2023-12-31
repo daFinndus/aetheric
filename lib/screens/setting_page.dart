@@ -1,6 +1,7 @@
-import 'package:aetheric/popups/data_privacy_page.dart';
-import 'package:aetheric/popups/imprint_page.dart';
 import 'package:flutter/material.dart';
+
+import 'package:aetheric/popups/imprint_page.dart';
+import 'package:aetheric/popups/data_privacy_page.dart';
 
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/elements/custom_field_button.dart';

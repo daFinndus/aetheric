@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:another_flushbar/flushbar.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:aetheric/services/auth/model/auth_expections.dart';
 
 // This class contains all the functions for authentication
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final AuthExceptions _authExceptions = AuthExceptions();
 
   // TODO: Right now the register page triggers everytime an error occurs
   // FIXME: This is not the best solution and should be fixed asap
@@ -22,7 +26,7 @@ class Auth {
         if (e.code == 'invalid-credential') {
           throw 'user-not-registered';
         } else {
-          _showErrorFlushbar(context, e.toString());
+          _showErrorFlushbar(context, e.code, e.code.toString());
         }
       }
     }
@@ -38,7 +42,7 @@ class Auth {
     } on FirebaseAuthException catch (e) {
       if (context.mounted) {
         debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.toString());
+        _showErrorFlushbar(context, e.code, e.toString());
       }
     }
   }
@@ -47,10 +51,10 @@ class Auth {
   Future signOut(BuildContext context) async {
     try {
       await _firebaseAuth.signOut();
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (context.mounted) {
         debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.toString());
+        _showErrorFlushbar(context, e.code, e.toString());
       }
     }
   }
@@ -59,29 +63,21 @@ class Auth {
   Future resetPassword(BuildContext context, String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (context.mounted) {
         debugPrint('Error: $e');
-        _showErrorFlushbar(context, e.toString());
+        _showErrorFlushbar(context, e.code, e.toString());
       }
     }
   }
 
-  // Display snackbar for errors
-  void _showErrorSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 5),
-        backgroundColor: const Color.fromRGBO(230, 50, 50, 0.8),
-      ),
-    );
-  }
-
-  // This is way cooler than the snackbar
-  void _showErrorFlushbar(BuildContext context, String message) {
+  // Function for showing a flushbar with an error message
+  void _showErrorFlushbar(
+      BuildContext context, String errorCode, String errorMessage) {
     Flushbar(
-      message: message,
+      message: _authExceptions.errors.containsKey(errorCode)
+          ? _authExceptions.errors[errorCode]
+          : errorMessage,
       duration: const Duration(seconds: 5),
       backgroundColor: const Color.fromRGBO(230, 50, 50, 0.8),
     ).show(context);

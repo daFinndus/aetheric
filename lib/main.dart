@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:aetheric/services/auth/screens/login_page.dart';
-import 'package:aetheric/colors/theme_data.dart';
-import 'package:aetheric/screens/tab_page.dart';
-
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:aetheric/screens/tab_page.dart';
+import 'package:aetheric/colors/theme_data.dart';
+import 'package:aetheric/services/auth/screens/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

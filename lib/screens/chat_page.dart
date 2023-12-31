@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:aetheric/services/chat/elements/contact_tile.dart';
 import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/services/chat/elements/contact_tile.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
