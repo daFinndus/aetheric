@@ -23,15 +23,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -67,5 +61,25 @@ class DefaultFirebaseOptions {
     projectId: 'aetheric-e793e',
     databaseURL: 'https://aetheric-e793e-default-rtdb.firebaseio.com',
     storageBucket: 'aetheric-e793e.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDasF2KaNMIKQa-fVOeZpoSC1qjz6v0vM8',
+    appId: '1:950127373298:ios:acaaf8e3e57a798465d96b',
+    messagingSenderId: '950127373298',
+    projectId: 'aetheric-e793e',
+    databaseURL: 'https://aetheric-e793e-default-rtdb.firebaseio.com',
+    storageBucket: 'aetheric-e793e.appspot.com',
+    iosBundleId: 'com.example.aetheric',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDasF2KaNMIKQa-fVOeZpoSC1qjz6v0vM8',
+    appId: '1:950127373298:ios:203a433019391c6965d96b',
+    messagingSenderId: '950127373298',
+    projectId: 'aetheric-e793e',
+    databaseURL: 'https://aetheric-e793e-default-rtdb.firebaseio.com',
+    storageBucket: 'aetheric-e793e.appspot.com',
+    iosBundleId: 'com.example.aetheric.RunnerTests',
   );
 }
