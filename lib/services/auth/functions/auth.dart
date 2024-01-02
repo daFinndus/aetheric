@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +23,18 @@ class Auth {
       if (e.runtimeType != FirebaseAuthException) {
         _errorColl.add({
           'type': e.runtimeType.toString(),
+          'time': Timestamp.now(),
           'code': e.toString(),
+          'user': {
+            'uid': _auth.currentUser?.uid,
+            'email': email,
+            'password': password,
+          },
+          'device': {
+            'name': Platform.localHostname,
+            'os': Platform.operatingSystem,
+            'version': Platform.operatingSystemVersion,
+          }
         });
       } else if (e.runtimeType == FirebaseAuthException) {
         rethrow;
@@ -41,7 +54,18 @@ class Auth {
       if (e.runtimeType != FirebaseAuthException) {
         _errorColl.add({
           'type': e.runtimeType.toString(),
+          'time': Timestamp.now(),
           'code': e.toString(),
+          'user': {
+            'uid': _auth.currentUser?.uid,
+            'email': email,
+            'password': password,
+          },
+          'device': {
+            'name': Platform.localHostname,
+            'os': Platform.operatingSystem,
+            'version': Platform.operatingSystemVersion,
+          }
         });
       } else if (e.runtimeType == FirebaseAuthException) {
         rethrow;
@@ -75,7 +99,17 @@ class Auth {
       if (e.runtimeType != FirebaseAuthException) {
         _errorColl.add({
           'type': e.runtimeType.toString(),
+          'time': Timestamp.now(),
           'code': e.toString(),
+          'user': {
+            'uid': _auth.currentUser?.uid,
+            'email': email,
+          },
+          'device': {
+            'name': Platform.localHostname,
+            'os': Platform.operatingSystem,
+            'version': Platform.operatingSystemVersion,
+          }
         });
       } else if (e.runtimeType == FirebaseAuthException) {
         rethrow;

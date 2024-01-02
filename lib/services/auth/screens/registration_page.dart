@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:another_flushbar/flushbar.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:aetheric/services/auth/model/auth_expections.dart';
 import 'package:aetheric/services/auth/elements/auth_text_field.dart';
+import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 class RegistrationPage extends StatefulWidget {
-  final String email;
-  final String password;
-
-  const RegistrationPage({
-    super.key,
-    required this.email,
-    required this.password,
-  });
+  const RegistrationPage({super.key});
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -27,6 +22,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cfrmPasswordController = TextEditingController();
 
+  final preferences = SharedPreferences.getInstance();
+
+  final AppFeatures _app = AppFeatures();
+
   final Auth _auth = Auth();
   final AuthExceptions _authExceptions = AuthExceptions();
 
@@ -34,8 +33,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     super.initState();
 
-    _emailController.text = widget.email;
-    _passwordController.text = widget.password;
+    preferences.then((pref) {
+      if (pref.containsKey('email') && pref.containsKey('password')) {
+        _emailController.text = pref.getString('email')!;
+        _passwordController.text = pref.getString('password')!;
+      }
+    });
   }
 
   @override
@@ -60,7 +63,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 36.0),
+                  const SizedBox(height: 72.0),
                   Text(
                     'Whoops!',
                     style: TextStyle(
@@ -76,7 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(height: 36.0),
+                  const SizedBox(height: 72.0),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
@@ -131,11 +134,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       if (_passwordController.text == _cfrmPasswordController.text) {
         return true;
       } else {
-        _showErrorFlushbar(context, 'Passwords do not match');
+        _app.showErrorFlushbar(context, 'Passwords do not match');
         return false;
       }
     } else {
-      _showErrorFlushbar(context, 'Password is too short');
+      _app.showErrorFlushbar(context, 'Password is too short');
       return false;
     }
   }
@@ -149,22 +152,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
       // Trying to sign up the user via firebase auth
       await _auth.signUp(context, email, password);
       if (context.mounted) Navigator.of(context).pop();
+
+      // Route to the personal data page
+      if (context.mounted) {
+        _app.showBottomSheet(context, const DataPersonalNamePage());
+      }
     } on FirebaseAuthException catch (e) {
       // Only catch auth errors, other errors will be sent to firestore
       // This is done to prevent the user from getting a flushbar for every error
       if (context.mounted) {
         if (_authExceptions.errors.containsKey(e.code)) {
-          _showErrorFlushbar(context, _authExceptions.errors[e.code]!);
+          _app.showErrorFlushbar(context, _authExceptions.errors[e.code]!);
         }
       }
     }
-  }
-
-  _showErrorFlushbar(BuildContext context, String message) {
-    Flushbar(
-      message: message,
-      duration: const Duration(seconds: 5),
-      backgroundColor: const Color.fromRGBO(230, 50, 50, 0.8),
-    ).show(context);
   }
 }
