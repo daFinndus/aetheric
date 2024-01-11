@@ -1,3 +1,4 @@
+import 'package:aetheric/popups/confirm_deletion_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/popups/imprint_page.dart';
@@ -5,6 +6,7 @@ import 'package:aetheric/popups/data_privacy_page.dart';
 
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/elements/custom_field_button_important.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -57,6 +59,14 @@ class _SettingPageState extends State<SettingPage> {
             icon: Icons.door_back_door_rounded,
             text: 'Sign out',
             function: () => _auth.signOut(context),
+          ),
+          CustomFieldButtonImportant(
+            icon: Icons.delete,
+            text: 'Delete your account',
+            function: () => _showBottomPage(
+              context,
+              const ConfirmDeletionPage(),
+            ),
           )
         ],
       ),

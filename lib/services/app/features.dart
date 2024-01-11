@@ -27,7 +27,9 @@ class AppFeatures {
   showSuccessFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
+      margin: const EdgeInsets.all(16.0),
       duration: const Duration(seconds: 5),
+      borderRadius: BorderRadius.circular(8.0),
       backgroundColor: const Color.fromARGB(200, 30, 130, 1),
     ).show(context);
   }
@@ -36,7 +38,9 @@ class AppFeatures {
   showErrorFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
+      margin: const EdgeInsets.all(16.0),
       duration: const Duration(seconds: 5),
+      borderRadius: BorderRadius.circular(8.0),
       backgroundColor: const Color.fromRGBO(230, 50, 50, 1),
     ).show(context);
   }

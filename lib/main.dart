@@ -46,27 +46,23 @@ class _MainAppState extends State<MainApp> {
       theme: ThemeColors.lightThemeData,
       darkTheme: ThemeColors.darkThemeData,
       home: Scaffold(
-        // Check if logged in
         body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, authSnapshot) {
+            // Check if user is logged in
             if (authSnapshot.hasData) {
               // Check if user has completed registration
-              return StreamBuilder(
-                stream: _usersColl.doc(_auth.currentUser?.uid).snapshots(),
-                builder: (context, dataSnapshot) {
-                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
-                    return const Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  // TODO: This doesn't work yet, gotta fix it
-                  if (dataSnapshot.hasData && authSnapshot.hasData) {
-                    return const TabPage();
+              return FutureBuilder(
+                future: _checkRegistration(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data == true) {
+                      return const TabPage();
+                    } else {
+                      return const DataPersonalNamePage();
+                    }
                   } else {
-                    return const DataPersonalNamePage();
+                    return const Center(child: CircularProgressIndicator());
                   }
                 },
               );
@@ -77,5 +73,17 @@ class _MainAppState extends State<MainApp> {
         ),
       ),
     );
+  }
+
+  // Search for a certain data entry in the users collection
+  Future<bool> _checkRegistration() async {
+    final User? user = _auth.currentUser;
+    final DocumentSnapshot userDoc = await _usersColl.doc(user!.uid).get();
+
+    if (userDoc.exists) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

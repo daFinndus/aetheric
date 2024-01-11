@@ -17,6 +17,7 @@ dependencies:
   firebase_core: ^2.24.2
   another_flushbar: ^1.12.30
   shared_preferences: ^2.2.2
+  slide_to_act: ^2.0.2
 
 dev_dependencies:
   flutter_test:

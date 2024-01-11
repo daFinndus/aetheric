@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/elements/auth_button.dart';
 
 class DataBirthdayPage extends StatefulWidget {
@@ -19,15 +18,11 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
 
   final preference = SharedPreferences.getInstance();
 
-  final AppFeatures _app = AppFeatures();
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.9,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 72.0),
@@ -46,7 +41,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          const SizedBox(height: 72.0),
+          const SizedBox(height: 64.0),
           SizedBox(
             height: 200,
             child: CupertinoDatePicker(
@@ -55,7 +50,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
               onDateTimeChanged: (DateTime newDate) {
                 debugPrint(newDate.toString());
                 setState(() {
-                  _date = newDate;
+                  _date = DateTime(newDate.year, newDate.month, newDate.day);
                 });
               },
             ),
@@ -86,6 +81,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
     );
   }
 
+  // Calculating age of user based on month and year
   int _calculateAge() {
     DateTime current = DateTime.now();
     DateTime birthday = _date;
@@ -103,7 +99,9 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
           pref.setString('birthday', _date.toString()),
         });
 
-    Navigator.pop(context);
-    _app.showBottomSheet(context, const DataUsernamePage());
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DataUsernamePage()),
+    );
   }
 }

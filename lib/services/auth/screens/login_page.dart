@@ -50,14 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  Text(
-                    'Closed Alpha v0.1.0',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 36.0),
+                  const SizedBox(height: 64.0),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(

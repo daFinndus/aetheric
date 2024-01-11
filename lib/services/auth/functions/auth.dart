@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference _userColl = _firestore.collection('users');
   late final CollectionReference _errorColl = _firestore.collection('errors');
 
   // Function for signing in the user
@@ -110,6 +111,25 @@ class Auth {
             'os': Platform.operatingSystem,
             'version': Platform.operatingSystemVersion,
           }
+        });
+      } else if (e.runtimeType == FirebaseAuthException) {
+        rethrow;
+      }
+    }
+  }
+
+  Future deleteAccount(BuildContext context) async {
+    try {
+      await _auth.currentUser?.delete();
+      debugPrint('Deleted auth entry...');
+      await _userColl.doc(_auth.currentUser?.uid).delete();
+      debugPrint('Deleted database entry...');
+    } catch (e) {
+      debugPrint("${e.runtimeType} - ${e.toString()}");
+      if (e.runtimeType != FirebaseAuthException) {
+        _errorColl.add({
+          'type': e.runtimeType.toString(),
+          'code': e.toString(),
         });
       } else if (e.runtimeType == FirebaseAuthException) {
         rethrow;

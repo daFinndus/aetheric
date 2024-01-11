@@ -109,7 +109,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 64.0),
                         AuthButton(
-                          text: 'Start your journey.',
+                          text: 'Start your journey',
                           function: () => _signUp(
                             context,
                             _emailController.text,

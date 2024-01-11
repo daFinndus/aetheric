@@ -27,73 +27,79 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.925,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "What's your name?",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: ListView(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.875,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "What's your name?",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 64.0),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          children: [
+                            AuthTextField(
+                              icon: Icons.person,
+                              hintText: 'First Name',
+                              isPassword: false,
+                              obscureText: false,
+                              controller: _firstNameController,
+                            ),
+                            const SizedBox(height: 8.0),
+                            AuthTextField(
+                              icon: Icons.person_outline,
+                              hintText: 'Last Name',
+                              isPassword: false,
+                              obscureText: false,
+                              controller: _lastNameController,
+                            ),
+                            const SizedBox(height: 64.0),
+                            AuthButton(
+                              text: 'Go to next',
+                              function: () => _saveDataAndNavigate(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 36.0),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        AuthTextField(
-                          icon: Icons.person,
-                          hintText: 'First Name',
-                          isPassword: false,
-                          obscureText: false,
-                          controller: _firstNameController,
+                ),
+                const Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.lock, size: 16.0),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'This data is for internal use only',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 8.0),
-                        AuthTextField(
-                          icon: Icons.person_outline,
-                          hintText: 'Last Name',
-                          isPassword: false,
-                          obscureText: false,
-                          controller: _lastNameController,
-                        ),
-                        const SizedBox(height: 64.0),
-                        AuthButton(
-                          text: 'Go to next',
-                          function: () => _saveDataAndNavigate(context),
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(width: 16.0)
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Align(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.lock, size: 16.0),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'This data is for internal use only',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 16.0)
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -107,6 +113,7 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
     return false;
   }
 
+  // Save the data to local storage, then navigate to the next page
   _saveDataAndNavigate(BuildContext context) async {
     String firstName = _app.capitalizeName(_firstNameController.text);
     String lastName = _app.capitalizeName(_lastNameController.text);
@@ -122,7 +129,10 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
     });
 
     context.mounted
-        ? _app.showBottomSheet(context, const DataBirthdayPage())
+        ? Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DataBirthdayPage()),
+          )
         : const Align(
             alignment: Alignment.center,
             child: CircularProgressIndicator(),

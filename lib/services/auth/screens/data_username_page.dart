@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:aetheric/services/auth/elements/auth_text_field.dart';
@@ -27,66 +28,55 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.9,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
-          ),
-        ),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 72.0),
-                  Text(
-                    'How should we call you?',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'How should we call you?',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                  Text(
-                    'The username will be your identity',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                ),
+                Text(
+                  'The username will be your identity',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                  const SizedBox(height: 72.0),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        AuthTextField(
-                          icon: Icons.person,
-                          hintText: 'Username',
-                          isPassword: false,
-                          obscureText: false,
-                          controller: _usernameController,
-                        ),
-                        const SizedBox(height: 64.0),
-                        AuthButton(
-                          text: 'Finish registration',
-                          function: () => _saveDataAndFinish(context),
-                        ),
-                      ],
-                    ),
+                ),
+                const SizedBox(height: 64.0),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      AuthTextField(
+                        icon: Icons.person,
+                        hintText: 'Username',
+                        isPassword: false,
+                        obscureText: false,
+                        controller: _usernameController,
+                      ),
+                      const SizedBox(height: 64.0),
+                      AuthButton(
+                        text: 'Finish registration',
+                        function: () => _saveDataAndFinish(context),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -117,10 +107,7 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
           username = pref.getString('username')!,
         });
 
-    debugPrint(firstName);
-    debugPrint(lastName);
-    debugPrint(birthday.toString());
-    debugPrint(username);
+    debugPrint('Uploading data to Firestore...');
 
     await _usersColl.doc(FirebaseAuth.instance.currentUser!.uid).set({
       'firstName': firstName,
@@ -129,5 +116,15 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
       'username': username,
       'uid': FirebaseAuth.instance.currentUser!.uid,
     });
+
+    context.mounted
+        ? Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TabPage()),
+          )
+        : const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          );
   }
 }
