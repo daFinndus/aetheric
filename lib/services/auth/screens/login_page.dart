@@ -125,9 +125,9 @@ class _LoginPageState extends State<LoginPage> {
         pref.setString('password', password);
       });
 
-      await _auth.signIn(context, email, password);
+      await _auth.signIn(email, password);
     } on FirebaseAuthException catch (e) {
-      // Only catch auth errors, other errors will be sent to firestore
+      // Only catch auth errors, other errors will be sent to firestore in our auth.dart
       // This is done to prevent the user from getting a flushbar for every error
       if (context.mounted) {
         if (e.code == 'user-not-found') {
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (email.isNotEmpty) {
       try {
-        await _auth.resetPassword(context, email);
+        await _auth.resetPassword(email);
 
         if (context.mounted) {
           _app.showSuccessFlushbar(context, 'You should get an email soon');

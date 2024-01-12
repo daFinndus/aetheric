@@ -58,7 +58,7 @@ class _SettingPageState extends State<SettingPage> {
           CustomFieldButton(
             icon: Icons.door_back_door_rounded,
             text: 'Sign out',
-            function: () => _auth.signOut(context),
+            function: () => _auth.signOut(),
           ),
           CustomFieldButtonImportant(
             icon: Icons.delete,

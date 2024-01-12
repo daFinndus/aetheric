@@ -150,7 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     try {
       // Trying to sign up the user via firebase auth
-      await _auth.signUp(context, email, password);
+      await _auth.signUp(email, password);
       if (context.mounted) Navigator.of(context).pop();
 
       // Route to the personal data page

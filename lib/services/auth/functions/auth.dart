@@ -13,7 +13,7 @@ class Auth {
   late final CollectionReference _errorColl = _firestore.collection('errors');
 
   // Function for signing in the user
-  Future signIn(BuildContext context, String email, String password) async {
+  Future signIn(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: email,
@@ -44,7 +44,7 @@ class Auth {
   }
 
   // Function for signing up the user
-  Future signUp(BuildContext context, String email, String password) async {
+  Future signUp(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -75,7 +75,7 @@ class Auth {
   }
 
   // Function for signing out the user
-  Future signOut(BuildContext context) async {
+  Future signOut() async {
     try {
       await _auth.signOut();
     } catch (e) {
@@ -92,7 +92,7 @@ class Auth {
   }
 
   // Function for sending a password reset email
-  Future resetPassword(BuildContext context, String email) async {
+  Future resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
@@ -118,20 +118,41 @@ class Auth {
     }
   }
 
-  Future deleteAccount(BuildContext context) async {
+  Future deleteAccount() async {
     try {
-      await _auth.currentUser?.delete();
-      debugPrint('Deleted auth entry...');
+      // Attempt to delete database entry
+      debugPrint('Uid: ${_auth.currentUser?.uid}');
       await _userColl.doc(_auth.currentUser?.uid).delete();
       debugPrint('Deleted database entry...');
+
+      // Attempt to delete auth entry
+      await _auth.currentUser?.delete();
+      debugPrint('Deleted auth entry...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
+
       if (e.runtimeType != FirebaseAuthException) {
+        String location = e.runtimeType == FirebaseAuthException
+            ? 'auth.dart - deleteAccount() - auth.currentUser.delete()'
+            : 'auth.dart - deleteAccount() - userColl.doc().delete()';
+
         _errorColl.add({
           'type': e.runtimeType.toString(),
+          'time': Timestamp.now(),
           'code': e.toString(),
+          'location': location,
+          'user': {
+            'uid': _auth.currentUser?.uid,
+          },
+          'device': {
+            'name': Platform.localHostname,
+            'os': Platform.operatingSystem,
+            'version': Platform.operatingSystemVersion,
+          }
         });
       } else if (e.runtimeType == FirebaseAuthException) {
+        // Rethrow the error for handling in our original page
+        debugPrint('Rethrowing error...');
         rethrow;
       }
     }

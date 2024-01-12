@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
 
+import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 
@@ -15,6 +16,7 @@ class ConfirmDeletionPage extends StatefulWidget {
 
 class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
   final Auth _auth = Auth();
+  final AppFeatures _app = AppFeatures();
 
   @override
   Widget build(BuildContext context) {
@@ -32,36 +34,20 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
         child: Column(
           children: [
             const SizedBox(height: 32.0),
-            Text(
-              'Think twice before this.',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-            Text(
-              'Everything related to you, will be deleted.',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 32.0,
-                left: 64.0,
-                right: 64.0,
-              ),
+            Container(
+              margin: const EdgeInsets.only(top: 32.0, left: 72.0, right: 72.0),
               child: SlideAction(
                 text: 'Slide to delete',
+                textStyle: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
                 textColor: Colors.white,
                 innerColor: Colors.red,
                 outerColor: Colors.redAccent,
                 sliderButtonIcon: const Icon(Icons.delete, color: Colors.white),
                 submittedIcon: const Icon(Icons.check, color: Colors.white),
-                onSubmit: () => _deleteAccount(),
+                onSubmit: () => _deleteAccount(context),
               ),
             ),
           ],
@@ -71,32 +57,43 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
   }
 
   // FIXME: Error doesnt get rethrown in auth.dart, how can I fix that?
-  _deleteAccount() {
+  _deleteAccount(BuildContext context) {
     try {
-      _auth.deleteAccount(context);
+      _auth.deleteAccount();
     } catch (e) {
-      debugPrint(e.toString());
-      debugPrint('TESTTESTESTESTESTTESTES');
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Please sign in again'),
-            content: const Text(
-              'For security reasons, please sign in again to delete your account.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                ),
-                child: const Text('OK'),
+      if (e is FirebaseAuthException) {
+        debugPrint("Error was caught");
+        _app.showErrorFlushbar(context, e.toString());
+      } else if (e.runtimeType == FirebaseAuthException) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Please sign in again'),
+              content: const Text(
+                'For security reasons, please sign in again to delete your account.',
               ),
-            ],
-          );
-        },
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  ),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } finally {
+      // Pop the Slide Action
+      Navigator.pop(context);
+      // Open the login page
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
       );
     }
   }

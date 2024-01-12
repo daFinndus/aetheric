@@ -95,36 +95,41 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
   }
 
   Future _uploadData() async {
+    String email = '';
+    String password = '';
     String firstName = '';
     String lastName = '';
     DateTime birthday = DateTime.now();
     String username = '';
 
     await preferences.then((pref) => {
+          email = pref.getString('email')!,
+          password = pref.getString('password')!,
           firstName = pref.getString('firstName')!,
           lastName = pref.getString('lastName')!,
-          birthday = DateTime.parse(pref.getString('birthday')!),
           username = pref.getString('username')!,
+          birthday = DateTime.parse(pref.getString('birthday')!),
         });
 
     debugPrint('Uploading data to Firestore...');
 
     await _usersColl.doc(FirebaseAuth.instance.currentUser!.uid).set({
-      'firstName': firstName,
-      'lastName': lastName,
-      'birthday': birthday,
-      'username': username,
-      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'personal data': {
+        'email': email,
+        'password': password,
+        'firstName': firstName,
+        'lastName': lastName,
+        'birthday': birthday,
+        'username': username,
+        'uid': FirebaseAuth.instance.currentUser!.uid,
+      }
     });
 
-    context.mounted
-        ? Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TabPage()),
-          )
-        : const Align(
-            alignment: Alignment.center,
-            child: CircularProgressIndicator(),
-          );
+    if (context.mounted) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => const TabPage()),
+      );
+    }
   }
 }
