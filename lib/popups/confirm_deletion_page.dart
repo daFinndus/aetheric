@@ -64,7 +64,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
       if (e is FirebaseAuthException) {
         debugPrint("Error was caught");
         _app.showErrorFlushbar(context, e.toString());
-      } else if (e.runtimeType == FirebaseAuthException) {
+      } else if (e is FirebaseAuthException) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
