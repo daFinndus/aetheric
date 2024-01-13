@@ -48,14 +48,20 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
         title: InkWell(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CircleAvatar(
+                radius: 20.0,
                 backgroundColor: Colors.transparent,
                 foregroundImage: NetworkImage(widget.image),
-                child: const CircularProgressIndicator(),
+                child: const CircleAvatar(
+                  radius: 16.0,
+                  backgroundColor: Colors.transparent,
+                  child: CircularProgressIndicator(),
+                ),
               ),
               const SizedBox(width: 24.0),
               Column(
@@ -67,7 +73,7 @@ class _ContactPageState extends State<ContactPage> {
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 4.0),
@@ -75,7 +81,7 @@ class _ContactPageState extends State<ContactPage> {
                     widget.status,
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -90,20 +96,27 @@ class _ContactPageState extends State<ContactPage> {
           )
         ],
       ),
-      body: GestureDetector(
-        onTap: () => _closeKeyboard(context),
-        child: ListView(
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: Platform.isIOS
-                  ? MediaQuery.of(context).size.height * 0.75
-                  : MediaQuery.of(context).size.height * 0.8,
-              margin: const EdgeInsets.all(8.0),
-              child:
-                  ListView(), // TODO: Implement ListView.builder for messages
+            GestureDetector(
+              onTap: () => _closeKeyboard(context),
+              child: ListView(
+                children: [
+                  // Insert messages here
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.75,
+                    child: const Center(
+                      child: Text('Messages'),
+                    ),
+                  )
+                ],
+              ),
             ),
-            _buildMessageInput(context),
+            _buildMessageInput(context)
           ],
         ),
       ),
@@ -115,7 +128,10 @@ class _ContactPageState extends State<ContactPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8.0),
+        // Take account of the nodge thingy on iphones
+        margin: Platform.isAndroid
+            ? const EdgeInsets.only(bottom: 16.0)
+            : const EdgeInsets.only(bottom: 32.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -124,7 +140,7 @@ class _ContactPageState extends State<ContactPage> {
               height: 56.0,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               decoration: BoxDecoration(
-                color: Theme.of(context).appBarTheme.backgroundColor,
+                color: Theme.of(context).colorScheme.onPrimary,
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: TextFormField(
@@ -134,21 +150,22 @@ class _ContactPageState extends State<ContactPage> {
                 minLines: 1,
                 maxLines: 5,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(top: 6.0),
                   border: InputBorder.none,
                   hintText: 'Type a message',
                   hintStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
             ),
             IconButton(
-                onPressed: () => _sendMessage(context),
-                icon: const Icon(Icons.send)),
+              onPressed: () => _sendMessage(context),
+              icon: const Icon(Icons.send),
+            ),
           ],
         ),
       ),

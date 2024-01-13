@@ -4,6 +4,9 @@ class ThemeColors {
   final Color lightPrimaryColor = const Color.fromARGB(255, 49, 49, 49);
   final Color darkPrimaryColor = const Color.fromARGB(255, 231, 231, 231);
 
+  final Color brightGrayColor = const Color.fromARGB(255, 242, 242, 242);
+  final Color darkGrayColor = const Color.fromARGB(255, 33, 33, 33);
+
   final Color? brightColor = Colors.white;
   final Color? darkColor = Colors.grey[900];
 
@@ -21,9 +24,8 @@ class ThemeColors {
       color: _themeColors.lightPrimaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: _themeColors.lightPrimaryColor,
-      titleTextStyle: TextStyle(color: _themeColors.darkPrimaryColor),
-      iconTheme: IconThemeData(color: _themeColors.darkPrimaryColor),
+      titleTextStyle: TextStyle(color: _themeColors.lightPrimaryColor),
+      iconTheme: IconThemeData(color: _themeColors.lightPrimaryColor),
     ),
     tabBarTheme: TabBarTheme(
       labelColor: _themeColors.brightColor,
@@ -51,9 +53,8 @@ class ThemeColors {
       color: _themeColors.darkPrimaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: _themeColors.darkPrimaryColor,
-      titleTextStyle: TextStyle(color: _themeColors.lightPrimaryColor),
-      iconTheme: IconThemeData(color: _themeColors.lightPrimaryColor),
+      titleTextStyle: TextStyle(color: _themeColors.darkPrimaryColor),
+      iconTheme: IconThemeData(color: _themeColors.darkPrimaryColor),
     ),
     tabBarTheme: TabBarTheme(
       labelColor: _themeColors.darkColor,

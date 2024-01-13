@@ -56,7 +56,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
     );
   }
 
-  // FIXME: Error doesnt get rethrown in auth.dart, how can I fix that?
+  // Function for deleting the account
   _deleteAccount(BuildContext context) {
     try {
       _auth.deleteAccount();
