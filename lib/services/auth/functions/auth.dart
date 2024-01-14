@@ -132,6 +132,8 @@ class Auth {
     }
   }
 
+  // This does not work as expected, the coll gets deleted but the auth entry not
+  // Probably fixed by deleting the auth entry first
   Future deleteAccount() async {
     try {
       // Attempt to delete database entry

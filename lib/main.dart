@@ -11,9 +11,6 @@ import 'package:aetheric/colors/theme_data.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
-// TODO: Strip down text field entries, cause they sometimes cause errors
-// TODO: Clear time from birthday datetime object
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // FIXME: This here doesnt work on web

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -8,14 +11,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String name = ''; // Fetch the username on init
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference _usersColl = _firestore.collection('users');
+  late final DocumentReference _userDoc = _usersColl.doc(uid);
+
+  String username = '';
 
   @override
   void initState() {
-    // TODO: Retreive data from database to use the username
     super.initState();
 
-    name = 'Finn Luca Jensen';
+    _userDoc.get().then((doc) {
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        username = data['personal data']['username'];
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -27,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Welcome back, $name.',
+              'Welcome back, $username.',
               style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
