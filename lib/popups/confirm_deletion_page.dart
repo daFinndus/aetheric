@@ -35,7 +35,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
           children: [
             const SizedBox(height: 32.0),
             Container(
-              margin: const EdgeInsets.only(top: 32.0, left: 72.0, right: 72.0),
+              margin: const EdgeInsets.only(top: 32.0, left: 58.0, right: 58.0),
               child: SlideAction(
                 text: 'Slide to delete',
                 textStyle: const TextStyle(
@@ -62,9 +62,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
       _auth.deleteAccount();
     } catch (e) {
       if (e is FirebaseAuthException) {
-        debugPrint("Error was caught");
-        _app.showErrorFlushbar(context, e.toString());
-      } else if (e is FirebaseAuthException) {
+        debugPrint('Error was caught, showing dialog...');
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -85,16 +83,10 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
             );
           },
         );
+      } else {
+        debugPrint("Error was caught: ${e.toString()}");
+        _app.showErrorFlushbar(context, e.toString());
       }
-    } finally {
-      // Pop the Slide Action
-      Navigator.pop(context);
-      // Open the login page
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
     }
   }
 }

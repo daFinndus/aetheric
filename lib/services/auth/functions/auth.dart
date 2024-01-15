@@ -134,16 +134,21 @@ class Auth {
 
   // This does not work as expected, the coll gets deleted but the auth entry not
   // Probably fixed by deleting the auth entry first
+  // FIXME: Problem above and error does not get rethrown correctly
   Future deleteAccount() async {
-    try {
-      // Attempt to delete database entry
-      debugPrint('Uid: ${_auth.currentUser?.uid}');
-      await _userColl.doc(_auth.currentUser?.uid).delete();
-      debugPrint('Deleted database entry...');
+    String? uid = _auth.currentUser?.uid;
 
+    try {
       // Attempt to delete auth entry
       await _auth.currentUser?.delete();
       debugPrint('Deleted auth entry...');
+
+      // Attempt to delete database entry
+      // After this, the user gets instantly thrown to the login page
+      // FIXME: main.dart checks for this doc existance, ifn't found, it directs to login page
+      debugPrint('Going to delete db-entry with this uid: $uid');
+      await _userColl.doc(uid).delete();
+      debugPrint('Deleted database entry...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
       if (e is FirebaseAuthException) {
@@ -151,16 +156,11 @@ class Auth {
         debugPrint('Rethrowing error...');
         rethrow;
       } else {
-        String location = e is FirebaseAuthException
-            ? 'auth.dart - deleteAccount() - auth.currentUser.delete()'
-            : 'auth.dart - deleteAccount() - userColl.doc().delete()';
-
         _errorColl.add(
           {
             'type': e.runtimeType.toString(),
             'time': Timestamp.now(),
             'code': e.toString(),
-            'location': location,
             'user': {
               'uid': _auth.currentUser?.uid,
             },

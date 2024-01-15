@@ -70,7 +70,7 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
                             ),
                             const SizedBox(height: 64.0),
                             AuthButton(
-                              text: 'Go to next',
+                              text: 'Next',
                               function: () => _saveDataAndNavigate(context),
                             ),
                           ],
