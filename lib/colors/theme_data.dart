@@ -54,6 +54,7 @@ class ThemeColors {
       color: _themeColors.darkPrimaryColor,
     ),
     appBarTheme: AppBarTheme(
+      centerTitle: true,
       titleTextStyle: TextStyle(color: _themeColors.darkPrimaryColor),
       iconTheme: IconThemeData(color: _themeColors.darkPrimaryColor),
     ),

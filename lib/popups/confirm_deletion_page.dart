@@ -57,6 +57,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
   }
 
   // Function for deleting the account
+  // TODO: Fix this function, the error is not being catched in the confirm_deletion_page after rethrowing it
   _deleteAccount(BuildContext context) {
     try {
       _auth.deleteAccount();

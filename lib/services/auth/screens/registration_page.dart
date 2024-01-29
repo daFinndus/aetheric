@@ -11,7 +11,14 @@ import 'package:aetheric/services/auth/elements/auth_text_field.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  final String email;
+  final String password;
+
+  const RegistrationPage({
+    super.key,
+    required this.email,
+    required this.password,
+  });
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -33,12 +40,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     super.initState();
 
-    preferences.then((pref) {
-      if (pref.containsKey('email') && pref.containsKey('password')) {
-        _emailController.text = pref.getString('email')!;
-        _passwordController.text = pref.getString('password')!;
-      }
-    });
+    _emailController.text = widget.email;
+    _passwordController.text = widget.password;
   }
 
   @override
@@ -65,7 +68,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   const SizedBox(height: 72.0),
                   Text(
-                    'Whoops!',
+                    'Welcome to Aetheric!',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -73,7 +76,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                   Text(
-                    'Seems like you are not a user yet.',
+                    'The easy way to message your friends.',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Theme.of(context).colorScheme.primary,
@@ -116,6 +119,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             _passwordController.text,
                           ),
                         ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            'Already a user? Go back here.',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -151,6 +164,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
     try {
       // Trying to sign up the user via firebase auth
       await _auth.signUp(email, password);
+
+      // Save the email and password to shared preferences
+      preferences.then((pref) {
+        pref.setString('email', email);
+        pref.setString('password', password);
+      });
+
       if (context.mounted) Navigator.of(context).pop();
 
       // Route to the personal data page

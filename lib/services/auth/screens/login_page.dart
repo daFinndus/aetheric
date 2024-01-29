@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final Auth _auth = Auth();
   final AuthExceptions _authExceptions = AuthExceptions();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +44,17 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Welcome to Aetheric!',
+                    'Nice to see you again.',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  Text(
+                    "We've been waiting for you.",
+                    style: TextStyle(
+                      fontSize: 12.0,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -75,9 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             'Forgot your password? Click here!',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
                               fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
@@ -88,6 +95,26 @@ class _LoginPageState extends State<LoginPage> {
                             context,
                             _emailController.text,
                             _passwordController.text,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => _app.showBottomSheet(
+                            context,
+                            RegistrationPage(
+                              email: _emailController.text.isNotEmpty
+                                  ? _emailController.text
+                                  : '',
+                              password: _passwordController.text.isNotEmpty
+                                  ? _passwordController.text
+                                  : '',
+                            ),
+                          ),
+                          child: Text(
+                            'Not a user yet? Sign up here.',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
                       ],
@@ -119,23 +146,18 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      // Save data to the 'local storage'
-      preferences.then((pref) {
-        pref.setString('email', email);
-        pref.setString('password', password);
-      });
-
       await _auth.signIn(email, password);
     } on FirebaseAuthException catch (e) {
       // Only catch auth errors, other errors will be sent to firestore in our auth.dart
       // This is done to prevent the user from getting a flushbar for every error
       if (context.mounted) {
-        if (e.code == 'user-not-found') {
-          _app.showBottomSheet(context, const RegistrationPage());
+        if (_authExceptions.errors.containsKey(e.code)) {
+          _app.showErrorFlushbar(
+            context,
+            _authExceptions.errors[e.code]!,
+          );
         } else {
-          if (_authExceptions.errors.containsKey(e.code)) {
-            _app.showErrorFlushbar(context, _authExceptions.errors[e.code]!);
-          }
+          _app.showErrorFlushbar(context, e.code);
         }
       }
     }

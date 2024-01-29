@@ -132,9 +132,7 @@ class Auth {
     }
   }
 
-  // This does not work as expected, the coll gets deleted but the auth entry not
-  // Probably fixed by deleting the auth entry first
-  // FIXME: Problem above and error does not get rethrown correctly
+  // Function for deleting the users account
   Future deleteAccount() async {
     String? uid = _auth.currentUser?.uid;
 
@@ -145,13 +143,12 @@ class Auth {
 
       // Attempt to delete database entry
       // After this, the user gets instantly thrown to the login page
-      // FIXME: main.dart checks for this doc existance, ifn't found, it directs to login page
       debugPrint('Going to delete db-entry with this uid: $uid');
       await _userColl.doc(uid).delete();
       debugPrint('Deleted database entry...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
-      if (e is FirebaseAuthException) {
+      if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
         // Rethrow the error for handling in our original page
         debugPrint('Rethrowing error...');
         rethrow;

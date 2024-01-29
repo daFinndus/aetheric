@@ -1,10 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/elements/custom_field_button.dart';
-
-// FIXME: Messages appearing out of sight
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {

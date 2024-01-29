@@ -42,7 +42,10 @@ class _AuthTextFieldState extends State<AuthTextField> {
           controller: widget.controller,
           obscureText: widget.isPassword ? _obscureText : widget.obscureText,
           cursorColor: Theme.of(context).colorScheme.primary,
-          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
           decoration: InputDecoration(
             border: InputBorder.none,
             prefixIcon: Icon(widget.icon),
@@ -57,7 +60,10 @@ class _AuthTextFieldState extends State<AuthTextField> {
                   )
                 : null,
             hintText: widget.hintText,
-            hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ),
       ),

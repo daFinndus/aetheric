@@ -49,6 +49,7 @@ class _MainAppState extends State<MainApp> {
             // Check if user is logged in
             if (authSnapshot.hasData) {
               // Check if user has completed registration
+              // That means that the user has a document in the users collection
               return FutureBuilder(
                 future: _checkRegistration(),
                 builder: (context, snapshot) {
