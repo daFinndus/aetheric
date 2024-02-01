@@ -22,9 +22,10 @@ class ImprintPage extends StatelessWidget {
             Text(
               'Imprint',
               style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimary),
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
           ],
         ),

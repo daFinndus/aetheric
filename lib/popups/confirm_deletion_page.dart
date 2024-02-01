@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
-import 'package:aetheric/services/auth/screens/login_page.dart';
+import 'package:aetheric/popups/refresh_login_alert_page.dart';
 
 class ConfirmDeletionPage extends StatefulWidget {
   const ConfirmDeletionPage({super.key});
@@ -57,36 +57,22 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
   }
 
   // Function for deleting the account
-  // TODO: Fix this function, the error is not being catched in the confirm_deletion_page after rethrowing it
-  _deleteAccount(BuildContext context) {
+  _deleteAccount(BuildContext context) async {
     try {
-      _auth.deleteAccount();
+      await _auth.deleteAccount();
     } catch (e) {
       if (e is FirebaseAuthException) {
         debugPrint('Error was caught, showing dialog...');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Please sign in again'),
-              content: const Text(
-                'For security reasons, please sign in again to delete your account.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  ),
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        // Pop the bottom bar and show the refresh login alert page
+        if (context.mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          _app.showBottomSheet(context, const RefreshLoginAlertPage());
+        }
       } else {
         debugPrint("Error was caught: ${e.toString()}");
-        _app.showErrorFlushbar(context, e.toString());
+        if (context.mounted) {
+          _app.showErrorFlushbar(context, e.toString());
+        }
       }
     }
   }
