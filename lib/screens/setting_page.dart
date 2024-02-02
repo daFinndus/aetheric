@@ -1,9 +1,11 @@
 import 'package:aetheric/popups/confirm_deletion_page.dart';
+import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/popups/imprint_page.dart';
 import 'package:aetheric/popups/data_privacy_page.dart';
 
+import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/elements/custom_field_button.dart';
 import 'package:aetheric/elements/custom_field_button_important.dart';
@@ -17,28 +19,62 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final Auth _auth = Auth();
+  final AppFeatures _app = AppFeatures();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Change the app on your needs.',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+        actions: [
+          IconButton(
+            onPressed: () => debugPrint('Pressed button on settings page'),
+            icon: const Icon(Icons.edit),
+          ),
+        ],
+      ),
+      body: ListView(
+        children: [
+          CustomFieldButton(
+            icon: Icons.abc,
+            text: 'Placeholder',
+            function: () => _app.showBottomSheet(
+              context,
+              const ExperimentalFeaturePage(
+                title: 'Placeholder',
               ),
             ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 8.0),
+          ),
+          CustomFieldButton(
+            icon: Icons.language,
+            text: 'Change language',
+            function: () => _app.showBottomSheet(
+              context,
+              const ExperimentalFeaturePage(
+                title: 'Change language',
+              ),
+            ),
+          ),
+          CustomFieldButton(
+            icon: Icons.notifications,
+            text: 'En- or disable notifications',
+            function: () => _app.showBottomSheet(
+              context,
+              const ExperimentalFeaturePage(
+                title: 'En- or disable notifications',
+              ),
+            ),
+          ),
+          CustomFieldButton(
+            icon: Icons.color_lens,
+            text: 'Change appearance',
+            function: () => _app.showBottomSheet(
+              context,
+              const ExperimentalFeaturePage(
+                title: 'Change appearance',
+              ),
+            ),
+          ),
+          const SizedBox(height: 32.0),
           CustomFieldButton(
             icon: Icons.lock,
             text: 'Data privacy',
@@ -55,6 +91,17 @@ class _SettingPageState extends State<SettingPage> {
               const ImprintPage(),
             ),
           ),
+          CustomFieldButton(
+            icon: Icons.help,
+            text: 'Support',
+            function: () => _app.showBottomSheet(
+              context,
+              const ExperimentalFeaturePage(
+                title: 'Support',
+              ),
+            ),
+          ),
+          const SizedBox(height: 32.0),
           CustomFieldButton(
             icon: Icons.door_back_door_rounded,
             text: 'Sign out',

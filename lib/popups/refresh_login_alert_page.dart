@@ -1,9 +1,8 @@
-import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/services/auth/functions/auth.dart';
+import 'package:aetheric/services/auth/elements/auth_button.dart';
 
-// TODO: Test this page
 // This page is shown when the user has to refresh their login
 class RefreshLoginAlertPage extends StatefulWidget {
   const RefreshLoginAlertPage({super.key});

@@ -7,7 +7,7 @@ class ImprintPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: const BorderRadius.only(
@@ -15,19 +15,14 @@ class ImprintPage extends StatelessWidget {
           topRight: Radius.circular(16.0),
         ),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 16.0),
-            Text(
-              'Imprint',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          ],
+      child: Center(
+        child: Text(
+          'Imprint',
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     );

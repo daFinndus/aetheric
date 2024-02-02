@@ -27,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final Auth _auth = Auth();
   final AuthExceptions _authExceptions = AuthExceptions();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {

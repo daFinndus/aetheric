@@ -1,3 +1,4 @@
+import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
@@ -60,6 +61,10 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
   _deleteAccount(BuildContext context) async {
     try {
       await _auth.deleteAccount();
+      if (context.mounted) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        MaterialPageRoute(builder: (context) => const LoginPage());
+      }
     } catch (e) {
       if (e is FirebaseAuthException) {
         debugPrint('Error was caught, showing dialog...');
