@@ -70,8 +70,8 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
                 ),
                 const SizedBox(height: 8.0),
                 AuthButton(
-                  text: "Let's go to the last question",
-                  function: () => _saveDataAndContinue(context),
+                  text: 'Approve and continue',
+                  function: () => _saveDataAndNavigate(context),
                 ),
               ],
             ),
@@ -94,7 +94,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
     return age;
   }
 
-  _saveDataAndContinue(BuildContext context) async {
+  _saveDataAndNavigate(BuildContext context) async {
     preference.then((pref) => {
           pref.setString('birthday', _date.toString()),
         });

@@ -45,27 +45,38 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, authSnapshot) {
-            // Check if user is logged in
-            if (authSnapshot.hasData) {
-              // Check if user has completed registration
-              // That means that the user has a document in the users collection
-              return FutureBuilder(
-                future: _checkRegistration(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data == true) {
-                      return const TabPage();
+          builder: (context, snapshot) {
+            // Check if user is signed in
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.data == null) {
+                return const LoginPage();
+              } else {
+                // Check if user has registered their personal data
+                return FutureBuilder(
+                  future: _checkRegistration(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data == true) {
+                        return const TabPage();
+                      } else {
+                        return const DataPersonalNamePage();
+                      }
                     } else {
-                      return const DataPersonalNamePage();
+                      return const Scaffold(
+                        body: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     }
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              );
+                  },
+                );
+              }
             } else {
-              return const LoginPage();
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
             }
           },
         ),

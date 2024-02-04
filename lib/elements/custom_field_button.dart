@@ -20,7 +20,7 @@ class CustomFieldButton extends StatelessWidget {
       onTap: () => function(),
       child: Container(
         height: 48.0,
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           color: Theme.of(context).primaryColor,

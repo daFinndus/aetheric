@@ -1,9 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:aetheric/services/auth/screens/login_page.dart';
 
 // This class contains all the functions for authentication
 class Auth {
@@ -11,6 +13,9 @@ class Auth {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final CollectionReference _userColl = _firestore.collection('users');
   late final CollectionReference _errorColl = _firestore.collection('errors');
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  late final Reference _picRef = _storage.ref('profile_pictures');
 
   // Function for signing in the user
   Future signIn(String email, String password) async {
@@ -84,6 +89,7 @@ class Auth {
   Future signOut() async {
     try {
       await _auth.signOut();
+      MaterialPageRoute(builder: (BuildContext context) => const LoginPage());
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
       if (e is FirebaseAuthException) {
@@ -134,12 +140,17 @@ class Auth {
 
   // Function for deleting the users account
   Future deleteAccount() async {
-    String? uid = _auth.currentUser?.uid;
+    String uid = _auth.currentUser!.uid;
 
     try {
       // Attempt to delete auth entry
       await _auth.currentUser?.delete();
       debugPrint('Deleted auth entry...');
+
+      // Delete the profile picture
+      debugPrint('Going to delete profile picture...');
+      await _picRef.child(uid).delete();
+      debugPrint('Deleted profile picture out of storage.');
 
       // Attempt to delete database entry
       // After this, the user gets instantly thrown to the login page

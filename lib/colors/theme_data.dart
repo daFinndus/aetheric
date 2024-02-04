@@ -25,6 +25,7 @@ class ThemeColors {
     ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
+      scrolledUnderElevation: 0.0,
       titleTextStyle: TextStyle(color: _themeColors.lightPrimaryColor),
       iconTheme: IconThemeData(color: _themeColors.lightPrimaryColor),
     ),
@@ -55,6 +56,7 @@ class ThemeColors {
     ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
+      scrolledUnderElevation: 0.0,
       titleTextStyle: TextStyle(color: _themeColors.darkPrimaryColor),
       iconTheme: IconThemeData(color: _themeColors.darkPrimaryColor),
     ),

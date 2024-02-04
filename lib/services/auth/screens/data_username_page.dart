@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:aetheric/services/auth/elements/auth_text_field.dart';
+import 'package:aetheric/services/auth/screens/data_picture_page.dart';
 
 class DataUsernamePage extends StatefulWidget {
   const DataUsernamePage({super.key});
@@ -17,12 +15,9 @@ class DataUsernamePage extends StatefulWidget {
 }
 
 class _DataUsernamePageState extends State<DataUsernamePage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late final CollectionReference _usersColl = _firestore.collection('users');
+  final TextEditingController _usernameController = TextEditingController();
 
   final preferences = SharedPreferences.getInstance();
-
-  final TextEditingController _usernameController = TextEditingController();
 
   final AppFeatures _app = AppFeatures();
 
@@ -68,8 +63,8 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
                       ),
                       const SizedBox(height: 64.0),
                       AuthButton(
-                        text: 'Finish registration',
-                        function: () => _saveDataAndFinish(context),
+                        text: "Let's head to the last step",
+                        function: () => _saveDataAndNavigate(context),
                       ),
                     ],
                   ),
@@ -82,54 +77,46 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
     );
   }
 
-  // Save the data to local storage, then read out all and upload to Firestore
-  _saveDataAndFinish(BuildContext context) async {
-    try {
-      final username = _usernameController.text;
-
-      await preferences.then((pref) => pref.setString('username', username));
-      await _uploadData();
-    } catch (e) {
-      if (context.mounted) _app.showErrorFlushbar(context, e.toString());
+  bool _checkData(String username) {
+    if (username.isNotEmpty) {
+      return true;
     }
+    return false;
   }
 
-  Future _uploadData() async {
-    String email = '';
-    String password = '';
-    String firstName = '';
-    String lastName = '';
-    DateTime birthday = DateTime.now();
-    String username = '';
+  bool _checkForWhitespace(String username) {
+    if (username.contains(' ')) {
+      return true;
+    }
+    return false;
+  }
+
+  // Save the data to local storage, then read out all and upload to Firestore
+  _saveDataAndNavigate(BuildContext context) async {
+    String username = _usernameController.text;
+
+    if (!_checkData(username)) {
+      _app.showErrorFlushbar(context, 'Please fill in all fields');
+      return;
+    }
+
+    if (_checkForWhitespace(username)) {
+      _app.showErrorFlushbar(context, 'Username cannot contain whitespace');
+      return;
+    }
 
     await preferences.then((pref) => {
-          email = pref.getString('email')!,
-          password = pref.getString('password')!,
-          firstName = pref.getString('firstName')!,
-          lastName = pref.getString('lastName')!,
-          username = pref.getString('username')!,
-          birthday = DateTime.parse(pref.getString('birthday')!),
+          pref.setString('username', username),
         });
 
-    debugPrint('Uploading data to Firestore...');
-
-    await _usersColl.doc(FirebaseAuth.instance.currentUser!.uid).set({
-      'personal data': {
-        'email': email,
-        'password': password,
-        'firstName': firstName,
-        'lastName': lastName,
-        'birthday': birthday,
-        'username': username,
-        'uid': FirebaseAuth.instance.currentUser!.uid,
-      }
-    });
-
-    if (context.mounted) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => const TabPage()),
-      );
-    }
+    context.mounted
+        ? Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DataPicturePage()),
+          )
+        : const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          );
   }
 }

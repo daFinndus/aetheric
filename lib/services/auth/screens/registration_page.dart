@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
@@ -28,8 +27,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cfrmPasswordController = TextEditingController();
-
-  final preferences = SharedPreferences.getInstance();
 
   final AppFeatures _app = AppFeatures();
 
@@ -164,12 +161,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     try {
       // Trying to sign up the user via firebase auth
       await _auth.signUp(email, password);
-
-      // Save the email and password to shared preferences
-      preferences.then((pref) {
-        pref.setString('email', email);
-        pref.setString('password', password);
-      });
 
       if (context.mounted) Navigator.of(context).pop();
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // We can change obscurity, icon, and hint text
 class AuthTextField extends StatefulWidget {
   final IconData icon;
-  final String hintText; // Displays what the user should enter
+  final String hintText; // Displays what the user should enter,s
 
   final bool isPassword; // Change if the fields need a toggle obscure button
   final bool obscureText; // Change if the text is displayed or not
