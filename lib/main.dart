@@ -12,6 +12,7 @@ import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 // TODO: Save register location and represent it in app
+// TODO: Add notifications for new messages
 // TODO: Audio messages and contacts managed by user id
 // TODO: Homepage should be a dashboard with important notifications
 // TODO: Lock app with fingerprint or face recognition

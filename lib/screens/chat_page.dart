@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:aetheric/elements/custom_field_button.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
 
-class ChatPage extends StatelessWidget {
+// TODO: Loading indicator while data is being fetched with a 1s delay
+
+class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  late final CollectionReference _usersColl = _firestore.collection('users');
 
   @override
   Widget build(BuildContext context) {
@@ -18,39 +33,52 @@ class ChatPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          ContactTile(
-            id: '1',
-            name: 'John Doe',
-            image: 'https://picsum.photos/100',
-            status: 'Yo, I am Doe!',
-            website: 'https://john-doe.com',
-            location: 'USA, New York',
-            contacts: 17,
-            messagesSent: 1249,
-            joined: DateTime(2021, 5, 17, 12, 39, 24),
-            readMessage: false,
-            lastMessage: 'Hello, how are you?',
-            timeMessage: DateTime(2023, 5, 17, 12, 39, 24),
-          ),
-          ContactTile(
-            id: '2',
-            name: 'Max Mustermann',
-            image: 'https://picsum.photos/100',
-            status: 'Max ist im Haus.',
-            website: 'www.max-mustermann.de',
-            location: 'Germany, Berlin',
-            contacts: 12,
-            messagesSent: 985021,
-            joined: DateTime(2022, 7, 23, 12, 56, 37),
-            readMessage: false,
-            lastMessage: 'Hey, wie geht es dir?',
-            timeMessage: DateTime.now(),
-          )
-        ],
+      body: StreamBuilder(
+        stream: _firestore.collection('users').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text('No data available...'),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: (snapshot.data?.docs.length),
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data!.docs[index];
+
+                // Check for user documents, if not our own, create a ContactTile
+                if (document.id != _firebaseAuth.currentUser!.uid) {
+                  // Create a chatId by sorting the uids and joining them
+                  final String chatId = _generateChatId(
+                    _firebaseAuth.currentUser!.uid,
+                    document.id,
+                  );
+
+                  debugPrint('Generated ChatId: $chatId');
+
+                  return ContactTile(
+                    receiverId: document.id,
+                    chatId: chatId,
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            );
+          }
+        },
       ),
     );
+  }
+
+  _generateChatId(String currentId, String otherId) {
+    final List<String> uids = [currentId, otherId];
+    uids.sort();
+    return uids.join('');
   }
 
   // Function for showing a modal bottom sheet with certain features

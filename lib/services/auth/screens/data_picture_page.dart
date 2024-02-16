@@ -203,8 +203,8 @@ class _DataPicturePageState extends State<DataPicturePage> {
         'lastName': _lastName,
         'birthday': _birthday,
         'username': _username,
+        'imageUrl': _imageUrl,
         'uid': FirebaseAuth.instance.currentUser!.uid,
-        'profile_picture': _imageUrl,
       }
     });
 

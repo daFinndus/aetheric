@@ -17,6 +17,24 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      body: Center(
+        child: _buildEmptyPage(),
+      ),
+    );
+  }
+
+  _buildEmptyPage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.error_outline_sharp,
+          color: Theme.of(context).colorScheme.primary,
+          size: 64.0,
+        ),
+        const SizedBox(height: 32.0),
+        const Text('This page seems to be empty.'),
+      ],
     );
   }
 }

@@ -21,8 +21,12 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  String _username = 'Nomen Nescio';
-  String _imageUrl = 'http://source.unsplash.com/weisses-flugzeug-YkXdt3429hc';
+  // String _username = 'Nomen Nescio';
+  String _imageUrl = '';
+
+  final ScrollController _scrollController = ScrollController();
+
+  double _opacity = 0.75;
 
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
@@ -34,6 +38,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_scrollListener);
 
     Future.delayed(Duration.zero, () {
       _getData();
@@ -56,109 +61,112 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            width: 128.0,
-            height: 128.0,
-            child: CachedNetworkImage(
-              imageUrl: _imageUrl,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            AnimatedOpacity(
+              opacity: _opacity,
+              duration: const Duration(milliseconds: 500),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: CachedNetworkImage(
+                  imageUrl: _imageUrl,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
                   ),
                 ),
               ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
-          ),
-          const SizedBox(height: 32.0),
-          CustomFieldButton(
-            icon: Icons.abc,
-            text: 'Placeholder',
-            function: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(
-                title: 'Placeholder',
+            const SizedBox(height: 32.0),
+            CustomFieldButton(
+              icon: Icons.abc,
+              text: 'Placeholder',
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(
+                  title: 'Placeholder',
+                ),
               ),
             ),
-          ),
-          CustomFieldButton(
-            icon: Icons.language,
-            text: 'Change language',
-            function: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(
-                title: 'Change language',
+            CustomFieldButton(
+              icon: Icons.language,
+              text: 'Change language',
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(
+                  title: 'Change language',
+                ),
               ),
             ),
-          ),
-          CustomFieldButton(
-            icon: Icons.notifications,
-            text: 'En- or disable notifications',
-            function: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(
-                title: 'En- or disable notifications',
+            CustomFieldButton(
+              icon: Icons.notifications,
+              text: 'En- or disable notifications',
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(
+                  title: 'En- or disable notifications',
+                ),
               ),
             ),
-          ),
-          CustomFieldButton(
-            icon: Icons.color_lens,
-            text: 'Change appearance',
-            function: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(
-                title: 'Change appearance',
+            CustomFieldButton(
+              icon: Icons.color_lens,
+              text: 'Change appearance',
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(
+                  title: 'Change appearance',
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 32.0),
-          CustomFieldButton(
-            icon: Icons.lock,
-            text: 'Data privacy',
-            function: () => _showBottomPage(
-              context,
-              const DataPrivacyPage(),
-            ),
-          ),
-          CustomFieldButton(
-            icon: Icons.book,
-            text: 'Imprint',
-            function: () => _showBottomPage(
-              context,
-              const ImprintPage(),
-            ),
-          ),
-          CustomFieldButton(
-            icon: Icons.help,
-            text: 'Support',
-            function: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(
-                title: 'Support',
+            const SizedBox(height: 32.0),
+            CustomFieldButton(
+              icon: Icons.lock,
+              text: 'Data privacy',
+              function: () => _showBottomPage(
+                context,
+                const DataPrivacyPage(),
               ),
             ),
-          ),
-          const SizedBox(height: 32.0),
-          CustomFieldButton(
-            icon: Icons.door_back_door_rounded,
-            text: 'Sign out',
-            function: () => _auth.signOut(),
-          ),
-          CustomFieldButtonImportant(
-            icon: Icons.delete,
-            text: 'Delete your account',
-            function: () => _showBottomPage(
-              context,
-              const ConfirmDeletionPage(),
+            CustomFieldButton(
+              icon: Icons.book,
+              text: 'Imprint',
+              function: () => _showBottomPage(
+                context,
+                const ImprintPage(),
+              ),
             ),
-          )
-        ],
+            CustomFieldButton(
+              icon: Icons.help,
+              text: 'Support',
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(
+                  title: 'Support',
+                ),
+              ),
+            ),
+            const SizedBox(height: 32.0),
+            CustomFieldButton(
+              icon: Icons.door_back_door_rounded,
+              text: 'Sign out',
+              function: () => _auth.signOut(),
+            ),
+            CustomFieldButtonImportant(
+              icon: Icons.delete,
+              text: 'Delete your account',
+              function: () => _showBottomPage(
+                context,
+                const ConfirmDeletionPage(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -180,14 +188,25 @@ class _SettingPageState extends State<SettingPage> {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         setState(() {
-          _username = documentSnapshot.get('personal_data')['username'];
-          _imageUrl = documentSnapshot.get('personal_data')['profile_picture'];
+          // _username = documentSnapshot.get('personal_data')['username'];
+          _imageUrl = documentSnapshot.get('personal_data')['imageUrl'];
         });
       }
     });
 
     // Pop the loading dialog
     Navigator.of(context).pop();
+  }
+
+  // Function for listening to the scroll position and changing the opacity of the image container
+  _scrollListener() {
+    debugPrint('Scrolling...');
+
+    setState(() {
+      _opacity = 1.0 - _scrollController.offset / 100;
+      // Make sure the variable is in our desired range
+      _opacity = _opacity.clamp(0.0, 0.75);
+    });
   }
 
   // Function for showing a page which appears from the bottom of the screen

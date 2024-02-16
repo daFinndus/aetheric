@@ -1,32 +1,21 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:aetheric/elements/custom_field_button.dart';
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {
-  final String id;
-  final String name;
-  final String image;
-  final String status;
-  final String website;
-  final String location;
-
-  final int contacts;
-  final int messagesSent;
-  final DateTime joined;
+  // Following variables are the properties of the contact
+  final String receiverId;
+  final String chatId;
 
   const ContactPage({
     super.key,
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.status,
-    required this.website,
-    required this.location,
-    required this.contacts,
-    required this.messagesSent,
-    required this.joined,
+    required this.receiverId,
+    required this.chatId,
   });
 
   @override
@@ -36,9 +25,20 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   final TextEditingController _messageController = TextEditingController();
 
+  String receiverName = '';
+  String receiverStatus = '';
+  String receiverImageUrl = '';
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference _userColl = _firestore.collection('users');
+
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      _getData();
+    });
   }
 
   @override
@@ -52,13 +52,21 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               CircleAvatar(
                 radius: 20.0,
-                backgroundColor: Colors.transparent,
-                foregroundImage: NetworkImage(widget.image),
-                child: const CircleAvatar(
-                  radius: 16.0,
-                  backgroundColor: Colors.transparent,
-                  child: CircularProgressIndicator(),
-                ),
+                child: receiverImageUrl.isNotEmpty
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: receiverImageUrl,
+                          width: 40.0,
+                          height: 40.0,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.error,
+                          ),
+                        ),
+                      )
+                    : const Icon(Icons.person),
               ),
               const SizedBox(width: 24.0),
               Column(
@@ -66,7 +74,7 @@ class _ContactPageState extends State<ContactPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.name,
+                    receiverName,
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -75,7 +83,7 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    widget.status,
+                    receiverStatus.isNotEmpty ? receiverStatus : 'Placeholder',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Theme.of(context).colorScheme.primary,
@@ -118,6 +126,28 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
     );
+  }
+
+  // Function for retrieving the data of the receiver
+  _getData() {
+    String firstName;
+    String lastName;
+
+    _userColl
+        .doc(widget.receiverId)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          firstName = documentSnapshot.get('personal_data')['firstName'];
+          lastName = documentSnapshot.get('personal_data')['lastName'];
+          receiverImageUrl = documentSnapshot.get('personal_data')['imageUrl'];
+
+          // Set the name of the receiver
+          receiverName = '$firstName $lastName';
+        });
+      }
+    });
   }
 
   // The message input is a text field to write messages and the send button
