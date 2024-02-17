@@ -1,10 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/services/chat/backend/message_model.dart';
+import 'package:aetheric/services/chat/elements/message_sender.dart';
+import 'package:aetheric/services/chat/backend/message_functions.dart';
+import 'package:aetheric/services/chat/elements/message_receiver.dart';
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {
@@ -29,8 +34,17 @@ class _ContactPageState extends State<ContactPage> {
   String receiverStatus = '';
   String receiverImageUrl = '';
 
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   late final CollectionReference _userColl = _firestore.collection('users');
+  late final CollectionReference _chatColl = _firestore.collection('chats');
+  late final DocumentReference _docRef = _chatColl.doc(widget.chatId);
+  late final CollectionReference _messagesColl = _docRef.collection('messages');
+
+  late final MessageFunctions _messageFunctions = MessageFunctions(
+    chatId: widget.chatId,
+  );
 
   @override
   void initState() {
@@ -110,13 +124,63 @@ class _ContactPageState extends State<ContactPage> {
               onTap: () => _closeKeyboard(context),
               child: ListView(
                 children: [
-                  // Insert messages here
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: const Center(
-                      child: Text('Messages'),
-                    ),
+                  const SizedBox(height: 16.0),
+                  StreamBuilder(
+                    stream: _messagesColl.snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        // Create a list of all messages in the collection
+                        // TODO: Sort messages based on id (datetime)
+                        final messages = snapshot.data!.docs;
+
+                        return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            final messageData =
+                                messages[index].data() as Map<String, dynamic>;
+
+                            String messageText = messageData['message'];
+                            String messageTime = messageData['datetime'];
+                            String messageUid = messageData['uid'];
+
+                            // Check if the message is sent by the user or the receiver
+                            if (messageUid == _firebaseAuth.currentUser!.uid) {
+                              return MessageSender(
+                                message: messageText,
+                                datetime: messageTime,
+                              );
+                            } else {
+                              return MessageReceiver(
+                                message: messageText,
+                                datetime: messageTime,
+                              );
+                            }
+                          },
+                        );
+                      }
+                      return const SizedBox();
+                    },
                   )
                 ],
               ),
@@ -202,9 +266,18 @@ class _ContactPageState extends State<ContactPage> {
   // Function for closing the keyboard
   _closeKeyboard(BuildContext context) => FocusScope.of(context).unfocus();
 
-  // Function for building MessageSender with the messageController.text everytime you click on the IconButton
+  // Function for uploading our message to the database
   _sendMessage(BuildContext context) {
     if (_messageController.text.isNotEmpty) {
+      // Create our message model
+      MessageModel messageModel = MessageModel(
+        uid: _firebaseAuth.currentUser!.uid,
+        message: _messageController.text,
+        datetime: DateTime.now().toString(),
+      );
+
+      // Add the message model to our database
+      _messageFunctions.sendMessage(messageModel);
       // Clear the messageController
       _messageController.clear();
     }

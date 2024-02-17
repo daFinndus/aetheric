@@ -207,6 +207,9 @@ class _SettingPageState extends State<SettingPage> {
       // Make sure the variable is in our desired range
       _opacity = _opacity.clamp(0.0, 0.75);
     });
+
+    debugPrint('Offset: ${_scrollController.offset}');
+    debugPrint('Opacity: $_opacity');
   }
 
   // Function for showing a page which appears from the bottom of the screen

@@ -19,8 +19,6 @@ class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  late final CollectionReference _usersColl = _firestore.collection('users');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

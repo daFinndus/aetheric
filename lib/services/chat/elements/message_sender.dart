@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
-class MessageSender extends StatelessWidget {
+class MessageSender extends StatefulWidget {
   final String message;
+  final String datetime;
 
-  const MessageSender({super.key, required this.message});
+  const MessageSender({
+    super.key,
+    required this.message,
+    required this.datetime,
+  });
+
+  @override
+  State<MessageSender> createState() => _MessageSenderState();
+}
+
+class _MessageSenderState extends State<MessageSender> {
+  late final DateTime _datetime = DateTime.parse(widget.datetime);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +37,7 @@ class MessageSender extends StatelessWidget {
                   right: 32.0,
                 ),
                 child: Text(
-                  message,
+                  widget.message,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
@@ -37,7 +49,7 @@ class MessageSender extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      '12:00',
+                      '${_datetime.hour}:${_datetime.minute}',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,

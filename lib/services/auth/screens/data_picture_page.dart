@@ -45,7 +45,6 @@ class _DataPicturePageState extends State<DataPicturePage> {
   void initState() {
     super.initState();
     // If the application crashes while taking the picture
-    // FIXME: Function hasn't been implemented yet
     _getLostData();
   }
 

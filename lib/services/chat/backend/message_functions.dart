@@ -23,32 +23,27 @@ class MessageFunctions {
   // Function for saving a messageModel in the database
   void sendMessage(MessageModel messageModel) {
     try {
-      _messagesColl.add(messageModel);
+      _messagesColl.add(messageModel.toMap());
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
-      if (e is FirebaseException) {
-        // Rethrow the error for handling in our original page
-        debugPrint('Rethrowing error...');
-        rethrow;
-      } else {
-        _errorColl.add(
-          {
-            'type': e.runtimeType.toString(),
-            'time': Timestamp.now(),
-            'code': e.toString(),
-            'location': 'Sending message...',
-            'user': {
-              'uid': _firebaseAuth.currentUser?.uid,
-              'email': _firebaseAuth.currentUser?.email,
-            },
-            'device': {
-              'name': Platform.localHostname,
-              'os': Platform.operatingSystem,
-              'version': Platform.operatingSystemVersion,
-            }
+
+      _errorColl.add(
+        {
+          'type': e.runtimeType.toString(),
+          'time': Timestamp.now(),
+          'code': e.toString(),
+          'location': 'Sending message...',
+          'user': {
+            'uid': _firebaseAuth.currentUser?.uid,
+            'email': _firebaseAuth.currentUser?.email,
           },
-        );
-      }
+          'device': {
+            'name': Platform.localHostname,
+            'os': Platform.operatingSystem,
+            'version': Platform.operatingSystemVersion,
+          }
+        },
+      );
     }
   }
 }

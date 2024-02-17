@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -28,18 +27,11 @@ class _ContactTileState extends State<ContactTile> {
   String lastMessage = '';
   DateTime timeMessage = DateTime(1970, 1, 1);
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   late final CollectionReference _userColl = _firestore.collection('users');
-  late final DocumentReference _docRef = _userColl.doc(widget.receiverId);
-
-  late final CollectionReference _chatColl = _firestore.collection('chats');
-  late final DocumentReference _chatDocRef = _chatColl.doc(widget.chatId);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     // Retrieve user data
@@ -80,7 +72,9 @@ class _ContactTileState extends State<ContactTile> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '${timeMessage.hour < 10 ? '0' : ''}${timeMessage.hour}:${timeMessage.minute < 10 ? '0' : ''}${timeMessage.minute}',
+              lastMessage == ''
+                  ? ''
+                  : '${timeMessage.hour < 10 ? '0' : ''}${timeMessage.hour}:${timeMessage.minute < 10 ? '0' : ''}${timeMessage.minute}',
               style: const TextStyle(fontSize: 12.0),
             ),
           ],
