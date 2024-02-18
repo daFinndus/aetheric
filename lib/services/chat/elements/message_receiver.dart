@@ -15,7 +15,14 @@ class MessageReceiver extends StatefulWidget {
 }
 
 class _MessageReceiverState extends State<MessageReceiver> {
-  late final DateTime _datetime = DateTime.parse(widget.datetime);
+  late DateTime _datetime = DateTime.parse(widget.datetime);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _datetime = _datetime.toLocal();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +55,7 @@ class _MessageReceiverState extends State<MessageReceiver> {
               bottom: 6.0,
               right: 10.0,
               child: Text(
-                '${_datetime.hour}:${_datetime.minute}',
+                '${_datetime.hour < 10 ? '0' : ''}${_datetime.hour}:${_datetime.minute < 10 ? '0' : ''}${_datetime.minute}',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSecondary,

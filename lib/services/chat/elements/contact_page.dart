@@ -13,13 +13,12 @@ import 'package:aetheric/services/chat/elements/message_receiver.dart';
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {
-  // Following variables are the properties of the contact
-  final String receiverId;
+  final String receiverUid;
   final String chatId;
 
   const ContactPage({
     super.key,
-    required this.receiverId,
+    required this.receiverUid,
     required this.chatId,
   });
 
@@ -30,18 +29,13 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   final TextEditingController _messageController = TextEditingController();
 
-  String receiverName = '';
-  String receiverStatus = '';
+  String receiverUsername = '';
   String receiverImageUrl = '';
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late final CollectionReference _userColl = _firestore.collection('users');
-  late final CollectionReference _chatColl = _firestore.collection('chats');
-  late final DocumentReference _docRef = _chatColl.doc(widget.chatId);
-  late final CollectionReference _messagesColl = _docRef.collection('messages');
-
   late final MessageFunctions _messageFunctions = MessageFunctions(
     chatId: widget.chatId,
   );
@@ -88,7 +82,7 @@ class _ContactPageState extends State<ContactPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    receiverName,
+                    receiverUsername,
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -97,7 +91,7 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    receiverStatus.isNotEmpty ? receiverStatus : 'Placeholder',
+                    'Messaging from  💻',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: Theme.of(context).colorScheme.primary,
@@ -125,63 +119,7 @@ class _ContactPageState extends State<ContactPage> {
               child: ListView(
                 children: [
                   const SizedBox(height: 16.0),
-                  StreamBuilder(
-                    stream: _messagesColl.snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            'Error: ${snapshot.error}',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        );
-                      }
-                      if (snapshot.hasData) {
-                        // Create a list of all messages in the collection
-                        // TODO: Sort messages based on id (datetime)
-                        final messages = snapshot.data!.docs;
-
-                        return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            final messageData =
-                                messages[index].data() as Map<String, dynamic>;
-
-                            String messageText = messageData['message'];
-                            String messageTime = messageData['datetime'];
-                            String messageUid = messageData['uid'];
-
-                            // Check if the message is sent by the user or the receiver
-                            if (messageUid == _firebaseAuth.currentUser!.uid) {
-                              return MessageSender(
-                                message: messageText,
-                                datetime: messageTime,
-                              );
-                            } else {
-                              return MessageReceiver(
-                                message: messageText,
-                                datetime: messageTime,
-                              );
-                            }
-                          },
-                        );
-                      }
-                      return const SizedBox();
-                    },
-                  )
+                  _buildMessageList(context),
                 ],
               ),
             ),
@@ -194,33 +132,109 @@ class _ContactPageState extends State<ContactPage> {
 
   // Function for retrieving the data of the receiver
   _getData() {
-    String firstName;
-    String lastName;
-
     _userColl
-        .doc(widget.receiverId)
+        .doc(widget.receiverUid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         setState(() {
-          firstName = documentSnapshot.get('personal_data')['firstName'];
-          lastName = documentSnapshot.get('personal_data')['lastName'];
+          receiverUsername = documentSnapshot.get('personal_data')['username'];
           receiverImageUrl = documentSnapshot.get('personal_data')['imageUrl'];
-
-          // Set the name of the receiver
-          receiverName = '$firstName $lastName';
         });
       }
     });
   }
 
+  // TODO: Erase whitespace at end of message
+  // Function for uploading our message to the database
+  _sendMessage(BuildContext context) {
+    if (_messageController.text.isNotEmpty) {
+      // Create our message model
+      MessageModel messageModel = MessageModel(
+        uid: _firebaseAuth.currentUser!.uid,
+        message: _messageController.text,
+        datetime: DateTime.timestamp().toString(),
+      );
+
+      // Add the message model to our database
+      _messageFunctions.sendMessage(messageModel);
+      // Clear the messageController
+      _messageController.clear();
+    }
+  }
+
+  // Function for closing the keyboard
+  _closeKeyboard(BuildContext context) => FocusScope.of(context).unfocus();
+
+  // The message list is a list of all messages in the chat
+  _buildMessageList(BuildContext context) {
+    return StreamBuilder(
+      stream: _messageFunctions.getMessages(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error: ${snapshot.error}',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          );
+        }
+        if (snapshot.hasData) {
+          // Create a list of all messages in the collection
+          final messages = snapshot.data!.docs;
+
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              final messageData =
+                  messages[index].data() as Map<String, dynamic>;
+
+              String messageText = messageData['message'];
+              String messageTime = messageData['datetime'];
+              String messageUid = messageData['uid'];
+
+              // Check if the message is sent by the user or the receiver
+              if (messageUid == _firebaseAuth.currentUser!.uid) {
+                return MessageSender(
+                  message: messageText,
+                  datetime: messageTime,
+                );
+              } else {
+                return MessageReceiver(
+                  message: messageText,
+                  datetime: messageTime,
+                );
+              }
+            },
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
   // The message input is a text field to write messages and the send button
+  // TODO: Make sure input doesn't overlap the messages
+  // Instead the input should displace the messages upwards
   _buildMessageInput(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
         // Take account of the nodge thingy on iphones
-        margin: Platform.isAndroid
+        padding: Platform.isAndroid
             ? const EdgeInsets.only(bottom: 16.0)
             : const EdgeInsets.only(bottom: 32.0),
         child: Row(
@@ -261,26 +275,6 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
     );
-  }
-
-  // Function for closing the keyboard
-  _closeKeyboard(BuildContext context) => FocusScope.of(context).unfocus();
-
-  // Function for uploading our message to the database
-  _sendMessage(BuildContext context) {
-    if (_messageController.text.isNotEmpty) {
-      // Create our message model
-      MessageModel messageModel = MessageModel(
-        uid: _firebaseAuth.currentUser!.uid,
-        message: _messageController.text,
-        datetime: DateTime.now().toString(),
-      );
-
-      // Add the message model to our database
-      _messageFunctions.sendMessage(messageModel);
-      // Clear the messageController
-      _messageController.clear();
-    }
   }
 
   // Function for showing a modal bottom sheet with certain features

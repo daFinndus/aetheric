@@ -7,12 +7,12 @@ import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
 class ContactTile extends StatefulWidget {
-  final String receiverId;
+  final String receiverUid;
   final String chatId;
 
   const ContactTile({
     super.key,
-    required this.receiverId,
+    required this.receiverUid,
     required this.chatId,
   });
 
@@ -21,7 +21,7 @@ class ContactTile extends StatefulWidget {
 }
 
 class _ContactTileState extends State<ContactTile> {
-  String receiverName = '';
+  String receiverUsername = '';
   String receiverImageUrl = '';
 
   String lastMessage = '';
@@ -63,7 +63,7 @@ class _ContactTileState extends State<ContactTile> {
             : const Icon(Icons.person),
       ),
       title: Text(
-        receiverName,
+        receiverUsername,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(lastMessage == '' ? 'No messages yet' : lastMessage),
@@ -85,21 +85,14 @@ class _ContactTileState extends State<ContactTile> {
 
   // Function for retrieving the data of the receiver
   _getData() {
-    String firstName;
-    String lastName;
-
     _userColl
-        .doc(widget.receiverId)
+        .doc(widget.receiverUid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         setState(() {
-          firstName = documentSnapshot.get('personal_data')['firstName'];
-          lastName = documentSnapshot.get('personal_data')['lastName'];
+          receiverUsername = documentSnapshot.get('personal_data')['username'];
           receiverImageUrl = documentSnapshot.get('personal_data')['imageUrl'];
-
-          // Set the name of the receiver
-          receiverName = '$firstName $lastName';
         });
       }
     });
@@ -110,7 +103,7 @@ class _ContactTileState extends State<ContactTile> {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          receiverId: widget.receiverId,
+          receiverUid: widget.receiverUid,
           chatId: widget.chatId,
         ),
       ),

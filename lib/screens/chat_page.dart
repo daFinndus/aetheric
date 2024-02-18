@@ -59,7 +59,7 @@ class _ChatPageState extends State<ChatPage> {
                   debugPrint('Generated ChatId: $chatId');
 
                   return ContactTile(
-                    receiverId: document.id,
+                    receiverUid: document.id,
                     chatId: chatId,
                   );
                 } else {
