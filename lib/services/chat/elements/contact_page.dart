@@ -27,6 +27,7 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+  final ScrollController _listviewController = ScrollController();
   final TextEditingController _messageController = TextEditingController();
 
   String receiverUsername = '';
@@ -44,9 +45,8 @@ class _ContactPageState extends State<ContactPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration.zero, () {
-      _getData();
-    });
+    // Retrieve user data
+    _getData();
   }
 
   @override
@@ -59,14 +59,14 @@ class _ContactPageState extends State<ContactPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CircleAvatar(
-                radius: 20.0,
+                radius: 22.0,
                 child: receiverImageUrl.isNotEmpty
                     ? ClipOval(
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl: receiverImageUrl,
-                          width: 40.0,
-                          height: 40.0,
+                          width: 44.0,
+                          height: 44.0,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(
@@ -76,7 +76,7 @@ class _ContactPageState extends State<ContactPage> {
                       )
                     : const Icon(Icons.person),
               ),
-              const SizedBox(width: 24.0),
+              const SizedBox(width: 20.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,16 +84,8 @@ class _ContactPageState extends State<ContactPage> {
                   Text(
                     receiverUsername,
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Messaging from  💻',
-                    style: TextStyle(
-                      fontSize: 12.0,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -111,48 +103,44 @@ class _ContactPageState extends State<ContactPage> {
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () => _closeKeyboard(context),
-              child: ListView(
-                children: [
-                  const SizedBox(height: 16.0),
-                  _buildMessageList(context),
-                ],
+        child: GestureDetector(
+          onTap: () => _closeKeyboard(context),
+          child: Column(
+            children: [
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: _buildMessageList(context),
               ),
-            ),
-            _buildMessageInput(context)
-          ],
+              const SizedBox(height: 16.0),
+              _buildMessageInput(context),
+            ],
+          ),
         ),
       ),
     );
   }
 
   // Function for retrieving the data of the receiver
-  _getData() {
-    _userColl
-        .doc(widget.receiverUid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          receiverUsername = documentSnapshot.get('personal_data')['username'];
-          receiverImageUrl = documentSnapshot.get('personal_data')['imageUrl'];
-        });
-      }
-    });
+  _getData() async {
+    final DocumentSnapshot data = await _userColl.doc(widget.receiverUid).get();
+
+    if (data.exists) {
+      setState(() {
+        receiverUsername = data.get('personal_data')['username'];
+        receiverImageUrl = data.get('personal_data')['imageUrl'];
+      });
+    }
   }
 
-  // TODO: Erase whitespace at end of message
   // Function for uploading our message to the database
   _sendMessage(BuildContext context) {
+    String message = _messageController.text.trim();
+
     if (_messageController.text.isNotEmpty) {
       // Create our message model
       MessageModel messageModel = MessageModel(
         uid: _firebaseAuth.currentUser!.uid,
-        message: _messageController.text,
+        message: message,
         datetime: DateTime.timestamp().toString(),
       );
 
@@ -160,11 +148,22 @@ class _ContactPageState extends State<ContactPage> {
       _messageFunctions.sendMessage(messageModel);
       // Clear the messageController
       _messageController.clear();
+      // Make sure the listview is scrolled down to the bottom
+      _scrollUp();
     }
   }
 
   // Function for closing the keyboard
   _closeKeyboard(BuildContext context) => FocusScope.of(context).unfocus();
+
+  // Function for scrolling the listview to the top
+  _scrollUp() {
+    _listviewController.animateTo(
+      _listviewController.position.minScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
 
   // The message list is a list of all messages in the chat
   _buildMessageList(BuildContext context) {
@@ -195,6 +194,7 @@ class _ContactPageState extends State<ContactPage> {
           final messages = snapshot.data!.docs;
 
           return ListView.builder(
+            controller: _listviewController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: messages.length,

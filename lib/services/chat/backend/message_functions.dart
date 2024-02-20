@@ -50,6 +50,6 @@ class MessageFunctions {
   // Function for getting the messages from the database
   // They are ordered by timestamps in descending order
   Stream<QuerySnapshot> getMessages() {
-    return _messagesColl.orderBy('datetime', descending: false).snapshots();
+    return _messagesColl.orderBy('datetime', descending: true).snapshots();
   }
 }

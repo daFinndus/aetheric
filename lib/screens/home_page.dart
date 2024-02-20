@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
         Icon(
           Icons.error_outline_sharp,
           color: Theme.of(context).colorScheme.primary,
-          size: 64.0,
+          size: 32.0,
         ),
         const SizedBox(height: 32.0),
         const Text('This page seems to be empty.'),

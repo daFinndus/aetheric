@@ -1,4 +1,3 @@
-import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
@@ -7,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/popups/refresh_login_alert_page.dart';
+import 'package:aetheric/services/auth/screens/login_page.dart';
 
 class ConfirmDeletionPage extends StatefulWidget {
   const ConfirmDeletionPage({super.key});

@@ -13,6 +13,7 @@ import 'package:aetheric/popups/confirm_deletion_page.dart';
 import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:aetheric/elements/custom_field_button_important.dart';
 
+// TODO: Make this stuff prettier
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -22,7 +23,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   // String _username = 'Nomen Nescio';
-  String _imageUrl = '';
+  String imageUrl = '';
 
   final ScrollController _scrollController = ScrollController();
 
@@ -40,9 +41,7 @@ class _SettingPageState extends State<SettingPage> {
     super.initState();
     _scrollController.addListener(_scrollListener);
 
-    Future.delayed(Duration.zero, () {
-      _getData();
-    });
+    _getData();
   }
 
   @override
@@ -54,9 +53,7 @@ class _SettingPageState extends State<SettingPage> {
             icon: const Icon(Icons.edit),
             onPressed: () => _app.showBottomSheet(
               context,
-              const ExperimentalFeaturePage(
-                title: 'Edit profile',
-              ),
+              const ExperimentalFeaturePage(),
             ),
           ),
         ],
@@ -72,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 child: CachedNetworkImage(
-                  imageUrl: _imageUrl,
+                  imageUrl: imageUrl,
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => const Center(
                     child: CircularProgressIndicator(),
@@ -85,23 +82,11 @@ class _SettingPageState extends State<SettingPage> {
             ),
             const SizedBox(height: 32.0),
             CustomFieldButton(
-              icon: Icons.abc,
-              text: 'Placeholder',
-              function: () => _app.showBottomSheet(
-                context,
-                const ExperimentalFeaturePage(
-                  title: 'Placeholder',
-                ),
-              ),
-            ),
-            CustomFieldButton(
               icon: Icons.language,
               text: 'Change language',
               function: () => _app.showBottomSheet(
                 context,
-                const ExperimentalFeaturePage(
-                  title: 'Change language',
-                ),
+                const ExperimentalFeaturePage(),
               ),
             ),
             CustomFieldButton(
@@ -109,9 +94,7 @@ class _SettingPageState extends State<SettingPage> {
               text: 'En- or disable notifications',
               function: () => _app.showBottomSheet(
                 context,
-                const ExperimentalFeaturePage(
-                  title: 'En- or disable notifications',
-                ),
+                const ExperimentalFeaturePage(),
               ),
             ),
             CustomFieldButton(
@@ -119,9 +102,7 @@ class _SettingPageState extends State<SettingPage> {
               text: 'Change appearance',
               function: () => _app.showBottomSheet(
                 context,
-                const ExperimentalFeaturePage(
-                  title: 'Change appearance',
-                ),
+                const ExperimentalFeaturePage(),
               ),
             ),
             const SizedBox(height: 32.0),
@@ -146,9 +127,7 @@ class _SettingPageState extends State<SettingPage> {
               text: 'Support',
               function: () => _app.showBottomSheet(
                 context,
-                const ExperimentalFeaturePage(
-                  title: 'Support',
-                ),
+                const ExperimentalFeaturePage(),
               ),
             ),
             const SizedBox(height: 32.0),
@@ -171,31 +150,15 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  _getData() {
-    // Show a loading dialog
-    showDialog(
-      context: context,
-      builder: (context) => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
+  _getData() async {
+    final String uid = _firebaseAuth.currentUser!.uid;
+    final DocumentSnapshot data = await _userColl.doc(uid).get();
 
-    _userColl
-        .doc(_firebaseAuth.currentUser!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          // _username = documentSnapshot.get('personal_data')['username'];
-          _imageUrl = documentSnapshot.get('personal_data')['imageUrl'];
-        });
-      }
-    });
-
-    // Pop the loading dialog
-    Navigator.of(context).pop();
+    if (data.exists) {
+      setState(() {
+        imageUrl = data.get('personal_data')['imageUrl'];
+      });
+    }
   }
 
   // Function for listening to the scroll position and changing the opacity of the image container

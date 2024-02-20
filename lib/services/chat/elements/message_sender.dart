@@ -39,9 +39,9 @@ class _MessageSenderState extends State<MessageSender> {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 12.0,
-                  bottom: 24.0,
-                  left: 12.0,
-                  right: 32.0,
+                  bottom: 32.0,
+                  left: 16.0,
+                  right: 48.0,
                 ),
                 child: Text(
                   widget.message,

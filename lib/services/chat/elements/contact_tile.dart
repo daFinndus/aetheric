@@ -34,10 +34,7 @@ class _ContactTileState extends State<ContactTile> {
   void initState() {
     super.initState();
 
-    // Retrieve user data
-    Future.delayed(Duration.zero, () {
-      _getData();
-    });
+    _getData();
   }
 
   @override
@@ -84,21 +81,20 @@ class _ContactTileState extends State<ContactTile> {
   }
 
   // Function for retrieving the data of the receiver
-  _getData() {
-    _userColl
-        .doc(widget.receiverUid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          receiverUsername = documentSnapshot.get('personal_data')['username'];
-          receiverImageUrl = documentSnapshot.get('personal_data')['imageUrl'];
-        });
-      }
-    });
+  _getData() async {
+    final DocumentSnapshot data = await _userColl.doc(widget.receiverUid).get();
+
+    if (data.exists) {
+      setState(() {
+        receiverUsername = data.get('personal_data')['username'];
+        receiverImageUrl = data.get('personal_data')['imageUrl'];
+      });
+    }
   }
 
-  void _routeContactPage(BuildContext context) {
+  // This function seems to work 50/50
+  // It does redirect but when hitting the go backwards arrow, it directs to the wrong page
+  _routeContactPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -11,11 +11,11 @@ import 'package:aetheric/colors/theme_data.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
-// TODO: Save register location and represent it in app
 // TODO: Add notifications for new messages
-// TODO: Audio messages and contacts managed by user id
-// TODO: Homepage should be a dashboard with important notifications
+// TODO: Manage contacts by user id
+// TODO: Audio messages
 // TODO: Lock app with fingerprint or face recognition
+// TODO: Homepage should be a feed of the user's contacts and more
 // TODO: Look at spotify api to show what the user is listening to
 
 void main() async {

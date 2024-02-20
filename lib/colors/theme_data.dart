@@ -31,13 +31,9 @@ class ThemeColors {
     ),
     tabBarTheme: TabBarTheme(
       labelColor: _themeColors.brightColor,
-      unselectedLabelColor: _themeColors.darkColor,
+      unselectedLabelColor: _themeColors.brightColor,
+      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicator: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-        color: _themeColors.lightPrimaryColor,
-      ),
     ),
   );
 
@@ -61,14 +57,11 @@ class ThemeColors {
       iconTheme: IconThemeData(color: _themeColors.darkPrimaryColor),
     ),
     tabBarTheme: TabBarTheme(
-      labelColor: _themeColors.darkColor,
+      labelColor: _themeColors.brightColor,
       unselectedLabelColor: _themeColors.brightColor,
+      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicator: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-        color: _themeColors.darkPrimaryColor,
-      ),
     ),
   );
 }

@@ -1,12 +1,12 @@
+import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/elements/custom_field_button.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
-
-// TODO: Loading indicator while data is being fetched with a 1s delay
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -16,6 +16,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final AppFeatures _app = AppFeatures();
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -99,7 +101,10 @@ class _ChatPageState extends State<ChatPage> {
             CustomFieldButton(
               icon: Icons.search_rounded,
               text: 'Search through your contacts',
-              function: () => {},
+              function: () => _app.showBottomSheet(
+                context,
+                const ExperimentalFeaturePage(),
+              ),
             ),
             CustomFieldButton(
               icon: Icons.add,

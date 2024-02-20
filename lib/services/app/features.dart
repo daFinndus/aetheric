@@ -12,6 +12,14 @@ class AppFeatures {
     return names.join(" ");
   }
 
+  // Function for pushing to another page
+  pagePush(BuildContext context, page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
   // Function for showing a bottom sheet
   showBottomSheet(BuildContext context, page) {
     showModalBottomSheet(

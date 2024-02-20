@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/screens/chat_page.dart';
