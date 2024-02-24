@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -10,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/elements/custom_icon_button.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 
 // Class for the user to upload a profile picture
 // This does work
@@ -107,13 +107,15 @@ class _DataPicturePageState extends State<DataPicturePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
-                      AuthButton(
+                      CustomButton(
                         text: 'Choose a picture',
                         function: () => _showChoices(context),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
-                      AuthButton(
+                      CustomButton(
                         text: 'Finish registration',
                         function: () => _uploadPicture(),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       )
                     ],
                   )),
@@ -232,12 +234,12 @@ class _DataPicturePageState extends State<DataPicturePage> {
         child: Column(
           children: [
             const SizedBox(height: 16.0),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.camera,
               text: 'Make a picture',
               function: () => _getImage(ImageSource.camera),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.photo,
               text: 'Search through gallery',
               function: () => _getImage(ImageSource.gallery),

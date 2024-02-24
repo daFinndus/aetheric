@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:aetheric/services/app/features.dart';
+import 'package:aetheric/elements/custom_text_field.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:aetheric/services/auth/model/auth_expections.dart';
-import 'package:aetheric/services/auth/elements/auth_text_field.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -54,85 +54,82 @@ class _RegistrationPageState extends State<RegistrationPage> {
             topRight: Radius.circular(16.0),
           ),
         ),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 72.0),
-                  Text(
-                    'Welcome to Aetheric!',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  Text(
-                    'The easy way to message your friends.',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 72.0),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        AuthTextField(
-                          icon: Icons.email,
-                          hintText: 'Enter your email',
-                          isPassword: false,
-                          obscureText: false,
-                          controller: _emailController,
-                        ),
-                        const SizedBox(height: 8.0),
-                        AuthTextField(
-                          icon: Icons.lock,
-                          hintText: 'Enter your password',
-                          isPassword: true,
-                          obscureText: true,
-                          controller: _passwordController,
-                        ),
-                        const SizedBox(height: 8.0),
-                        AuthTextField(
-                          icon: Icons.lock,
-                          hintText: 'Confirm your password',
-                          isPassword: true,
-                          obscureText: true,
-                          controller: _cfrmPasswordController,
-                        ),
-                        const SizedBox(height: 64.0),
-                        AuthButton(
-                          text: 'Start your journey',
-                          function: () => _signUp(
-                            context,
-                            _emailController.text,
-                            _passwordController.text,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text(
-                            'Already a user? Go back here.',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 72.0),
+              Text(
+                'Welcome to Aetheric!',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-          ],
+              Text(
+                'The easy way to message your friends.',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 72.0),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    CustomTextField(
+                      icon: Icons.email,
+                      hintText: 'Enter your email',
+                      isPassword: false,
+                      obscureText: false,
+                      controller: _emailController,
+                    ),
+                    const SizedBox(height: 8.0),
+                    CustomTextField(
+                      icon: Icons.lock,
+                      hintText: 'Enter your password',
+                      isPassword: true,
+                      obscureText: true,
+                      controller: _passwordController,
+                    ),
+                    const SizedBox(height: 8.0),
+                    CustomTextField(
+                      icon: Icons.lock,
+                      hintText: 'Confirm your password',
+                      isPassword: true,
+                      obscureText: true,
+                      controller: _cfrmPasswordController,
+                    ),
+                    const SizedBox(height: 64.0),
+                    CustomButton(
+                      text: 'Start your journey',
+                      function: () => _signUp(
+                        context,
+                        _emailController.text,
+                        _passwordController.text,
+                      ),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Already a user? Go back here.',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

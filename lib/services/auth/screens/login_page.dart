@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/services/app/features.dart';
+import 'package:aetheric/elements/custom_text_field.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
 import 'package:aetheric/services/auth/model/auth_expections.dart';
-import 'package:aetheric/services/auth/elements/auth_text_field.dart';
 import 'package:aetheric/services/auth/screens/registration_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -33,96 +33,93 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Nice to see you again.',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  Text(
-                    "We've been waiting for you.",
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 64.0),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        AuthTextField(
-                          icon: Icons.email,
-                          hintText: 'Enter your email',
-                          isPassword: false,
-                          obscureText: false,
-                          controller: _emailController,
-                        ),
-                        const SizedBox(height: 8.0),
-                        AuthTextField(
-                          icon: Icons.lock,
-                          hintText: 'Enter your password',
-                          isPassword: true,
-                          obscureText: true,
-                          controller: _passwordController,
-                        ),
-                        TextButton(
-                          onPressed: () => _resetPassword(context),
-                          child: Text(
-                            'Forgot your password? Click here!',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 64.0),
-                        AuthButton(
-                          text: 'Ready. Set. Go!',
-                          function: () => _signIn(
-                            context,
-                            _emailController.text,
-                            _passwordController.text,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => _app.showBottomSheet(
-                            context,
-                            RegistrationPage(
-                              email: _emailController.text.isNotEmpty
-                                  ? _emailController.text
-                                  : '',
-                              password: _passwordController.text.isNotEmpty
-                                  ? _passwordController.text
-                                  : '',
-                            ),
-                          ),
-                          child: Text(
-                            'Not a user yet? Sign up here.',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Nice to see you again.',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-          ],
+              Text(
+                "We've been waiting for you.",
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 64.0),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    CustomTextField(
+                      icon: Icons.email,
+                      hintText: 'Enter your email',
+                      isPassword: false,
+                      obscureText: false,
+                      controller: _emailController,
+                    ),
+                    const SizedBox(height: 8.0),
+                    CustomTextField(
+                      icon: Icons.lock,
+                      hintText: 'Enter your password',
+                      isPassword: true,
+                      obscureText: true,
+                      controller: _passwordController,
+                    ),
+                    TextButton(
+                      onPressed: () => _resetPassword(context),
+                      child: Text(
+                        'Forgot your password? Click here!',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 64.0),
+                    CustomButton(
+                      text: 'Ready. Set. Go!',
+                      function: () => _signIn(
+                        context,
+                        _emailController.text,
+                        _passwordController.text,
+                      ),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    TextButton(
+                      onPressed: () => _app.showBottomSheet(
+                        context,
+                        RegistrationPage(
+                          email: _emailController.text.isNotEmpty
+                              ? _emailController.text
+                              : '',
+                          password: _passwordController.text.isNotEmpty
+                              ? _passwordController.text
+                              : '',
+                        ),
+                      ),
+                      child: Text(
+                        'Not a user yet? Sign up here.',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

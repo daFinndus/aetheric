@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:aetheric/popups/imprint_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/popups/data_privacy_page.dart';
+import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
-import 'package:aetheric/elements/custom_field_button.dart';
 import 'package:aetheric/popups/confirm_deletion_page.dart';
 import 'package:aetheric/popups/experimental_feature_page.dart';
-import 'package:aetheric/elements/custom_field_button_important.dart';
+import 'package:aetheric/elements/custom_icon_button_important.dart';
 
 // TODO: Make this stuff prettier
 // Add profile picture, edit profile and more
@@ -50,8 +50,8 @@ class _SettingPageState extends State<SettingPage> {
         controller: _scrollController,
         child: Column(
           children: [
-            const SizedBox(height: 32.0),
-            CustomFieldButton(
+            const SizedBox(height: 16.0),
+            CustomIconButton(
               icon: Icons.language,
               text: 'Change language',
               function: () => _app.showBottomSheet(
@@ -59,7 +59,7 @@ class _SettingPageState extends State<SettingPage> {
                 const ExperimentalFeaturePage(),
               ),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.notifications,
               text: 'En- or disable notifications',
               function: () => _app.showBottomSheet(
@@ -67,7 +67,7 @@ class _SettingPageState extends State<SettingPage> {
                 const ExperimentalFeaturePage(),
               ),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.color_lens,
               text: 'Change appearance',
               function: () => _app.showBottomSheet(
@@ -76,7 +76,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             const SizedBox(height: 32.0),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.lock,
               text: 'Data privacy',
               function: () => _showBottomPage(
@@ -84,7 +84,7 @@ class _SettingPageState extends State<SettingPage> {
                 const DataPrivacyPage(),
               ),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.book,
               text: 'Imprint',
               function: () => _showBottomPage(
@@ -92,7 +92,7 @@ class _SettingPageState extends State<SettingPage> {
                 const ImprintPage(),
               ),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.help,
               text: 'Support',
               function: () => _app.showBottomSheet(
@@ -101,7 +101,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             const SizedBox(height: 32.0),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.door_back_door_rounded,
               text: 'Sign out',
               function: () => _auth.signOut(),

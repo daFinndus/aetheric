@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
-import 'package:aetheric/services/auth/elements/auth_text_field.dart';
+import 'package:aetheric/elements/custom_text_field.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 
 class DataPersonalNamePage extends StatefulWidget {
   const DataPersonalNamePage({super.key});
@@ -53,7 +53,7 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
                         margin: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: Column(
                           children: [
-                            AuthTextField(
+                            CustomTextField(
                               icon: Icons.person,
                               hintText: 'First Name',
                               isPassword: false,
@@ -61,7 +61,7 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
                               controller: _firstNameController,
                             ),
                             const SizedBox(height: 8.0),
-                            AuthTextField(
+                            CustomTextField(
                               icon: Icons.person_outline,
                               hintText: 'Last Name',
                               isPassword: false,
@@ -69,9 +69,10 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
                               controller: _lastNameController,
                             ),
                             const SizedBox(height: 64.0),
-                            AuthButton(
+                            CustomButton(
                               text: 'Next',
                               function: () => _saveDataAndNavigate(context),
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ],
                         ),

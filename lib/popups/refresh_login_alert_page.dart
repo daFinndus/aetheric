@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:aetheric/elements/custom_text_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
 
 // This page is shown when the user has to refresh their login
 class RefreshLoginAlertPage extends StatefulWidget {
@@ -48,10 +48,11 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
             ),
           ),
           const SizedBox(height: 64.0),
-          AuthButton(
+          CustomButton(
             text: 'Sign out',
             function: () => _auth.signOut().then((value) =>
                 Navigator.popUntil(context, (route) => route.isFirst)),
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ],
       ),

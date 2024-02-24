@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class AuthButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String text;
   final Function function;
+  final Color color;
 
-  const AuthButton({
+  const CustomButton({
     super.key,
     required this.text,
     required this.function,
+    required this.color,
   });
 
   @override
@@ -18,7 +20,7 @@ class AuthButton extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
-        color: Theme.of(context).colorScheme.onPrimary,
+        color: color,
       ),
       child: TextButton(
         onPressed: () => function(),
@@ -27,7 +29,9 @@ class AuthButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
+            color: color == Theme.of(context).colorScheme.onPrimary
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary,
           ),
         ),
       ),

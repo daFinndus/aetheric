@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-// This is the text field used in the authentication pages
-// We can change obscurity, icon, and hint text
-class AuthTextField extends StatefulWidget {
+class CustomTextField extends StatefulWidget {
   final IconData icon;
   final String hintText; // Displays what the user should enter,s
 
@@ -11,7 +9,7 @@ class AuthTextField extends StatefulWidget {
 
   final TextEditingController controller;
 
-  const AuthTextField({
+  const CustomTextField({
     super.key,
     required this.icon,
     required this.hintText,
@@ -21,10 +19,10 @@ class AuthTextField extends StatefulWidget {
   });
 
   @override
-  State<AuthTextField> createState() => _AuthTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _AuthTextFieldState extends State<AuthTextField> {
+class _CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText = widget.obscureText;
 
   @override

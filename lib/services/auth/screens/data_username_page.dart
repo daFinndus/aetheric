@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/services/auth/elements/auth_button.dart';
-import 'package:aetheric/services/auth/elements/auth_text_field.dart';
+import 'package:aetheric/elements/custom_text_field.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 import 'package:aetheric/services/auth/screens/data_picture_page.dart';
 
 class DataUsernamePage extends StatefulWidget {
@@ -54,7 +54,7 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
-                      AuthTextField(
+                      CustomTextField(
                         icon: Icons.person,
                         hintText: 'Username',
                         isPassword: false,
@@ -62,9 +62,10 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
                         controller: _usernameController,
                       ),
                       const SizedBox(height: 64.0),
-                      AuthButton(
+                      CustomButton(
                         text: "Let's head to the last step",
                         function: () => _saveDataAndNavigate(context),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ],
                   ),

@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/colors/theme_data.dart';
-import 'package:aetheric/services/auth/screens/login_page.dart';
+import 'package:aetheric/services/auth/screens/greet_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 // TODO: Add notifications for new messages
@@ -55,7 +55,7 @@ class _MainAppState extends State<MainApp> {
             // Check if user is signed in
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.data == null) {
-                return const LoginPage();
+                return const GreetPage();
               } else {
                 // Check if user has registered their personal data
                 return FutureBuilder(

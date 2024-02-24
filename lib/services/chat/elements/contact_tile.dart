@@ -30,6 +30,13 @@ class _ContactTileState extends State<ContactTile> {
   DateTime timeMessage = DateTime(1970, 1, 1);
 
   @override
+  void initState() {
+    super.initState();
+
+    _getLastMessage();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => _routeContactPage(context),
@@ -55,7 +62,7 @@ class _ContactTileState extends State<ContactTile> {
         data['personal_data']['username'],
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(lastMessage == '' ? 'No messages yet' : lastMessage),
+      subtitle: Text(lastMessage == '' ? 'Loading...' : lastMessage),
       trailing: SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,6 +77,27 @@ class _ContactTileState extends State<ContactTile> {
         ),
       ),
     );
+  }
+
+  // Function for fetching the last message
+  Future _getLastMessage() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    CollectionReference chatColl = firestore.collection('chats');
+    DocumentReference docRef = chatColl.doc(widget.chatId);
+    CollectionReference messagesColl = docRef.collection('messages');
+
+    QuerySnapshot messages =
+        await messagesColl.orderBy('datetime', descending: true).limit(1).get();
+
+    setState(() {
+      if (messages.docs.isNotEmpty) {
+        lastMessage = messages.docs[0]['message'];
+        timeMessage = DateTime.parse(messages.docs[0]['datetime']);
+      } else {
+        lastMessage = 'No messages yet';
+      }
+    });
   }
 
   // This function seems to work 50/50

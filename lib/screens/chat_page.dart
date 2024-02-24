@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
 
@@ -100,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
         child: Column(
           children: [
             const SizedBox(height: 16.0),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.search_rounded,
               text: 'Search through your contacts',
               function: () => _app.showBottomSheet(
@@ -108,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
                 const ExperimentalFeaturePage(),
               ),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.add,
               text: 'Add a contact',
               function: () => {},

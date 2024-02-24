@@ -5,13 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:aetheric/elements/custom_field_button.dart';
+import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/chat/backend/message_model.dart';
 import 'package:aetheric/services/chat/elements/message_sender.dart';
 import 'package:aetheric/services/chat/backend/message_functions.dart';
 import 'package:aetheric/services/chat/elements/message_receiver.dart';
 
 // This is the page where you can chat with a certain contact
+// TODO: Implement date for messages
+// By divider that show stuff like 'yesterday', 'today' or a certain date
 class ContactPage extends StatefulWidget {
   final DocumentSnapshot data;
   final String receiverUid;
@@ -94,7 +96,7 @@ class _ContactPageState extends State<ContactPage> {
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: GestureDetector(
-          onTap: () => _closeKeyboard(context),
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             children: [
               const SizedBox(height: 16.0),
@@ -150,9 +152,6 @@ class _ContactPageState extends State<ContactPage> {
     FirebaseFirestore.instance.collection('users').doc(widget.chatId).delete();
     Navigator.pop(context);
   }
-
-  // Function for closing the keyboard
-  _closeKeyboard(BuildContext context) => FocusScope.of(context).unfocus();
 
   // Function for scrolling the listview to the top
   _scrollUp() {
@@ -290,17 +289,17 @@ class _ContactPageState extends State<ContactPage> {
         child: Column(
           children: [
             const SizedBox(height: 16.0),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.image,
               text: 'Send a picture',
               function: () => {},
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.file_copy_rounded,
               text: 'Send a file',
               function: () => {},
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.location_searching_rounded,
               text: 'Send a location',
               function: () => {},
@@ -311,17 +310,17 @@ class _ContactPageState extends State<ContactPage> {
               indent: 16.0,
               endIndent: 16.0,
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.delete,
               text: 'Delete chat',
               function: () => _deleteChat(),
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.report,
               text: 'Report user',
               function: () => {},
             ),
-            CustomFieldButton(
+            CustomIconButton(
               icon: Icons.block,
               text: 'Block user',
               function: () => {},

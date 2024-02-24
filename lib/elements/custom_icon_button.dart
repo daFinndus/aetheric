@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 // A container which executes a function when pressed
-class CustomFieldButton extends StatelessWidget {
+class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final String text;
   final Function function;
 
-  const CustomFieldButton({
+  const CustomIconButton({
     super.key,
     required this.icon,
     required this.text,

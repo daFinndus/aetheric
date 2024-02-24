@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:aetheric/services/auth/elements/auth_button.dart';
+import 'package:aetheric/elements/custom_text_button.dart';
 
 class DataBirthdayPage extends StatefulWidget {
   const DataBirthdayPage({super.key});
@@ -69,9 +69,10 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                AuthButton(
+                CustomButton(
                   text: 'Approve and continue',
                   function: () => _saveDataAndNavigate(context),
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ],
             ),
