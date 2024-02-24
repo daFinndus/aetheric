@@ -13,11 +13,13 @@ import 'package:aetheric/services/chat/elements/message_receiver.dart';
 
 // This is the page where you can chat with a certain contact
 class ContactPage extends StatefulWidget {
+  final DocumentSnapshot data;
   final String receiverUid;
   final String chatId;
 
   const ContactPage({
     super.key,
+    required this.data,
     required this.receiverUid,
     required this.chatId,
   });
@@ -27,27 +29,15 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+  late Map<String, dynamic> data = widget.data.data()! as Map<String, dynamic>;
+
   final ScrollController _listviewController = ScrollController();
   final TextEditingController _messageController = TextEditingController();
 
-  String receiverUsername = '';
-  String receiverImageUrl = '';
-
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  late final CollectionReference _userColl = _firestore.collection('users');
   late final MessageFunctions _messageFunctions = MessageFunctions(
     chatId: widget.chatId,
   );
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Retrieve user data
-    _getData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +50,11 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               CircleAvatar(
                 radius: 22.0,
-                child: receiverImageUrl.isNotEmpty
+                child: data['personal_data']['imageUrl'].isNotEmpty
                     ? ClipOval(
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: receiverImageUrl,
+                          imageUrl: data['personal_data']['imageUrl'],
                           width: 44.0,
                           height: 44.0,
                           placeholder: (context, url) =>
@@ -82,7 +72,7 @@ class _ContactPageState extends State<ContactPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    receiverUsername,
+                    data['personal_data']['username'],
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -120,18 +110,6 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  // Function for retrieving the data of the receiver
-  _getData() async {
-    final DocumentSnapshot data = await _userColl.doc(widget.receiverUid).get();
-
-    if (data.exists) {
-      setState(() {
-        receiverUsername = data.get('personal_data')['username'];
-        receiverImageUrl = data.get('personal_data')['imageUrl'];
-      });
-    }
-  }
-
   // Function for uploading our message to the database
   _sendMessage(BuildContext context) {
     String message = _messageController.text.trim();
@@ -151,6 +129,26 @@ class _ContactPageState extends State<ContactPage> {
       // Make sure the listview is scrolled down to the bottom
       _scrollUp();
     }
+  }
+
+  // Function for deleting the chat from the database
+  _deleteChat() {
+    debugPrint('Deleting chat...');
+    debugPrint('Chat ID: ${widget.chatId}');
+
+    FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .collection('messages')
+        .get()
+        .then((querySnapshot) {
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+
+    FirebaseFirestore.instance.collection('users').doc(widget.chatId).delete();
+    Navigator.pop(context);
   }
 
   // Function for closing the keyboard
@@ -227,8 +225,6 @@ class _ContactPageState extends State<ContactPage> {
   }
 
   // The message input is a text field to write messages and the send button
-  // TODO: Make sure input doesn't overlap the messages
-  // Instead the input should displace the messages upwards
   _buildMessageInput(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -314,6 +310,11 @@ class _ContactPageState extends State<ContactPage> {
               thickness: 1.0,
               indent: 16.0,
               endIndent: 16.0,
+            ),
+            CustomFieldButton(
+              icon: Icons.delete,
+              text: 'Delete chat',
+              function: () => _deleteChat(),
             ),
             CustomFieldButton(
               icon: Icons.report,

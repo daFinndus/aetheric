@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:aetheric/popups/imprint_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/popups/data_privacy_page.dart';
@@ -14,6 +10,7 @@ import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:aetheric/elements/custom_field_button_important.dart';
 
 // TODO: Make this stuff prettier
+// Add profile picture, edit profile and more
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -22,26 +19,17 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  // String _username = 'Nomen Nescio';
-  String imageUrl = '';
-
   final ScrollController _scrollController = ScrollController();
 
   double _opacity = 0.75;
 
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late final CollectionReference _userColl = _firestore.collection('users');
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-
-    _getData();
   }
 
   @override
@@ -62,24 +50,6 @@ class _SettingPageState extends State<SettingPage> {
         controller: _scrollController,
         child: Column(
           children: [
-            AnimatedOpacity(
-              opacity: _opacity,
-              duration: const Duration(milliseconds: 500),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 200,
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 32.0),
             CustomFieldButton(
               icon: Icons.language,
@@ -148,17 +118,6 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
     );
-  }
-
-  _getData() async {
-    final String uid = _firebaseAuth.currentUser!.uid;
-    final DocumentSnapshot data = await _userColl.doc(uid).get();
-
-    if (data.exists) {
-      setState(() {
-        imageUrl = data.get('personal_data')['imageUrl'];
-      });
-    }
   }
 
   // Function for listening to the scroll position and changing the opacity of the image container

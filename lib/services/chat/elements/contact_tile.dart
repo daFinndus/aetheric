@@ -6,12 +6,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
+// TODO: Implement last message feature
 class ContactTile extends StatefulWidget {
+  final DocumentSnapshot data;
   final String receiverUid;
   final String chatId;
 
   const ContactTile({
     super.key,
+    required this.data,
     required this.receiverUid,
     required this.chatId,
   });
@@ -21,21 +24,10 @@ class ContactTile extends StatefulWidget {
 }
 
 class _ContactTileState extends State<ContactTile> {
-  String receiverUsername = '';
-  String receiverImageUrl = '';
+  late Map<String, dynamic> data = widget.data.data()! as Map<String, dynamic>;
 
   String lastMessage = '';
   DateTime timeMessage = DateTime(1970, 1, 1);
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late final CollectionReference _userColl = _firestore.collection('users');
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +35,11 @@ class _ContactTileState extends State<ContactTile> {
       onTap: () => _routeContactPage(context),
       leading: CircleAvatar(
         radius: 24.0,
-        child: receiverImageUrl.isNotEmpty
+        child: data['personal_data']['imageUrl'].isNotEmpty
             ? ClipOval(
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: receiverImageUrl,
+                  imageUrl: data['personal_data']['imageUrl'],
                   width: 48.0,
                   height: 48.0,
                   placeholder: (context, url) =>
@@ -60,7 +52,7 @@ class _ContactTileState extends State<ContactTile> {
             : const Icon(Icons.person),
       ),
       title: Text(
-        receiverUsername,
+        data['personal_data']['username'],
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(lastMessage == '' ? 'No messages yet' : lastMessage),
@@ -80,18 +72,6 @@ class _ContactTileState extends State<ContactTile> {
     );
   }
 
-  // Function for retrieving the data of the receiver
-  _getData() async {
-    final DocumentSnapshot data = await _userColl.doc(widget.receiverUid).get();
-
-    if (data.exists) {
-      setState(() {
-        receiverUsername = data.get('personal_data')['username'];
-        receiverImageUrl = data.get('personal_data')['imageUrl'];
-      });
-    }
-  }
-
   // This function seems to work 50/50
   // It does redirect but when hitting the go backwards arrow, it directs to the wrong page
   _routeContactPage(BuildContext context) {
@@ -99,6 +79,7 @@ class _ContactTileState extends State<ContactTile> {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
+          data: widget.data,
           receiverUid: widget.receiverUid,
           chatId: widget.chatId,
         ),
