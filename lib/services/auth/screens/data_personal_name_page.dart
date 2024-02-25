@@ -129,14 +129,11 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
       pref.setString('lastName', lastName);
     });
 
-    context.mounted
-        ? Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const DataBirthdayPage()),
-          )
-        : const Align(
-            alignment: Alignment.center,
-            child: CircularProgressIndicator(),
-          );
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DataBirthdayPage()),
+      );
+    }
   }
 }

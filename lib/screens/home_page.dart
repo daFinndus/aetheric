@@ -24,16 +24,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildEmptyPage() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.error_outline_sharp,
-          color: Theme.of(context).colorScheme.primary,
-          size: 32.0,
-        ),
-        const SizedBox(height: 32.0),
-        const Text('This page seems to be empty.'),
+        Text('This page seems to be empty.'),
       ],
     );
   }

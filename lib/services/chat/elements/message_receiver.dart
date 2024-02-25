@@ -39,7 +39,7 @@ class _MessageReceiverState extends State<MessageReceiver> {
               child: Padding(
                 padding: const EdgeInsets.only(
                   top: 12.0,
-                  bottom: 32.0,
+                  bottom: 24.0,
                   left: 16.0,
                   right: 48.0,
                 ),

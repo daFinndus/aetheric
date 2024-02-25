@@ -54,15 +54,18 @@ class _MainAppState extends State<MainApp> {
           builder: (context, snapshot) {
             // Check if user is signed in
             if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.data == null) {
+              if (!snapshot.hasData) {
+                debugPrint('Staying on GreetPage..');
                 return const GreetPage();
               } else {
+                debugPrint('Going into registration check..');
                 // Check if user has registered their personal data
                 return FutureBuilder(
                   future: _checkRegistration(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data == true) {
+                        debugPrint('User is registered..');
                         return const TabPage();
                       } else {
                         return const DataPersonalNamePage();

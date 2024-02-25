@@ -43,92 +43,84 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.9,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
-          ),
-        ),
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 72.0),
-              Text(
-                'Welcome to Aetheric!',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 156.0),
+                Text(
+                  "Let's get started.",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-              ),
-              Text(
-                'The easy way to message your friends.',
-                style: TextStyle(
-                  fontSize: 12.0,
-                  color: Theme.of(context).colorScheme.primary,
+                Text(
+                  "Experience the easiest way to send messages.",
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 72.0),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      icon: Icons.email,
-                      hintText: 'Enter your email',
-                      isPassword: false,
-                      obscureText: false,
-                      controller: _emailController,
-                    ),
-                    const SizedBox(height: 8.0),
-                    CustomTextField(
-                      icon: Icons.lock,
-                      hintText: 'Enter your password',
-                      isPassword: true,
-                      obscureText: true,
-                      controller: _passwordController,
-                    ),
-                    const SizedBox(height: 8.0),
-                    CustomTextField(
-                      icon: Icons.lock,
-                      hintText: 'Confirm your password',
-                      isPassword: true,
-                      obscureText: true,
-                      controller: _cfrmPasswordController,
-                    ),
-                    const SizedBox(height: 64.0),
-                    CustomButton(
-                      text: 'Start your journey',
-                      function: () => _signUp(
-                        context,
-                        _emailController.text,
-                        _passwordController.text,
+                const SizedBox(height: 64.0),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        icon: Icons.email,
+                        hintText: 'Enter your email',
+                        isPassword: false,
+                        obscureText: false,
+                        controller: _emailController,
                       ),
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'Already a user? Go back here.',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Theme.of(context).colorScheme.primary,
+                      const SizedBox(height: 8.0),
+                      CustomTextField(
+                        icon: Icons.lock,
+                        hintText: 'Enter your password',
+                        isPassword: true,
+                        obscureText: true,
+                        controller: _passwordController,
+                      ),
+                      const SizedBox(height: 8.0),
+                      CustomTextField(
+                        icon: Icons.lock,
+                        hintText: 'Confirm your password',
+                        isPassword: true,
+                        obscureText: true,
+                        controller: _cfrmPasswordController,
+                      ),
+                      const SizedBox(height: 64.0),
+                      CustomButton(
+                        text: 'Start your journey',
+                        function: () => _signUp(
+                          context,
+                          _emailController.text,
+                          _passwordController.text,
+                        ),
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          'Already a user? Go back here.',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

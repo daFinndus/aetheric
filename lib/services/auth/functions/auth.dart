@@ -24,6 +24,8 @@ class Auth {
         email: email,
         password: password,
       );
+
+      debugPrint('Signing in user...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
       if (e is FirebaseAuthException) {
@@ -57,6 +59,8 @@ class Auth {
         email: email,
         password: password,
       );
+
+      debugPrint('Signing up user...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
       if (e is FirebaseAuthException) {

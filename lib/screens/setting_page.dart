@@ -19,17 +19,12 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  final ScrollController _scrollController = ScrollController();
-
-  double _opacity = 0.75;
-
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
   }
 
   @override
@@ -47,10 +42,8 @@ class _SettingPageState extends State<SettingPage> {
         ],
       ),
       body: SingleChildScrollView(
-        controller: _scrollController,
         child: Column(
           children: [
-            const SizedBox(height: 16.0),
             CustomIconButton(
               icon: Icons.language,
               text: 'Change language',
@@ -118,20 +111,6 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
     );
-  }
-
-  // Function for listening to the scroll position and changing the opacity of the image container
-  _scrollListener() {
-    debugPrint('Scrolling...');
-
-    setState(() {
-      _opacity = 1.0 - _scrollController.offset / 100;
-      // Make sure the variable is in our desired range
-      _opacity = _opacity.clamp(0.0, 0.75);
-    });
-
-    debugPrint('Offset: ${_scrollController.offset}');
-    debugPrint('Opacity: $_opacity');
   }
 
   // Function for showing a page which appears from the bottom of the screen
