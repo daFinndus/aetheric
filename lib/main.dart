@@ -12,6 +12,7 @@ import 'package:aetheric/services/auth/screens/greet_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 // TODO: Add notifications for new messages
+// FIXME: Notifications, last message preview is bugged
 // TODO: Manage contacts by user id
 // TODO: Audio messages
 // TODO: Lock app with fingerprint or face recognition
