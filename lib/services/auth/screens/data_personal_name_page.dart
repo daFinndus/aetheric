@@ -116,13 +116,16 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
 
   // Save the data to local storage, then navigate to the next page
   _saveDataAndNavigate(BuildContext context) async {
-    String firstName = _app.capitalizeName(_firstNameController.text);
-    String lastName = _app.capitalizeName(_lastNameController.text);
+    String firstName = _firstNameController.text;
+    String lastName = _lastNameController.text;
 
     if (!_checkData(firstName, lastName)) {
       _app.showErrorFlushbar(context, 'Please enter your data');
       return;
     }
+
+    firstName = _app.capitalizeName(_firstNameController.text);
+    lastName = _app.capitalizeName(_lastNameController.text);
 
     await preferences.then((pref) {
       pref.setString('firstName', firstName);

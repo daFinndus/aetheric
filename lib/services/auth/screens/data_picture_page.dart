@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as scale;
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,12 +28,11 @@ class _DataPicturePageState extends State<DataPicturePage> {
   DateTime _birthday = DateTime.now();
   String _username = '';
 
-  File _image = File('');
   String _imageUrl = '';
+  File _image = File('');
   final ImagePicker _picker = ImagePicker();
 
   final preferences = SharedPreferences.getInstance();
-
   final AppFeatures _app = AppFeatures();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -129,6 +129,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
   // Function for selecting an image from the device
   Future<void> _getImage(ImageSource source) async {
     final image = await _picker.pickImage(source: source);
+
     setState(() {
       if (image != null) _image = File(image.path);
       Navigator.of(context).pop();
@@ -169,10 +170,11 @@ class _DataPicturePageState extends State<DataPicturePage> {
       ),
     );
 
+    final scaledImage = await _scaleImage(_image, 512);
     final String uid = FirebaseAuth.instance.currentUser!.uid;
 
     // Upload the picture and get the URL
-    await _picRef.child(uid).putFile(_image);
+    await _picRef.child(uid).putFile(scaledImage);
     _imageUrl = await _picRef.child(uid).getDownloadURL();
 
     await preferences.then((pref) => {
@@ -185,16 +187,48 @@ class _DataPicturePageState extends State<DataPicturePage> {
     if (context.mounted) Navigator.of(context).pop();
   }
 
+  // Function for scaling down the image to a certain size
+  Future<File> _scaleImage(File image, int maxSize) async {
+    final scale.Image? decodedImage = scale.decodeImage(
+      await image.readAsBytes(),
+    );
+
+    if (decodedImage == null) {
+      // Wenn das Bild nicht dekodiert werden kann, gibt einfach das ursprüngliche Bild zurück
+      return image;
+    }
+
+    final scale.Image resizedImage = scale.copyResize(
+      decodedImage,
+      width: maxSize,
+      height: maxSize,
+      interpolation: scale.Interpolation.linear,
+    );
+
+    // Speichere das skalierte Bild in einer temporären Datei
+    final tempDir = await Directory.systemTemp.createTemp();
+    final tempFile = File('${tempDir.path}/scaled_image.jpg');
+    await tempFile.writeAsBytes(scale.encodeJpg(resizedImage));
+
+    return tempFile;
+  }
+
   // Function for uploading all necessary data to Firestore
   // And routing to the tab page afterwards
   Future _uploadData() async {
-    await preferences.then((pref) => {
-          _firstName = pref.getString('firstName') ?? 'Nomen',
-          _lastName = pref.getString('lastName') ?? 'Nescio',
-          _username = pref.getString('username') ?? 'NNescio',
-          _birthday =
-              DateTime.parse(pref.getString('birthday') ?? '1970-01-01'),
-        });
+    await preferences
+        .then((pref) => {
+              _firstName = pref.getString('firstName')!,
+              _lastName = pref.getString('lastName')!,
+              _username = pref.getString('username')!,
+              _birthday = DateTime.parse(pref.getString('birthday')!),
+            })
+        .whenComplete(() => preferences.then((pref) => {
+              pref.remove('firstName'),
+              pref.remove('lastName'),
+              pref.remove('username'),
+              pref.remove('birthday'),
+            }));
 
     debugPrint('Uploading data to Firestore...');
 

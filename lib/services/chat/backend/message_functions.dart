@@ -21,9 +21,9 @@ class MessageFunctions {
   });
 
   // Function for saving a messageModel in the database
-  void sendMessage(MessageModel messageModel) {
+  void sendMessage(MessageModel messageModel) async {
     try {
-      _messagesColl.add(messageModel.toMap());
+      await _messagesColl.add(messageModel.toMap());
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
 

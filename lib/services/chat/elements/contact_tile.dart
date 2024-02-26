@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
-// TODO: Implement last message feature
-class ContactTile extends StatefulWidget {
+class ContactTile extends StatelessWidget {
   final DocumentSnapshot data;
   final String receiverUid;
   final String chatId;
@@ -20,57 +20,88 @@ class ContactTile extends StatefulWidget {
   });
 
   @override
-  State<ContactTile> createState() => _ContactTileState();
-}
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('datetime', descending: true)
+          .limit(1)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _buildTile(context, 'Loading...', '', '', false);
+        } else if (snapshot.hasError) {
+          return _buildTile(context, 'Error', '', '', false);
+        } else {
+          final messages = snapshot.data!.docs;
 
-class _ContactTileState extends State<ContactTile> {
-  late Map<String, dynamic> data = widget.data.data()! as Map<String, dynamic>;
-
-  String lastMessage = '';
-  DateTime timeMessage = DateTime(1970, 1, 1);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getLastMessage();
+          if (messages.isNotEmpty) {
+            final messageData = messages.first.data() as Map<String, dynamic>;
+            final messageUid = messageData['uid']!;
+            final messageText = messageData['message']!;
+            final messageTime = DateTime.parse(messageData['datetime']!);
+            return _buildTile(
+              context,
+              messageText,
+              '${messageTime.hour < 10 ? '0' : ''}${messageTime.hour}:${messageTime.minute < 10 ? '0' : ''}${messageTime.minute}',
+              messageUid,
+              true,
+            );
+          } else {
+            return _buildTile(context, 'No messages yet', '', '', false);
+          }
+        }
+      },
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  // Builds the tile for the contact
+  Widget _buildTile(
+    BuildContext context,
+    String message,
+    String time,
+    String uid,
+    bool foundMessage,
+  ) {
+    final username = data['personal_data']['username'];
+    final imageUrl = data['personal_data']['imageUrl'];
+
     return ListTile(
       onTap: () => _routeContactPage(context),
       leading: CircleAvatar(
         radius: 24.0,
-        child: data['personal_data']['imageUrl'].isNotEmpty
+        child: imageUrl.isNotEmpty
             ? ClipOval(
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: data['personal_data']['imageUrl'],
+                  imageUrl: imageUrl,
                   width: 48.0,
                   height: 48.0,
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.error,
-                  ),
                 ),
               )
             : const Icon(Icons.person),
       ),
       title: Text(
-        data['personal_data']['username'],
+        username,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(lastMessage == '' ? 'Loading...' : lastMessage),
+      subtitle: Text(
+        foundMessage
+            ? _checkStringLength(message, uid, username)
+            : 'Loading...',
+        style: const TextStyle(fontSize: 12.0),
+      ),
       trailing: SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              lastMessage == ''
-                  ? ''
-                  : '${timeMessage.hour < 10 ? '0' : ''}${timeMessage.hour}:${timeMessage.minute < 10 ? '0' : ''}${timeMessage.minute}',
+              foundMessage ? time : '',
               style: const TextStyle(fontSize: 12.0),
             ),
           ],
@@ -79,37 +110,31 @@ class _ContactTileState extends State<ContactTile> {
     );
   }
 
-  // Function for fetching the last message
-  Future _getLastMessage() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // Shorten the string so the tile doesn't overflow
+  _checkStringLength(String message, String messageUid, String username) {
+    final senderUid = FirebaseAuth.instance.currentUser!.uid;
 
-    CollectionReference chatColl = firestore.collection('chats');
-    DocumentReference docRef = chatColl.doc(widget.chatId);
-    CollectionReference messagesColl = docRef.collection('messages');
+    if (messageUid == senderUid) {
+      message = 'You: $message';
+    } else {
+      message = '$username: $message';
+    }
 
-    QuerySnapshot messages =
-        await messagesColl.orderBy('datetime', descending: true).limit(1).get();
+    message = message.replaceFirst('\n', ' ');
+    message = message.replaceAll('\n', '');
+    if (message.length >= 30) message = '${message.substring(0, 30)}...';
 
-    setState(() {
-      if (messages.docs.isNotEmpty) {
-        lastMessage = messages.docs[0]['message'];
-        timeMessage = DateTime.parse(messages.docs[0]['datetime']);
-      } else {
-        lastMessage = 'No messages yet';
-      }
-    });
+    return message;
   }
 
-  // This function seems to work 50/50
-  // It does redirect but when hitting the go backwards arrow, it directs to the wrong page
-  _routeContactPage(BuildContext context) {
+  void _routeContactPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          data: widget.data,
-          receiverUid: widget.receiverUid,
-          chatId: widget.chatId,
+          data: data,
+          receiverUid: receiverUid,
+          chatId: chatId,
         ),
       ),
     );

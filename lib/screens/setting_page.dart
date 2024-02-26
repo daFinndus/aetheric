@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:aetheric/popups/imprint_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/popups/data_privacy_page.dart';
 import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/popups/confirm_deletion_page.dart';
@@ -44,47 +42,6 @@ class _SettingPageState extends State<SettingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CustomIconButton(
-              icon: Icons.language,
-              text: 'Change language',
-              function: () => _app.showBottomSheet(
-                context,
-                const ExperimentalFeaturePage(),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icons.notifications,
-              text: 'En- or disable notifications',
-              function: () => _app.showBottomSheet(
-                context,
-                const ExperimentalFeaturePage(),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icons.color_lens,
-              text: 'Change appearance',
-              function: () => _app.showBottomSheet(
-                context,
-                const ExperimentalFeaturePage(),
-              ),
-            ),
-            const SizedBox(height: 32.0),
-            CustomIconButton(
-              icon: Icons.lock,
-              text: 'Data privacy',
-              function: () => _showBottomPage(
-                context,
-                const DataPrivacyPage(),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icons.book,
-              text: 'Imprint',
-              function: () => _showBottomPage(
-                context,
-                const ImprintPage(),
-              ),
-            ),
             CustomIconButton(
               icon: Icons.help,
               text: 'Support',

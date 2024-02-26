@@ -21,13 +21,12 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: ListView(
         children: [
           const SizedBox(height: 72.0),
           Text(
             'When were you born?',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
@@ -36,6 +35,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
           ),
           Text(
             'Other users are able to see this information',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12.0,
               color: Theme.of(context).colorScheme.primary,
@@ -96,13 +96,15 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
   }
 
   _saveDataAndNavigate(BuildContext context) async {
-    preference.then((pref) => {
+    await preference.then((pref) => {
           pref.setString('birthday', _date.toString()),
         });
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const DataUsernamePage()),
-    );
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DataUsernamePage()),
+      );
+    }
   }
 }

@@ -10,6 +10,7 @@ import 'package:aetheric/services/auth/screens/login_page.dart';
 // This class contains all the functions for authentication
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final CollectionReference _userColl = _firestore.collection('users');
   late final CollectionReference _errorColl = _firestore.collection('errors');
@@ -37,6 +38,7 @@ class Auth {
           'type': e.runtimeType.toString(),
           'time': Timestamp.now(),
           'code': e.toString(),
+          'location': 'Signing in user..',
           'user': {
             'uid': _auth.currentUser?.uid,
             'email': email,
@@ -73,6 +75,7 @@ class Auth {
             'type': e.runtimeType.toString(),
             'time': Timestamp.now(),
             'code': e.toString(),
+            'location': 'Signing up user...',
             'user': {
               'uid': _auth.currentUser?.uid,
               'email': email,
@@ -127,6 +130,7 @@ class Auth {
             'type': e.runtimeType.toString(),
             'time': Timestamp.now(),
             'code': e.toString(),
+            'location': 'Sign in page, reset password...',
             'user': {
               'uid': _auth.currentUser?.uid,
               'email': email,
@@ -173,6 +177,7 @@ class Auth {
             'type': e.runtimeType.toString(),
             'time': Timestamp.now(),
             'code': e.toString(),
+            'location': 'Settings page, delete account...',
             'user': {
               'uid': _auth.currentUser?.uid,
             },
