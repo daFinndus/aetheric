@@ -30,8 +30,8 @@ class ThemeColors {
       iconTheme: IconThemeData(color: _themeColors.lightPrimaryColor),
     ),
     tabBarTheme: TabBarTheme(
-      labelColor: _themeColors.brightColor,
-      unselectedLabelColor: _themeColors.brightColor,
+      labelColor: _themeColors.darkColor,
+      unselectedLabelColor: _themeColors.darkColor,
       labelStyle: const TextStyle(fontWeight: FontWeight.bold),
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
     ),

@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:aetheric/services/app/notifications.dart';
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
-class ContactTile extends StatelessWidget {
+class ContactTile extends StatefulWidget {
   final DocumentSnapshot data;
   final String receiverUid;
   final String chatId;
@@ -20,11 +21,18 @@ class ContactTile extends StatelessWidget {
   });
 
   @override
+  State<ContactTile> createState() => _ContactTileState();
+}
+
+class _ContactTileState extends State<ContactTile> {
+  final NotificationService _notification = NotificationService();
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('chats')
-          .doc(chatId)
+          .doc(widget.chatId)
           .collection('messages')
           .orderBy('datetime', descending: true)
           .limit(1)
@@ -42,6 +50,14 @@ class ContactTile extends StatelessWidget {
             final messageUid = messageData['uid']!;
             final messageText = messageData['message']!;
             final messageTime = DateTime.parse(messageData['datetime']!);
+
+            // This does work, but it's hella useless as the notification is already shown
+            // And the user cannot receive any notifications without being in the chat page
+            _notification.showNotification(
+              title: widget.data['personal_data']['username'],
+              body: messageText,
+              payload: widget.chatId,
+            );
             return _buildTile(
               context,
               messageText,
@@ -65,8 +81,8 @@ class ContactTile extends StatelessWidget {
     String uid,
     bool foundMessage,
   ) {
-    final username = data['personal_data']['username'];
-    final imageUrl = data['personal_data']['imageUrl'];
+    final username = widget.data['personal_data']['username'];
+    final imageUrl = widget.data['personal_data']['imageUrl'];
 
     return ListTile(
       onTap: () => _routeContactPage(context),
@@ -132,9 +148,9 @@ class ContactTile extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          data: data,
-          receiverUid: receiverUid,
-          chatId: chatId,
+          data: widget.data,
+          receiverUid: widget.receiverUid,
+          chatId: widget.chatId,
         ),
       ),
     );

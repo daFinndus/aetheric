@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -5,8 +6,14 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
+    debugPrint('Initializing notifications..');
+    notificationPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
+
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('app_icon');
+        const AndroidInitializationSettings('ic_stat_blur_on');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -28,24 +35,32 @@ class NotificationService {
             (NotificationResponse notificationResponse) async {});
   }
 
-  notificationDetails() {
+  // This is needed for showNotification
+  _notificationDetails() {
     return const NotificationDetails(
-      android: AndroidNotificationDetails('channelId', 'channelName'),
+      android: AndroidNotificationDetails(
+        'channelId',
+        'channelName',
+        icon: 'ic_stat_blur_on',
+      ),
       iOS: DarwinNotificationDetails(),
     );
   }
 
+  // Displays a local notification
+  // I really don't know why payload needs to be there
   Future showNotification({
     int id = 0,
     String? title,
     String? body,
     String? payload,
   }) async {
+    debugPrint('Trying to show notification');
     return notificationPlugin.show(
       id,
       title,
       body,
-      await notificationDetails(),
+      await _notificationDetails(),
     );
   }
 }

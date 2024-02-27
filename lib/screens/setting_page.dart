@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/services/app/features.dart';
+import 'package:aetheric/services/app/notifications.dart';
 import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/popups/confirm_deletion_page.dart';
@@ -19,6 +20,7 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
+  final NotificationService _notification = NotificationService();
 
   @override
   void initState() {
@@ -42,6 +44,14 @@ class _SettingPageState extends State<SettingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            CustomIconButton(
+              icon: Icons.notifications,
+              text: 'Trigger notification',
+              function: () => _notification.showNotification(
+                title: 'Hello world',
+                body: 'This is a test notification',
+              ),
+            ),
             CustomIconButton(
               icon: Icons.help,
               text: 'Support',
