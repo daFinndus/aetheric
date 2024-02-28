@@ -238,9 +238,12 @@ class _DataPicturePageState extends State<DataPicturePage> {
         'lastName': _lastName,
         'birthday': _birthday,
         'username': _username,
+      },
+      'technical_data': {
+        'email': FirebaseAuth.instance.currentUser!.email,
         'imageUrl': _imageUrl,
         'uid': FirebaseAuth.instance.currentUser!.uid,
-      }
+      },
     });
 
     if (context.mounted) {

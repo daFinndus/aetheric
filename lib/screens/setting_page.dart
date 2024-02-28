@@ -52,6 +52,7 @@ class _SettingPageState extends State<SettingPage> {
                 body: 'This is a test notification',
               ),
             ),
+            const SizedBox(height: 32.0),
             CustomIconButton(
               icon: Icons.help,
               text: 'Support',
