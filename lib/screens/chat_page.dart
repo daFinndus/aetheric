@@ -1,12 +1,11 @@
-import 'package:aetheric/popups/add_contact_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:aetheric/popups/invite_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/elements/custom_icon_button.dart';
-import 'package:aetheric/popups/experimental_feature_page.dart';
+import 'package:aetheric/popups/add_contact_page.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
 
 class ChatPage extends StatefulWidget {
@@ -30,11 +29,22 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          tooltip: 'Manage your invites',
+          icon: const Icon(Icons.mail),
+          onPressed: () => _app.showBottomSheet(
+            context,
+            const InvitePage(),
+          ),
+        ),
         actions: [
           IconButton(
             tooltip: 'Search for contacts, add someone and more',
-            icon: const Icon(Icons.more_vert),
-            onPressed: () => _showMoreSettings(context),
+            icon: const Icon(Icons.add_circle_rounded),
+            onPressed: () => _app.showBottomSheet(
+              context,
+              const AddContactPage(),
+            ),
           ),
         ],
       ),
@@ -60,9 +70,10 @@ class _ChatPageState extends State<ChatPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'No contacts yet.. 😢\n',
+                    'No contacts yet 😢\n',
                     style: TextStyle(
                       fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -71,6 +82,7 @@ class _ChatPageState extends State<ChatPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   )
@@ -97,54 +109,15 @@ class _ChatPageState extends State<ChatPage> {
 
   // Build each contact list item
   // TODO: Check if this works
-  _buildContactListItem(DocumentSnapshot snapshot) {
-    final contacts = snapshot.data() as Map<String, dynamic>;
+  _buildContactListItem(DocumentSnapshot document) {
+    final contacts = document.data() as Map<String, dynamic>;
     final receiverUid = contacts['uid']!;
     final chatId = _generateChatId(uid, receiverUid);
 
     return ContactTile(
-      data: snapshot,
+      data: document,
       receiverUid: receiverUid,
       chatId: chatId,
-    );
-  }
-
-// Function for showing a modal bottom sheet with certain features
-  _showMoreSettings(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.2,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
-          ),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 16.0),
-            CustomIconButton(
-              icon: Icons.search_rounded,
-              text: 'Search through your contacts',
-              function: () => _app.showBottomSheet(
-                context,
-                const ExperimentalFeaturePage(),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icons.add,
-              text: 'Add a contact',
-              function: () => _app.showBottomSheet(
-                context,
-                const AddContactPage(),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

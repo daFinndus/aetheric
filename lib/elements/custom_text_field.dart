@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final IconData icon;
-  final String hintText; // Displays what the user should enter,s
+  final String hintText; // Displays what the user should enter
 
   final bool isPassword; // Change if the fields need a toggle obscure button
   final bool obscureText; // Change if the text is displayed or not

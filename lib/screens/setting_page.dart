@@ -8,7 +8,6 @@ import 'package:aetheric/popups/confirm_deletion_page.dart';
 import 'package:aetheric/popups/experimental_feature_page.dart';
 import 'package:aetheric/elements/custom_icon_button_important.dart';
 
-// TODO: Make this stuff prettier
 // Add profile picture, edit profile and more
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
