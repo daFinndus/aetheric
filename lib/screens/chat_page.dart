@@ -62,53 +62,27 @@ class _ChatPageState extends State<ChatPage> {
   _buildContactList() {
     return StreamBuilder(
       stream: userRef.collection('contacts').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data != null) {
-          if (snapshot.data!.size == 0) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'No contacts yet 😢\n',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  Text(
-                    'Try adding someone by clicking\nthe button in the top right corner.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  )
-                ],
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+      builder: (context, AsyncSnapshot<QuerySnapshot> querySnapshot) {
+        if (querySnapshot.data != null) {
+          if (!querySnapshot.hasData) {
+            _buildNoContactsYet();
+          } else if (querySnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           } else {
             return ListView(
-              children: snapshot.data!.docs
-                  .map<Widget>((snapshot) => _buildContactListItem(snapshot))
+              children: querySnapshot.data!.docs
+                  .map<Widget>((document) => _buildContactListItem(document))
                   .toList(),
             );
           }
-        } else {
-          return const SizedBox();
         }
+        return _buildNoContactsYet();
       },
     );
   }
 
+  // TODO: Change this so we could use the contact collection snapshot
   // Build each contact list item
-  // TODO: Check if this works
   _buildContactListItem(DocumentSnapshot document) {
     final contacts = document.data() as Map<String, dynamic>;
     final receiverUid = contacts['uid']!;
@@ -118,6 +92,34 @@ class _ChatPageState extends State<ChatPage> {
       data: document,
       receiverUid: receiverUid,
       chatId: chatId,
+    );
+  }
+
+  // Function for displaying widgets when there are no contacts
+  _buildNoContactsYet() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'No contacts yet 😢\n',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          Text(
+            'Try adding someone by clicking\nthe button in the top right corner.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

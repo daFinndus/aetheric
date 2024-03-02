@@ -4,28 +4,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 // This should only be used for the add contact page
-class UserTile extends StatefulWidget {
-  final DocumentSnapshot data;
+// It's a tile that displays the user's username and profile picture
+class AddUserTile extends StatefulWidget {
+  final DocumentSnapshot document;
   final Function function;
 
   final String userUid;
   final IconData icon;
 
-  const UserTile({
+  const AddUserTile({
     super.key,
-    required this.data,
+    required this.document,
     required this.function,
     required this.userUid,
     required this.icon,
   });
 
   @override
-  State<UserTile> createState() => _UserTileState();
+  State<AddUserTile> createState() => _AddUserTileState();
 }
 
-class _UserTileState extends State<UserTile> {
-  late final username = widget.data['personal_data']['username'];
-  late final imageUrl = widget.data['technical_data']['imageUrl'];
+class _AddUserTileState extends State<AddUserTile> {
+  late final username = widget.document['personal_data']['username'];
+  late final imageUrl = widget.document['technical_data']['imageUrl'];
 
   @override
   Widget build(BuildContext context) {

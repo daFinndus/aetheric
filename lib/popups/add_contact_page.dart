@@ -1,14 +1,14 @@
-import 'dart:io';
-
+import 'package:aetheric/services/app/features.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/elements/custom_text_field.dart';
-import 'package:aetheric/services/chat/elements/user_tile.dart';
+import 'package:aetheric/services/chat/elements/add_user_tile.dart';
 
 // This page is for the user to send invites to other users
+// ? Does this work ?
 class AddContactPage extends StatefulWidget {
   const AddContactPage({super.key});
 
@@ -19,6 +19,7 @@ class AddContactPage extends StatefulWidget {
 class _AddContactPageState extends State<AddContactPage> {
   final TextEditingController controller = TextEditingController();
 
+  final AppFeatures _app = AppFeatures();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final CollectionReference userRef = _firestore.collection('users');
@@ -59,33 +60,37 @@ class _AddContactPageState extends State<AddContactPage> {
   _buildUserList() {
     return StreamBuilder(
       stream: _firestore.collection('users').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> userSnapshot) {
-        if (!userSnapshot.hasData) {
-          return const Center(
-            child: Text('No data available...'),
-          );
-        } else if (userSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+      builder: (context, AsyncSnapshot<QuerySnapshot> querySnapshot) {
+        if (querySnapshot.data != null) {
+          if (!querySnapshot.hasData) {
+            return const Center(child: Text('No data available...'));
+          } else if (querySnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+              itemCount: querySnapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder(
+                  future: _checkInvitations(querySnapshot.data!.docs[index].id),
+                  builder: (context, AsyncSnapshot<bool> boolSnapshot) {
+                    if (boolSnapshot.data != null) {
+                      if (boolSnapshot.data!) {
+                        return const SizedBox();
+                      } else {
+                        return _buildUserListItem(
+                          querySnapshot.data!.docs[index],
+                        );
+                      }
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                );
+              },
+            );
+          }
         } else {
-          return ListView.builder(
-            itemCount: userSnapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              final document = userSnapshot.data!.docs[index];
-
-              return FutureBuilder(
-                future: _checkInvitations(document.id),
-                builder: (context, AsyncSnapshot<bool> invSnapshot) {
-                  if (invSnapshot.data!) {
-                    return const SizedBox();
-                  } else {
-                    return _buildUserListItem(document);
-                  }
-                },
-              );
-            },
-          );
+          return const SizedBox();
         }
       },
     );
@@ -93,39 +98,15 @@ class _AddContactPageState extends State<AddContactPage> {
 
   // Build user tiles for each user in the database
   // Also check if the user already has a pending invite
-  _buildUserListItem(DocumentSnapshot document) {
+  Widget _buildUserListItem(DocumentSnapshot document) {
     debugPrint('Now trying to build user list item for ${document.id}');
+    debugPrint('This is our uid ${_auth.currentUser?.uid}');
 
     final uid = _auth.currentUser!.uid;
 
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final DocumentReference userDoc = firestore.collection('users').doc(uid);
-
-    final CollectionReference invSentRef = userDoc.collection('invite_sent');
-    final CollectionReference invRecvRef = userDoc.collection('invite_recv');
-
-    // Check if we are the user the system is currently iterating
-    if (document.id == uid) return const SizedBox();
-
-    // Check if we already sent an invite to the user
-    invSentRef.doc(document.id).get().then((doc) {
-      if (doc.exists) {
-        debugPrint('Invite already sent to ${document.id}');
-        return const SizedBox();
-      }
-    });
-
-    // Check if we already received an invite from the user
-    invRecvRef.doc(document.id).get().then((doc) {
-      if (doc.exists) {
-        debugPrint('Invite already received from ${document.id}');
-        return const SizedBox();
-      }
-    });
-
     // If nothing of the above is true, return the user tile
-    return UserTile(
-      data: document,
+    return AddUserTile(
+      document: document,
       function: () => manageInvites(uid, document.id, document),
       userUid: document.id,
       icon: Icons.person_add,
@@ -139,11 +120,11 @@ class _AddContactPageState extends State<AddContactPage> {
     final invSentRef = userRef.doc(uid).collection('invite_sent');
     final invRecvRef = userRef.doc(uid).collection('invite_recv');
 
+    // Check if we sent an invite to the user or received one
     final sentDoc = await invSentRef.doc(userId).get();
     final recvDoc = await invRecvRef.doc(userId).get();
 
     if (userId == uid) return true;
-
     return sentDoc.exists || recvDoc.exists;
   }
 
@@ -153,6 +134,10 @@ class _AddContactPageState extends State<AddContactPage> {
     sendInvite(ownUid, otherUid);
     receiveInvite(otherUid);
     debugPrint('Invite sent!');
+    _app.showSuccessFlushbar(context, 'Invite sent!');
+    setState(() {
+      debugPrint('Reloading...');
+    });
   }
 
   // Send a invite to a certain user
