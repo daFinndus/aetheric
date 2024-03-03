@@ -99,7 +99,7 @@ class _ContactPageState extends State<ContactPage> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             children: [
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 8.0),
               Expanded(
                 child: _buildMessageList(context),
               ),

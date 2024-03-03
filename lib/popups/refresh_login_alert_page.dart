@@ -48,7 +48,7 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
             ),
           ),
           const SizedBox(height: 64.0),
-          CustomButton(
+          CustomTextButton(
             text: 'Sign out',
             function: () => _auth.signOut().then((value) =>
                 Navigator.popUntil(context, (route) => route.isFirst)),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 // A custom designed button widget
-class CustomButton extends StatelessWidget {
+class CustomTextButton extends StatelessWidget {
   final String text;
   final Function function;
   final Color color;
 
-  const CustomButton({
+  const CustomTextButton({
     super.key,
     required this.text,
     required this.function,

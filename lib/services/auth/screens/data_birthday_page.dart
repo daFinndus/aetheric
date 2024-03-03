@@ -69,7 +69,7 @@ class _DataBirthdayPageState extends State<DataBirthdayPage> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                CustomButton(
+                CustomTextButton(
                   text: 'Approve and continue',
                   function: () => _saveDataAndNavigate(context),
                   color: Theme.of(context).colorScheme.onPrimary,

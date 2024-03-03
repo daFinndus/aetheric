@@ -10,7 +10,7 @@ class ExperimentalFeaturePage extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
@@ -25,7 +25,7 @@ class ExperimentalFeaturePage extends StatelessWidget {
             children: [
               Icon(
                 Icons.construction,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onSecondary,
                 size: 32.0,
               ),
               const SizedBox(height: 32.0),
@@ -33,7 +33,7 @@ class ExperimentalFeaturePage extends StatelessWidget {
                 'This feature is still under development.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.onSecondary,
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),

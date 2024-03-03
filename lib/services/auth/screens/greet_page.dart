@@ -45,7 +45,7 @@ class GreetPage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: [
-                    CustomButton(
+                    CustomTextButton(
                       text: 'I am a user already',
                       function: () => _routePage(
                         context,
@@ -53,7 +53,7 @@ class GreetPage extends StatelessWidget {
                       ),
                       color: Theme.of(context).colorScheme.onSecondary,
                     ),
-                    CustomButton(
+                    CustomTextButton(
                       text: 'I am new here',
                       function: () => _routePage(
                         context,

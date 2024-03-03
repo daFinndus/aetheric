@@ -1,4 +1,7 @@
+import 'package:aetheric/popups/send_feedback_page.dart';
 import 'package:flutter/material.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/app/notifications.dart';
@@ -17,6 +20,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final preferences = SharedPreferences.getInstance();
+
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
   final NotificationService _notification = NotificationService();
@@ -51,6 +56,11 @@ class _SettingPageState extends State<SettingPage> {
                 body: 'This is a test notification',
               ),
             ),
+            CustomIconButton(
+              icon: Icons.moving,
+              text: 'Toggle marquee',
+              function: () => _toggleMarquee(),
+            ),
             const SizedBox(height: 32.0),
             CustomIconButton(
               icon: Icons.help,
@@ -58,6 +68,14 @@ class _SettingPageState extends State<SettingPage> {
               function: () => _app.showBottomSheet(
                 context,
                 const ExperimentalFeaturePage(),
+              ),
+            ),
+            CustomIconButton(
+              icon: Icons.feedback,
+              text: 'Send feedback',
+              function: () => _app.showBottomSheet(
+                context,
+                const SendFeedbackPage(),
               ),
             ),
             const SizedBox(height: 32.0),
@@ -78,6 +96,17 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
     );
+  }
+
+  _toggleMarquee() async {
+    final prefs = await preferences;
+    final marquee = prefs.getBool('marquee') ?? false;
+
+    await prefs.setBool('marquee', !marquee);
+
+    if (context.mounted) {
+      _app.showSuccessFlushbar(context, 'Marquee is now set to ${!marquee}');
+    }
   }
 
   // Function for showing a page which appears from the bottom of the screen

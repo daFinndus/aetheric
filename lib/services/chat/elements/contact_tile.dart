@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:marquee/marquee.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:aetheric/services/chat/elements/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
-class ContactTile extends StatelessWidget {
+class ContactTile extends StatefulWidget {
   final DocumentSnapshot data;
   final String receiverUid;
   final String chatId;
@@ -20,11 +22,29 @@ class ContactTile extends StatelessWidget {
   });
 
   @override
+  State<ContactTile> createState() => _ContactTileState();
+}
+
+class _ContactTileState extends State<ContactTile> {
+  bool sender = false;
+  bool marquee = false;
+
+  final preferences = SharedPreferences.getInstance();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _getPreferences();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('chats')
-          .doc(chatId)
+          .doc(widget.chatId)
           .collection('messages')
           .orderBy('datetime', descending: true)
           .limit(1)
@@ -71,7 +91,7 @@ class ContactTile extends StatelessWidget {
     String uid,
     bool foundMessage,
   ) {
-    Map<String, dynamic> data = this.data.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = widget.data.data() as Map<String, dynamic>;
 
     final username = data['personal_data']['username'];
     final imageUrl = data['technical_data']['imageUrl'];
@@ -98,11 +118,37 @@ class ContactTile extends StatelessWidget {
         username,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(
-        foundMessage
-            ? _checkStringLength(message, uid, username)
-            : 'No messages yet - start a conversation!',
-        style: const TextStyle(fontSize: 12.0),
+      subtitle: SizedBox(
+        height: 18.0,
+        child: marquee
+            ? Marquee(
+                text: foundMessage
+                    ? _checkStringLength(message, uid)
+                    : 'No messages yet',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: sender
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.primary,
+                ),
+                scrollAxis: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                blankSpace: 20.0,
+                velocity: 50.0,
+                pauseAfterRound: const Duration(seconds: 1),
+                startAfter: const Duration(seconds: 1),
+              )
+            : Text(
+                foundMessage
+                    ? _checkStringLength(message, uid)
+                    : 'No messages yet',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: sender
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ),
       ),
       trailing: SizedBox(
         child: Column(
@@ -118,15 +164,25 @@ class ContactTile extends StatelessWidget {
     );
   }
 
+  // Get the user's preferences
+  _getPreferences() async {
+    marquee = await preferences.then((prefs) {
+      return prefs.getBool('marquee') ?? false;
+    });
+  }
+
   // Shorten the string so the tile doesn't overflow
-  _checkStringLength(String message, String messageUid, String username) {
+  _checkStringLength(String message, String messageUid) {
     final senderUid = FirebaseAuth.instance.currentUser!.uid;
 
-    if (messageUid == senderUid) message = 'You: $message';
+    if (messageUid == senderUid) sender = true;
 
     message = message.replaceFirst('\n', ' ');
     message = message.replaceAll('\n', '');
-    if (message.length >= 30) message = '${message.substring(0, 30)}...';
+
+    if (!marquee && message.length > 30) {
+      message = '${message.substring(0, 30)}...';
+    }
 
     return message;
   }
@@ -136,9 +192,9 @@ class ContactTile extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(
-          data: data,
-          receiverUid: receiverUid,
-          chatId: chatId,
+          data: widget.data,
+          receiverUid: widget.receiverUid,
+          chatId: widget.chatId,
         ),
       ),
     );

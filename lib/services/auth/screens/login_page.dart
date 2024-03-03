@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 64.0),
-                      CustomButton(
+                      CustomTextButton(
                         text: 'Ready. Set. Go!',
                         function: () => _signIn(
                           context,

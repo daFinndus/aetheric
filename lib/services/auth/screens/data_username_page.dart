@@ -62,7 +62,7 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
                         controller: _usernameController,
                       ),
                       const SizedBox(height: 64.0),
-                      CustomButton(
+                      CustomTextButton(
                         text: "Let's head to the last step",
                         function: () => _saveDataAndNavigate(context),
                         color: Theme.of(context).colorScheme.onPrimary,

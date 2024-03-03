@@ -107,12 +107,12 @@ class _DataPicturePageState extends State<DataPicturePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     children: [
-                      CustomButton(
+                      CustomTextButton(
                         text: 'Choose a picture',
                         function: () => _showChoices(context),
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
-                      CustomButton(
+                      CustomTextButton(
                         text: 'Finish registration',
                         function: () => _uploadPicture(),
                         color: Theme.of(context).colorScheme.onPrimary,
