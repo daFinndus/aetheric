@@ -29,32 +29,35 @@ class ContactTile extends StatelessWidget {
           .orderBy('datetime', descending: true)
           .limit(1)
           .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (context, querySnapshot) {
+        if (querySnapshot.connectionState == ConnectionState.waiting) {
           return _buildTile(context, 'Loading...', '', '', false);
-        } else if (snapshot.hasError) {
+        } else if (querySnapshot.hasError) {
           return _buildTile(context, 'Error', '', '', false);
         } else {
-          final messages = snapshot.data!.docs;
+          final messages = querySnapshot.data!.docs;
 
-          if (messages.isNotEmpty) {
-            final messageData = messages.first.data() as Map<String, dynamic>;
-            final messageUid = messageData['uid']!;
-            final messageText = messageData['message']!;
-            final messageTime = DateTime.parse(messageData['datetime']!);
+          if (querySnapshot.data != null) {
+            if (messages.isNotEmpty) {
+              final messageData = messages.first.data() as Map<String, dynamic>;
+              final messageUid = messageData['uid']!;
+              final messageText = messageData['message']!;
+              final messageTime = DateTime.parse(messageData['datetime']!);
 
-            // This does work, but it's hella useless as the notification is already shown
-            // And the user cannot receive any notifications without being in the chat page
-            return _buildTile(
-              context,
-              messageText,
-              '${messageTime.hour < 10 ? '0' : ''}${messageTime.hour}:${messageTime.minute < 10 ? '0' : ''}${messageTime.minute}',
-              messageUid,
-              true,
-            );
-          } else {
-            return _buildTile(context, 'No messages yet', '', '', false);
+              // This does work, but it's hella useless as the notification is already shown
+              // And the user cannot receive any notifications without being in the chat page
+              return _buildTile(
+                context,
+                messageText,
+                '${messageTime.hour < 10 ? '0' : ''}${messageTime.hour}:${messageTime.minute < 10 ? '0' : ''}${messageTime.minute}',
+                messageUid,
+                true,
+              );
+            } else {
+              return _buildTile(context, 'No messages yet', '', '', false);
+            }
           }
+          return _buildTile(context, 'Error', '', '', false);
         }
       },
     );
@@ -68,8 +71,10 @@ class ContactTile extends StatelessWidget {
     String uid,
     bool foundMessage,
   ) {
+    Map<String, dynamic> data = this.data.data() as Map<String, dynamic>;
+
     final username = data['personal_data']['username'];
-    final imageUrl = data['personal_data']['imageUrl'];
+    final imageUrl = data['technical_data']['imageUrl'];
 
     return ListTile(
       onTap: () => _routeContactPage(context),
@@ -96,7 +101,7 @@ class ContactTile extends StatelessWidget {
       subtitle: Text(
         foundMessage
             ? _checkStringLength(message, uid, username)
-            : 'Loading...',
+            : 'No messages yet - start a conversation!',
         style: const TextStyle(fontSize: 12.0),
       ),
       trailing: SizedBox(
@@ -117,11 +122,7 @@ class ContactTile extends StatelessWidget {
   _checkStringLength(String message, String messageUid, String username) {
     final senderUid = FirebaseAuth.instance.currentUser!.uid;
 
-    if (messageUid == senderUid) {
-      message = 'You: $message';
-    } else {
-      message = '$username: $message';
-    }
+    if (messageUid == senderUid) message = 'You: $message';
 
     message = message.replaceFirst('\n', ' ');
     message = message.replaceAll('\n', '');
@@ -130,7 +131,7 @@ class ContactTile extends StatelessWidget {
     return message;
   }
 
-  void _routeContactPage(BuildContext context) {
+  _routeContactPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(

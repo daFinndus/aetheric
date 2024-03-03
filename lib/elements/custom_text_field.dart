@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// A custom designed text field widget
 class CustomTextField extends StatefulWidget {
   final IconData icon;
   final String hintText; // Displays what the user should enter

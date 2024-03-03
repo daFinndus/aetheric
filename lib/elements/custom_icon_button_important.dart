@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// A container which executes a function when pressed
+// A custom button with an important color (red)
 class CustomFieldButtonImportant extends StatelessWidget {
   final IconData icon;
   final String text;

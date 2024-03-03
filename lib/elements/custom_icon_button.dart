@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// A container which executes a function when pressed
+// A custom designed button widget
 class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final String text;

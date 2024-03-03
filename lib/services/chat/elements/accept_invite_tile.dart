@@ -19,12 +19,14 @@ class AcceptInviteTile extends StatefulWidget {
 }
 
 class _AcceptInviteTileState extends State<AcceptInviteTile> {
+  // This is the uid of the other user we're working with
+  late final String uid = _auth.currentUser!.uid;
   late final String userUid = widget.data.id;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late final CollectionReference userRef = _firestore.collection('users');
-  late final DocumentReference userDoc = userRef.doc(userUid);
+  late final CollectionReference userColl = _firestore.collection('users');
+  late final DocumentReference userDoc = userColl.doc(userUid);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,8 @@ class _AcceptInviteTileState extends State<AcceptInviteTile> {
           final imageUrl = snapshot.data!['technical_data']['imageUrl'];
 
           return ListTile(
+            // Open contact page here
+            onTap: () => {},
             leading: CircleAvatar(
               radius: 24.0,
               child: imageUrl.isNotEmpty
@@ -66,9 +70,22 @@ class _AcceptInviteTileState extends State<AcceptInviteTile> {
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
             ),
-            trailing: IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () => {},
+            trailing: SizedBox(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    // Add the user to our contacts here
+                    onPressed: () => _acceptInvite(),
+                    icon: const Icon(Icons.check),
+                  ),
+                  IconButton(
+                    // Delete the invite here
+                    onPressed: () => _denyInvite(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -76,15 +93,23 @@ class _AcceptInviteTileState extends State<AcceptInviteTile> {
     );
   }
 
-  // Accept invite - add user to contact collection and remove from invite collection
-  _acceptInvite() {}
+  // Function for deleting the invite and adding the contact
+  _acceptInvite() {
+    userColl.doc(uid).collection('invite_recv').doc(userUid).delete();
+    userColl.doc(userUid).collection('invite_sent').doc(uid).delete();
 
-  _addUserToContacts() {
-    final uid = _auth.currentUser!.uid;
-    final DocumentReference userDoc = userRef.doc(userUid);
-    final CollectionReference contactsRefOwn = userDoc.collection('contacts');
-    final CollectionReference contactsRefOther = userDoc.collection('contacts');
+    userColl.doc(uid).collection('contacts').doc(userUid).set({
+      'exists': true,
+    });
 
-    contactsRefOwn.doc(userUid).set({});
+    userColl.doc(userUid).collection('contacts').doc(uid).set({
+      'exists': true,
+    });
+  }
+
+  // Function for denying the invite, basically just deleting it
+  _denyInvite() {
+    userColl.doc(uid).collection('invite_recv').doc(userUid).delete();
+    userColl.doc(userUid).collection('invite_sent').doc(uid).delete();
   }
 }

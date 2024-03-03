@@ -8,15 +8,14 @@ import 'package:aetheric/elements/custom_text_field.dart';
 import 'package:aetheric/services/chat/elements/add_user_tile.dart';
 
 // This page is for the user to send invites to other users
-// ? Does this work ?
-class AddContactPage extends StatefulWidget {
-  const AddContactPage({super.key});
+class AddUserPage extends StatefulWidget {
+  const AddUserPage({super.key});
 
   @override
-  State<AddContactPage> createState() => _AddContactPageState();
+  State<AddUserPage> createState() => _AddUserPageState();
 }
 
-class _AddContactPageState extends State<AddContactPage> {
+class _AddUserPageState extends State<AddUserPage> {
   final TextEditingController controller = TextEditingController();
 
   final AppFeatures _app = AppFeatures();
@@ -38,7 +37,7 @@ class _AddContactPageState extends State<AddContactPage> {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8.0),
           CustomTextField(
             icon: Icons.search,
             hintText: 'Search a contact by username',
@@ -46,7 +45,7 @@ class _AddContactPageState extends State<AddContactPage> {
             obscureText: false,
             controller: controller,
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8.0),
           Expanded(
             child: _buildUserList(),
           ),
@@ -107,32 +106,35 @@ class _AddContactPageState extends State<AddContactPage> {
     // If nothing of the above is true, return the user tile
     return AddUserTile(
       document: document,
-      function: () => manageInvites(uid, document.id, document),
+      function: () => _manageInvites(uid, document.id, document),
       userUid: document.id,
       icon: Icons.person_add,
     );
   }
 
   // This function checks if the user already has a pending or sent invitation
+  // It also checks if the user is already in our contacts
   // This was carried by ChatGPT - thank you very much!
   Future<bool> _checkInvitations(String userId) async {
     final uid = _auth.currentUser!.uid;
     final invSentRef = userRef.doc(uid).collection('invite_sent');
     final invRecvRef = userRef.doc(uid).collection('invite_recv');
+    final contactRef = userRef.doc(uid).collection('contacts');
 
     // Check if we sent an invite to the user or received one
     final sentDoc = await invSentRef.doc(userId).get();
     final recvDoc = await invRecvRef.doc(userId).get();
+    final contactDoc = await contactRef.doc(userId).get();
 
     if (userId == uid) return true;
-    return sentDoc.exists || recvDoc.exists;
+    return sentDoc.exists || recvDoc.exists || contactDoc.exists;
   }
 
   // Executes all necessary functions
-  manageInvites(String ownUid, String otherUid, DocumentSnapshot document) {
+  _manageInvites(String ownUid, String otherUid, DocumentSnapshot document) {
     debugPrint('Sending invite...');
-    sendInvite(ownUid, otherUid);
-    receiveInvite(otherUid);
+    _sendInvite(ownUid, otherUid);
+    _receiveInvite(otherUid);
     debugPrint('Invite sent!');
     _app.showSuccessFlushbar(context, 'Invite sent!');
     setState(() {
@@ -142,7 +144,7 @@ class _AddContactPageState extends State<AddContactPage> {
 
   // Send a invite to a certain user
   // Basically add our uid to our invite_send collection
-  sendInvite(String uid, String otherUid) {
+  _sendInvite(String uid, String otherUid) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference userDoc = firestore.collection('users').doc(uid);
     final CollectionReference invSentRef = userDoc.collection('invite_sent');
@@ -154,7 +156,7 @@ class _AddContactPageState extends State<AddContactPage> {
 
   // Receive an invite from a certain user
   // Basically add the user's uid to our invite_recv collection
-  receiveInvite(String uid) {
+  _receiveInvite(String uid) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference userDoc = firestore.collection('users').doc(uid);
     final CollectionReference invSentRef = userDoc.collection('invite_recv');

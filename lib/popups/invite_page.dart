@@ -1,12 +1,10 @@
-import 'package:aetheric/services/chat/elements/accept_invite_tile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:aetheric/services/chat/elements/add_user_tile.dart';
+import 'package:aetheric/services/chat/elements/accept_invite_tile.dart';
 
-// FIXME: This page doesn't work yet, fix it
 class InvitePage extends StatefulWidget {
   const InvitePage({super.key});
 
@@ -48,22 +46,8 @@ class _InvitePageState extends State<InvitePage> {
       stream: userDoc.collection('invite_recv').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> querySnapshot) {
         if (querySnapshot.data != null) {
-          if (!querySnapshot.hasData) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'No invites found 😢',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            );
+          if (!querySnapshot.hasData || querySnapshot.data!.docs.isEmpty) {
+            return _buildNoPendingInvites();
           } else if (querySnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else {
@@ -74,9 +58,23 @@ class _InvitePageState extends State<InvitePage> {
             );
           }
         } else {
-          return const SizedBox();
+          return _buildNoPendingInvites();
         }
       },
+    );
+  }
+
+  // Display a message if there are no pending invites
+  _buildNoPendingInvites() {
+    return Center(
+      child: Text(
+        'No pending invites found 😢',
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
     );
   }
 

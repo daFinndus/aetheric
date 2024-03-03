@@ -52,11 +52,11 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               CircleAvatar(
                 radius: 22.0,
-                child: data['personal_data']['imageUrl'].isNotEmpty
+                child: data['technical_data']['imageUrl'].isNotEmpty
                     ? ClipOval(
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: data['personal_data']['imageUrl'],
+                          imageUrl: data['technical_data']['imageUrl'],
                           width: 44.0,
                           height: 44.0,
                           placeholder: (context, url) =>

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/popups/invite_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/popups/add_contact_page.dart';
+import 'package:aetheric/popups/add_user_page.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
 
 class ChatPage extends StatefulWidget {
@@ -43,7 +43,7 @@ class _ChatPageState extends State<ChatPage> {
             icon: const Icon(Icons.add_circle_rounded),
             onPressed: () => _app.showBottomSheet(
               context,
-              const AddContactPage(),
+              const AddUserPage(),
             ),
           ),
         ],
@@ -64,15 +64,32 @@ class _ChatPageState extends State<ChatPage> {
       stream: userRef.collection('contacts').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> querySnapshot) {
         if (querySnapshot.data != null) {
-          if (!querySnapshot.hasData) {
-            _buildNoContactsYet();
+          if (!querySnapshot.hasData && querySnapshot.data!.docs.isEmpty) {
+            return _buildNoContactsYet();
           } else if (querySnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            return ListView(
-              children: querySnapshot.data!.docs
-                  .map<Widget>((document) => _buildContactListItem(document))
-                  .toList(),
+            return ListView.builder(
+              itemCount: querySnapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final uid = querySnapshot.data!.docs[index].id;
+
+                return FutureBuilder(
+                  future: _firestore.collection('users').doc(uid).get(),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.data != null) {
+                      if (userSnapshot.hasError) {
+                        return const Center(child: Icon(Icons.error));
+                      } else if (!userSnapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else {
+                        return _buildContactListItem(userSnapshot.data!);
+                      }
+                    }
+                    return const SizedBox();
+                  },
+                );
+              },
             );
           }
         }
@@ -81,11 +98,9 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // TODO: Change this so we could use the contact collection snapshot
   // Build each contact list item
   _buildContactListItem(DocumentSnapshot document) {
-    final contacts = document.data() as Map<String, dynamic>;
-    final receiverUid = contacts['uid']!;
+    final receiverUid = document.id;
     final chatId = _generateChatId(uid, receiverUid);
 
     return ContactTile(

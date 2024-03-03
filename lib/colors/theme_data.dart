@@ -33,6 +33,7 @@ class ThemeColors {
       labelColor: _themeColors.darkColor,
       unselectedLabelColor: _themeColors.darkColor,
       labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
       overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
     ),
   );
