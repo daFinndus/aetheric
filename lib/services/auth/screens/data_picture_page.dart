@@ -184,7 +184,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
     _uploadData();
 
     // Pop the loading dialog
-    if (context.mounted) Navigator.of(context).pop();
+    if (mounted) Navigator.of(context).pop();
   }
 
   // Function for scaling down the image to a certain size
@@ -223,11 +223,11 @@ class _DataPicturePageState extends State<DataPicturePage> {
               _username = pref.getString('username')!,
               _birthday = DateTime.parse(pref.getString('birthday')!),
             })
-        .whenComplete(() => preferences.then((pref) => {
-              pref.remove('firstName'),
-              pref.remove('lastName'),
-              pref.remove('username'),
-              pref.remove('birthday'),
+        .whenComplete(() => preferences.then((pref) {
+              pref.remove('firstName');
+              pref.remove('lastName');
+              pref.remove('username');
+              pref.remove('birthday');
             }));
 
     debugPrint('Uploading data to Firestore...');
@@ -246,7 +246,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
       },
     });
 
-    if (context.mounted) {
+    if (mounted) {
       Navigator.of(context).popUntil((route) => route.isFirst);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (BuildContext context) => const TabPage()),
