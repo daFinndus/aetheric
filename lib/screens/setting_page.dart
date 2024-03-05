@@ -104,7 +104,7 @@ class _SettingPageState extends State<SettingPage> {
 
     await prefs.setBool('marquee', !marquee);
 
-    if (context.mounted) {
+    if (mounted) {
       _app.showSuccessFlushbar(context, 'Marquee is now set to ${!marquee}');
     }
   }

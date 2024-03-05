@@ -1,10 +1,9 @@
-import 'package:aetheric/services/app/features.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:aetheric/elements/custom_text_field.dart';
+import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/services/chat/elements/add_user_tile.dart';
 
 // This page is for the user to send invites to other users
@@ -16,8 +15,6 @@ class AddUserPage extends StatefulWidget {
 }
 
 class _AddUserPageState extends State<AddUserPage> {
-  final TextEditingController controller = TextEditingController();
-
   final AppFeatures _app = AppFeatures();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -37,14 +34,6 @@ class _AddUserPageState extends State<AddUserPage> {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 8.0),
-          CustomTextField(
-            icon: Icons.search,
-            hintText: 'Search a contact by username',
-            isPassword: false,
-            obscureText: false,
-            controller: controller,
-          ),
           const SizedBox(height: 8.0),
           Expanded(
             child: _buildUserList(),

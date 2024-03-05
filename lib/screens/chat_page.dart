@@ -38,13 +38,28 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ),
         actions: [
-          IconButton(
-            tooltip: 'Search for contacts, add someone and more',
-            icon: const Icon(Icons.add_circle_rounded),
-            onPressed: () => _app.showBottomSheet(
-              context,
-              const AddUserPage(),
-            ),
+          FutureBuilder(
+            future: _checkAvailableUsers(),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return IconButton(
+                  tooltip: 'Add a new contact',
+                  icon: const Icon(Icons.person_add),
+                  onPressed: () => _app.showBottomSheet(
+                    context,
+                    const AddUserPage(),
+                  ),
+                );
+              }
+              return IconButton(
+                tooltip: 'Add a new contact',
+                icon: const Icon(Icons.person_add),
+                onPressed: () => _app.showErrorFlushbar(
+                  context,
+                  'No users available to add',
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -52,10 +67,47 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  // This function generates a chat id based on the two user ids
   _generateChatId(String currentId, String otherId) {
     final List<String> uids = [currentId, otherId];
     uids.sort();
     return uids.join('');
+  }
+
+  // This function returns true if someone of every user available is not in our contacts
+  // Or the user isn't the current user or in our invite collections
+  Future<bool> _checkAvailableUsers() async {
+    final invSentRef = userRef.collection('invites_sent');
+    final invRecvRef = userRef.collection('invites_recv');
+
+    final userSnapshot = await _firestore.collection('users').get();
+    final inviteSentSnapshot = await invSentRef.get();
+    final inviteRecvSnapshot = await invRecvRef.get();
+    final contactSnapshot = await contactRef.get();
+
+    List<String> unavailableUsers = [];
+
+    for (var document in inviteSentSnapshot.docs) {
+      unavailableUsers.add(document.id);
+    }
+
+    for (var document in inviteRecvSnapshot.docs) {
+      unavailableUsers.add(document.id);
+    }
+
+    for (var document in contactSnapshot.docs) {
+      unavailableUsers.add(document.id);
+    }
+
+    for (var document in userSnapshot.docs) {
+      for (var user in unavailableUsers) {
+        debugPrint('User: $user');
+        if (document.id == uid) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   // Build the entire contact list
