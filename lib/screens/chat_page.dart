@@ -7,6 +7,7 @@ import 'package:aetheric/popups/invite_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/popups/add_user_page.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
+import 'package:aetheric/services/chat/elements/feedback_tile.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -63,7 +64,18 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      body: _buildContactList(),
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            const FeedbackTile(),
+            Expanded(
+              child: _buildContactList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

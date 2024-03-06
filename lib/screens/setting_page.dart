@@ -1,4 +1,3 @@
-import 'package:aetheric/popups/send_feedback_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,17 +33,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () => _app.showBottomSheet(
-              context,
-              const ExperimentalFeaturePage(),
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -68,14 +57,6 @@ class _SettingPageState extends State<SettingPage> {
               function: () => _app.showBottomSheet(
                 context,
                 const ExperimentalFeaturePage(),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icons.feedback,
-              text: 'Send feedback',
-              function: () => _app.showBottomSheet(
-                context,
-                const SendFeedbackPage(),
               ),
             ),
             const SizedBox(height: 32.0),
@@ -105,7 +86,11 @@ class _SettingPageState extends State<SettingPage> {
     await prefs.setBool('marquee', !marquee);
 
     if (mounted) {
-      _app.showSuccessFlushbar(context, 'Marquee is now set to ${!marquee}');
+      if (marquee) {
+        _app.showErrorFlushbar(context, 'Marquee is now set to ${!marquee}');
+      } else {
+        _app.showSuccessFlushbar(context, 'Marquee is now set to ${!marquee}');
+      }
     }
   }
 

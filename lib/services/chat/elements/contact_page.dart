@@ -100,9 +100,7 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             children: [
               const SizedBox(height: 8.0),
-              Expanded(
-                child: _buildMessageList(context),
-              ),
+              Expanded(child: _buildMessageList(context)),
               const SizedBox(height: 16.0),
               _buildMessageInput(context),
             ],
@@ -113,7 +111,7 @@ class _ContactPageState extends State<ContactPage> {
   }
 
   // Function for uploading our message to the database
-  _sendMessage(BuildContext context) {
+  _sendMessage() {
     String message = _messageController.text.trim();
 
     if (_messageController.text.isNotEmpty) {
@@ -263,7 +261,7 @@ class _ContactPageState extends State<ContactPage> {
               ),
             ),
             IconButton(
-              onPressed: () => _sendMessage(context),
+              onPressed: () => _sendMessage(),
               icon: const Icon(Icons.send),
             ),
           ],
