@@ -93,17 +93,17 @@ class _ChatPageState extends State<ChatPage> {
     final invRecvRef = userRef.collection('invites_recv');
 
     final userSnapshot = await _firestore.collection('users').get();
-    final inviteSentSnapshot = await invSentRef.get();
-    final inviteRecvSnapshot = await invRecvRef.get();
+    final invSentSnapshot = await invSentRef.get();
+    final invRecvSnapshot = await invRecvRef.get();
     final contactSnapshot = await contactRef.get();
 
     List<String> unavailableUsers = [];
 
-    for (var document in inviteSentSnapshot.docs) {
+    for (var document in invSentSnapshot.docs) {
       unavailableUsers.add(document.id);
     }
 
-    for (var document in inviteRecvSnapshot.docs) {
+    for (var document in invRecvSnapshot.docs) {
       unavailableUsers.add(document.id);
     }
 

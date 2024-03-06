@@ -1,3 +1,4 @@
+// This class is used for displaying more user friendly exceptions
 class AuthExceptions {
   Map<String, String> errors = {
     "invalid-email": "The email address is not valid",

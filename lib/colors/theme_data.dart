@@ -38,7 +38,7 @@ class ThemeColors {
     ),
   );
 
-  // This here is what the user sees when enabling dark mode
+  // This here is what the user sees when dark mode is enabled
   static ThemeData darkThemeData = ThemeData(
     primaryColor: _themeColors.darkPrimaryColor,
     secondaryHeaderColor: _themeColors.lightPrimaryColor,

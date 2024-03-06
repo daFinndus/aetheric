@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 // A custom designed button widget
 class CustomTextButton extends StatelessWidget {
   final String text;
-  final Function function;
   final Color color;
+  final Function function;
 
   const CustomTextButton({
     super.key,
     required this.text,
-    required this.function,
     required this.color,
+    required this.function,
   });
 
   @override

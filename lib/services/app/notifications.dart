@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+// This is a service class that handles notifications
 class NotificationService {
   FlutterLocalNotificationsPlugin notificationPlugin =
       FlutterLocalNotificationsPlugin();

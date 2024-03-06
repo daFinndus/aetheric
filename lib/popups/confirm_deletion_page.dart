@@ -8,6 +8,7 @@ import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/popups/refresh_login_alert_page.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 
+// This is a widget used in the settings page for deleting the whole account
 class ConfirmDeletionPage extends StatefulWidget {
   const ConfirmDeletionPage({super.key});
 

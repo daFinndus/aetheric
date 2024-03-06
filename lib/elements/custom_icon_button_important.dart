@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 // A custom button with an important color (red)
 class CustomFieldButtonImportant extends StatelessWidget {
-  final IconData icon;
   final String text;
+  final IconData icon;
   final Function function;
 
   const CustomFieldButtonImportant({
     super.key,
-    required this.icon,
     required this.text,
+    required this.icon,
     required this.function,
   });
 

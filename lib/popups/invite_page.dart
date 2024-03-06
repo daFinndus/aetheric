@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/services/chat/elements/accept_invite_tile.dart';
 
+// This page shows the user's pending invites
 class InvitePage extends StatefulWidget {
   const InvitePage({super.key});
 

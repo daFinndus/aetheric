@@ -5,7 +5,7 @@ class CustomTextField extends StatefulWidget {
   final IconData icon;
   final String hintText; // Displays what the user should enter
 
-  final bool isPassword; // Change if the fields need a toggle obscure button
+  final bool isPassword; // Bool if the fields need a toggle obscure button
   final bool obscureText; // Change if the text is displayed or not
 
   final TextEditingController controller;

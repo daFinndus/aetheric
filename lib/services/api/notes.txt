@@ -1,2 +1,3 @@
 Going to implement certain API's next. Perhaps the quote or the news API?
+
 Spotify API -> Show users what their contacts are listening to, favorite song, current song

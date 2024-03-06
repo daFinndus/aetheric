@@ -4,6 +4,7 @@ import 'package:aetheric/elements/custom_text_button.dart';
 import 'package:aetheric/services/auth/screens/login_page.dart';
 import 'package:aetheric/services/auth/screens/registration_page.dart';
 
+// This is our basically the first page the user sees
 class GreetPage extends StatelessWidget {
   const GreetPage({super.key});
 

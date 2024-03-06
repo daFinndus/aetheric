@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:another_flushbar/flushbar.dart';
 
+// This class has some app features that are used in multiple places
 class AppFeatures {
   // Function for capitalizing and splitting names (if needed)
   String capitalizeName(String name) {

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 // A custom designed button widget
 class CustomIconButton extends StatelessWidget {
-  final IconData icon;
   final String text;
+  final IconData icon;
   final Function function;
 
   const CustomIconButton({
     super.key,
-    required this.icon,
     required this.text,
+    required this.icon,
     required this.function,
   });
 

@@ -43,7 +43,6 @@ class _AddUserPageState extends State<AddUserPage> {
     );
   }
 
-  // TODO: Sort user list depending on the search query
   // Build user list from the database with user tiles
   _buildUserList() {
     return StreamBuilder(

@@ -41,13 +41,13 @@ class _SettingPageState extends State<SettingPage> {
               icon: Icons.notifications,
               text: 'Trigger notification',
               function: () => _notification.showNotification(
-                title: 'Hello world',
-                body: 'This is a test notification',
+                title: 'Aetheric',
+                body: 'This is a debug notification',
               ),
             ),
             CustomIconButton(
               icon: Icons.moving,
-              text: 'Toggle marquee',
+              text: 'Toggle marquee - moving text',
               function: () => _toggleMarquee(),
             ),
             const SizedBox(height: 32.0),
@@ -79,6 +79,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  // This toggles the marquee bool in the shared preferences
+  // It is used for the contact tile in our chat page
   _toggleMarquee() async {
     final prefs = await preferences;
     final marquee = prefs.getBool('marquee') ?? false;
