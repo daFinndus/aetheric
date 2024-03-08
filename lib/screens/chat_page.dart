@@ -86,6 +86,7 @@ class _ChatPageState extends State<ChatPage> {
     return uids.join('');
   }
 
+  // FIXME: This doesn't work as intended
   // This function returns true if someone of every user available is not in our contacts
   // Or the user isn't the current user or in our invite collections
   Future<bool> _checkAvailableUsers() async {
@@ -111,10 +112,11 @@ class _ChatPageState extends State<ChatPage> {
       unavailableUsers.add(document.id);
     }
 
+    // Check if we already have the user in our contacts or invites
+    // Or if we are the user that is being checked out
     for (var document in userSnapshot.docs) {
       for (var user in unavailableUsers) {
-        debugPrint('User: $user');
-        if (document.id == uid) {
+        if (document.id == user || document.id == uid) {
           return false;
         }
       }
@@ -128,7 +130,7 @@ class _ChatPageState extends State<ChatPage> {
       stream: userRef.collection('contacts').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> querySnapshot) {
         if (querySnapshot.data != null) {
-          if (!querySnapshot.hasData && querySnapshot.data!.docs.isEmpty) {
+          if (!querySnapshot.hasData || querySnapshot.data!.docs.isEmpty) {
             return _buildNoContactsYet();
           } else if (querySnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -142,22 +144,21 @@ class _ChatPageState extends State<ChatPage> {
                   future: _firestore.collection('users').doc(uid).get(),
                   builder: (context, userSnapshot) {
                     if (userSnapshot.data != null) {
-                      if (userSnapshot.hasError) {
+                      if (!userSnapshot.hasData) {
                         return const Center(child: Icon(Icons.error));
-                      } else if (!userSnapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
                       } else {
+                        debugPrint('Trying to build contact list item..');
                         return _buildContactListItem(userSnapshot.data!);
                       }
                     }
-                    return const SizedBox();
+                    return const Center(child: CircularProgressIndicator());
                   },
                 );
               },
             );
           }
         }
-        return _buildNoContactsYet();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -14,7 +14,6 @@ import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/elements/custom_text_button.dart';
 
 // Class for the user to upload a profile picture
-// This does work
 class DataPicturePage extends StatefulWidget {
   const DataPicturePage({super.key});
 
@@ -25,8 +24,8 @@ class DataPicturePage extends StatefulWidget {
 class _DataPicturePageState extends State<DataPicturePage> {
   String _firstName = '';
   String _lastName = '';
-  DateTime _birthday = DateTime.now();
   String _username = '';
+  DateTime _birthday = DateTime.now();
 
   String _imageUrl = '';
   File _image = File('');
@@ -104,21 +103,22 @@ class _DataPicturePageState extends State<DataPicturePage> {
               ),
               const SizedBox(height: 64.0),
               Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    children: [
-                      CustomTextButton(
-                        text: 'Choose a picture',
-                        function: () => _showChoices(context),
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      CustomTextButton(
-                        text: 'Finish registration',
-                        function: () => _uploadPicture(),
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )
-                    ],
-                  )),
+                margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    CustomTextButton(
+                      text: 'Choose a picture',
+                      function: () => _showChoices(context),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    CustomTextButton(
+                      text: 'Finish registration',
+                      function: () => _uploadPicture(),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -194,7 +194,6 @@ class _DataPicturePageState extends State<DataPicturePage> {
     );
 
     if (decodedImage == null) {
-      // Wenn das Bild nicht dekodiert werden kann, gibt einfach das ursprüngliche Bild zurück
       return image;
     }
 
@@ -205,7 +204,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
       interpolation: scale.Interpolation.linear,
     );
 
-    // Speichere das skalierte Bild in einer temporären Datei
+    // Save the downscaled image to a temporary file
     final tempDir = await Directory.systemTemp.createTemp();
     final tempFile = File('${tempDir.path}/scaled_image.jpg');
     await tempFile.writeAsBytes(scale.encodeJpg(resizedImage));
@@ -262,7 +261,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * 0.225,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),

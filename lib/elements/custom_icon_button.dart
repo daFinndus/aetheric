@@ -22,14 +22,14 @@ class CustomIconButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         child: Row(
           children: [
             const SizedBox(width: 16.0),
             Icon(
               icon,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
             const SizedBox(width: 16.0),
             Text(
@@ -37,7 +37,7 @@ class CustomIconButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onSecondary,
               ),
             ),
           ],

@@ -147,6 +147,8 @@ class Auth {
   }
 
   // Function for deleting the users account
+  // This function really is complex, because we have to delete a lot of data
+  // Because this function would get out of hand, we are not deleting messages
   Future deleteAccount() async {
     String uid = _auth.currentUser!.uid;
 
@@ -165,6 +167,44 @@ class Auth {
       debugPrint('Going to delete db-entry with this uid: $uid');
       await _userColl.doc(uid).delete();
       debugPrint('Deleted database entry...');
+
+      await _userColl.doc(uid).collection('invite_sent').get().then((snapshot) {
+        for (DocumentSnapshot document in snapshot.docs) {
+          document.reference.delete();
+
+          // Delete our uid from their received invites
+          _userColl
+              .doc(document.id)
+              .collection('invite_recv')
+              .doc(uid)
+              .delete();
+        }
+      });
+      debugPrint('Deleted sent invites...');
+
+      await _userColl.doc(uid).collection('invite_recv').get().then((snapshot) {
+        for (DocumentSnapshot document in snapshot.docs) {
+          document.reference.delete();
+
+          // Delete our uid from their sent invites
+          _userColl
+              .doc(document.id)
+              .collection('invite_sent')
+              .doc(uid)
+              .delete();
+        }
+      });
+      debugPrint('Deleted received invites...');
+
+      await _userColl.doc(uid).collection('contacts').get().then((snapshot) {
+        for (DocumentSnapshot document in snapshot.docs) {
+          document.reference.delete();
+
+          // Delete our uid from their contacts
+          _userColl.doc(document.id).collection('contacts').doc(uid).delete();
+        }
+      });
+      debugPrint('Deleted contacts...');
     } catch (e) {
       debugPrint("${e.runtimeType} - ${e.toString()}");
       if (e is FirebaseAuthException && e.code == 'requires-recent-login') {

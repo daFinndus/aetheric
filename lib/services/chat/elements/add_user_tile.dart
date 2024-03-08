@@ -30,32 +30,36 @@ class _AddUserTileState extends State<AddUserTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => widget.function(),
-      leading: CircleAvatar(
-        radius: 24.0,
-        child: imageUrl.isNotEmpty
-            ? ClipOval(
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: imageUrl,
-                  width: 48.0,
-                  height: 48.0,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                ),
-              )
-            : const Icon(Icons.person),
-      ),
-      title: Text(
-        username,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSecondary,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8.0),
+      child: ListTile(
+        onTap: () => widget.function(),
+        leading: CircleAvatar(
+          radius: 24.0,
+          child: imageUrl.isNotEmpty
+              ? ClipOval(
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: imageUrl,
+                    width: 48.0,
+                    height: 48.0,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                  ),
+                )
+              : const Icon(Icons.person),
         ),
+        title: Text(
+          username,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
+        ),
+        trailing: Icon(widget.icon),
       ),
-      trailing: Icon(widget.icon),
     );
   }
 }

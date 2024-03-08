@@ -21,7 +21,7 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
       height: MediaQuery.of(context).size.height * 0.5,
       padding: const EdgeInsets.all(32.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
@@ -34,7 +34,7 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
           ),
           const SizedBox(
@@ -44,7 +44,7 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
             'For security reasons, the last login cannot be older than 5 minutes. Please login again by clicking the button below.',
             style: TextStyle(
               fontSize: 16.0,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onSecondary,
             ),
           ),
           const SizedBox(height: 64.0),
@@ -52,7 +52,7 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
             text: 'Sign out',
             function: () => _auth.signOut().then((value) =>
                 Navigator.popUntil(context, (route) => route.isFirst)),
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onSecondary,
           ),
         ],
       ),

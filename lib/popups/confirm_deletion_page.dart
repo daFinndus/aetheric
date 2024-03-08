@@ -26,7 +26,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(16.0),
           topRight: Radius.circular(16.0),
