@@ -28,6 +28,8 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
+
+    NotificationService().init();
   }
 
   @override

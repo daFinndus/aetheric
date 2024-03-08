@@ -33,9 +33,8 @@ class _ContactTileState extends State<ContactTile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
+    // Get the user's preferences
     _getPreferences();
   }
 

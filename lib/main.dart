@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:aetheric/screens/tab_page.dart';
 import 'package:aetheric/colors/theme_data.dart';
-import 'package:aetheric/services/app/notifications.dart';
 import 'package:aetheric/services/auth/screens/greet_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
@@ -21,7 +20,6 @@ import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MainApp());
 }

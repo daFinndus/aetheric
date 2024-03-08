@@ -30,13 +30,29 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          tooltip: 'Manage your invites',
-          icon: const Icon(Icons.mail),
-          onPressed: () => _app.showBottomSheet(
-            context,
-            const InvitePage(),
-          ),
+        leading: FutureBuilder(
+          future: _checkPendingInvites(),
+          builder: (context, snapshot) {
+            if (snapshot.data == true) {
+              return IconButton(
+                tooltip: 'Manage your invites',
+                icon: const Icon(Icons.mail),
+                onPressed: () => _app.showBottomSheet(
+                  context,
+                  const InvitePage(),
+                ),
+              );
+            } else {
+              return IconButton(
+                tooltip: 'Manage your invites',
+                icon: const Icon(Icons.mail),
+                onPressed: () => _app.showErrorFlushbar(
+                  context,
+                  'No pending invites',
+                ),
+              );
+            }
+          },
         ),
         actions: [
           FutureBuilder(
@@ -86,10 +102,24 @@ class _ChatPageState extends State<ChatPage> {
     return uids.join('');
   }
 
-  // FIXME: This doesn't work as intended
+  Future<bool> _checkPendingInvites() async {
+    bool data = false;
+
+    final invRecvRef = userRef.collection('invites_recv');
+    final invRecvSnapshot = await invRecvRef.get();
+
+    if (invRecvSnapshot.docs.isNotEmpty) {
+      data = true;
+    }
+
+    return data;
+  }
+
   // This function returns true if someone of every user available is not in our contacts
   // Or the user isn't the current user or in our invite collections
   Future<bool> _checkAvailableUsers() async {
+    bool data = false;
+
     final invSentRef = userRef.collection('invites_sent');
     final invRecvRef = userRef.collection('invites_recv');
 
@@ -117,11 +147,13 @@ class _ChatPageState extends State<ChatPage> {
     for (var document in userSnapshot.docs) {
       for (var user in unavailableUsers) {
         if (document.id == user || document.id == uid) {
-          return false;
+          data = false;
+        } else {
+          data = true;
         }
       }
     }
-    return true;
+    return data;
   }
 
   // Build the entire contact list
@@ -194,7 +226,7 @@ class _ChatPageState extends State<ChatPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16.0,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.normal,
               color: Theme.of(context).colorScheme.primary,
             ),
           )
