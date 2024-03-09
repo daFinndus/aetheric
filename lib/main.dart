@@ -11,6 +11,8 @@ import 'package:aetheric/colors/theme_data.dart';
 import 'package:aetheric/services/auth/screens/greet_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
+// TODO: Fix notifications, fix profile page (tab bar on top of keyboard)
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
