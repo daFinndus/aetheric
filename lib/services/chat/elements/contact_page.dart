@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,70 +44,74 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: InkWell(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 22.0,
-                child: data['technical_data']['imageUrl'].isNotEmpty
-                    ? ClipOval(
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: data['technical_data']['imageUrl'],
-                          width: 44.0,
-                          height: 44.0,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.error,
-                          ),
-                        ),
-                      )
-                    : const Icon(Icons.person),
-              ),
-              const SizedBox(width: 20.0),
-              Column(
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            title: InkWell(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    data['personal_data']['username'],
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  CircleAvatar(
+                    radius: 22.0,
+                    child: data['technical_data']['imageUrl'].isNotEmpty
+                        ? ClipOval(
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: data['technical_data']['imageUrl'],
+                              width: 44.0,
+                              height: 44.0,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.error,
+                              ),
+                            ),
+                          )
+                        : const Icon(Icons.person),
+                  ),
+                  const SizedBox(width: 20.0),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data['personal_data']['username'],
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () => _showMoreSettings(context),
+                icon: const Icon(Icons.more_vert),
+              )
             ],
           ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => _showMoreSettings(context),
-            icon: const Icon(Icons.more_vert),
-          )
-        ],
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            children: [
-              const SizedBox(height: 8.0),
-              Expanded(child: _buildMessageList(context)),
-              const SizedBox(height: 16.0),
-              _buildMessageInput(context),
-            ],
+          body: SizedBox(
+            width: SizerUtil.width,
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8.0),
+                  Expanded(child: _buildMessageList(context)),
+                  const SizedBox(height: 16.0),
+                  _buildMessageInput(context),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -167,8 +172,8 @@ class _ContactPageState extends State<ContactPage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: SizerUtil.width,
+            height: SizerUtil.height,
             child: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -234,7 +239,7 @@ class _ContactPageState extends State<ContactPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width - 80.0,
+              width: SizerUtil.width - 80.0,
               height: 56.0,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               decoration: BoxDecoration(
@@ -275,8 +280,8 @@ class _ContactPageState extends State<ContactPage> {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.5,
+        width: SizerUtil.width,
+        height: SizerUtil.height * 0.5,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: const BorderRadius.only(

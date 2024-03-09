@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/elements/custom_text_button.dart';
@@ -16,46 +17,51 @@ class _RefreshLoginAlertPageState extends State<RefreshLoginAlertPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.5,
-      padding: const EdgeInsets.all(32.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Please refresh your login',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSecondary,
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Container(
+          width: SizerUtil.width,
+          height: SizerUtil.height * 0.5,
+          padding: const EdgeInsets.all(32.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
             ),
           ),
-          const SizedBox(
-            height: 32.0,
+          child: Column(
+            children: [
+              Text(
+                'Please refresh your login',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+              ),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                'For security reasons, the last login cannot be older than 5 minutes. Please login again by clicking the button below.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+              ),
+              const SizedBox(height: 64.0),
+              CustomTextButton(
+                text: 'Sign out',
+                function: () => _auth.signOut().then((value) =>
+                    Navigator.popUntil(context, (route) => route.isFirst)),
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ],
           ),
-          Text(
-            'For security reasons, the last login cannot be older than 5 minutes. Please login again by clicking the button below.',
-            style: TextStyle(
-              fontSize: 16.0,
-              color: Theme.of(context).colorScheme.onSecondary,
-            ),
-          ),
-          const SizedBox(height: 64.0),
-          CustomTextButton(
-            text: 'Sign out',
-            function: () => _auth.signOut().then((value) =>
-                Navigator.popUntil(context, (route) => route.isFirst)),
-            color: Theme.of(context).colorScheme.onSecondary,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

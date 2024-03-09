@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 // A custom designed text field widget
@@ -28,44 +29,51 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 64.0,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Align(
-        alignment: Alignment.center,
-        child: TextField(
-          controller: widget.controller,
-          obscureText: widget.isPassword ? _obscureText : widget.obscureText,
-          cursorColor: Theme.of(context).colorScheme.primary,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Container(
+          width: SizerUtil.width,
+          height: 64.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            prefixIcon: Icon(widget.icon),
-            prefixIconColor: Theme.of(context).colorScheme.primary,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    onPressed: () => _toggleObscure(),
-                    color: Theme.of(context).colorScheme.primary,
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                    ),
-                  )
-                : null,
-            hintText: widget.hintText,
-            hintStyle: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.normal,
+          child: Align(
+            alignment: Alignment.center,
+            child: TextField(
+              controller: widget.controller,
+              obscureText:
+                  widget.isPassword ? _obscureText : widget.obscureText,
+              cursorColor: Theme.of(context).colorScheme.primary,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                prefixIcon: Icon(widget.icon),
+                prefixIconColor: Theme.of(context).colorScheme.primary,
+                suffixIcon: widget.isPassword
+                    ? IconButton(
+                        onPressed: () => _toggleObscure(),
+                        color: Theme.of(context).colorScheme.primary,
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      )
+                    : null,
+                hintText: widget.hintText,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

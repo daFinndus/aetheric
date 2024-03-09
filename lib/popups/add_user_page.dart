@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,24 +23,28 @@ class _AddUserPageState extends State<AddUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: _buildUserList(),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Container(
+          width: SizerUtil.width,
+          height: SizerUtil.height * 0.8,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
           ),
-        ],
-      ),
+          child: Column(
+            children: [
+              const SizedBox(height: 8.0),
+              Expanded(
+                child: _buildUserList(),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -120,11 +125,16 @@ class _AddUserPageState extends State<AddUserPage> {
 
   // Executes all necessary functions
   _manageInvites(String ownUid, String otherUid, DocumentSnapshot document) {
-    debugPrint('Sending invite...');
-    _sendInvite(ownUid, otherUid);
-    _receiveInvite(otherUid);
-    debugPrint('Invite sent!');
-    _app.showSuccessFlushbar(context, 'Invite sent!');
+    try {
+      debugPrint('Sending invite...');
+      _sendInvite(ownUid, otherUid);
+      _receiveInvite(otherUid);
+      debugPrint('Invite sent!');
+      _app.showSuccessFlushbar(context, 'Invite sent!');
+    } catch (e) {
+      debugPrint('Error sending invite: $e');
+      _app.showErrorFlushbar(context, 'Error sending invite');
+    }
     setState(() {
       debugPrint('Reloading...');
     });
@@ -132,24 +142,24 @@ class _AddUserPageState extends State<AddUserPage> {
 
   // Send a invite to a certain user
   // Basically add our uid to our invite_send collection
-  _sendInvite(String uid, String otherUid) {
+  _sendInvite(String uid, String otherUid) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference userDoc = firestore.collection('users').doc(uid);
     final CollectionReference invSentRef = userDoc.collection('invite_sent');
 
-    invSentRef.doc(otherUid).set({
+    await invSentRef.doc(otherUid).set({
       'exists': true,
     });
   }
 
   // Receive an invite from a certain user
   // Basically add the user's uid to our invite_recv collection
-  _receiveInvite(String uid) {
+  _receiveInvite(String uid) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference userDoc = firestore.collection('users').doc(uid);
     final CollectionReference invSentRef = userDoc.collection('invite_recv');
 
-    invSentRef.doc(_auth.currentUser?.uid).set({
+    await invSentRef.doc(_auth.currentUser?.uid).set({
       'exists': true,
     });
   }

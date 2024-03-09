@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:aetheric/screens/chat_page.dart';
-import 'package:aetheric/screens/profile_page.dart';
 import 'package:aetheric/screens/setting_page.dart';
 
 class TabPage extends StatelessWidget {
@@ -11,7 +10,7 @@ class TabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       initialIndex: 0,
       child: Scaffold(
         bottomNavigationBar: _buildTabBar(),
@@ -38,10 +37,6 @@ Widget _buildTabBar() {
         icon: Icon(Icons.settings),
         text: 'Settings',
       ),
-      Tab(
-        icon: Icon(Icons.person),
-        text: 'Profile',
-      ),
     ],
   );
 }
@@ -51,7 +46,6 @@ Widget _buildTabBarView() {
     children: [
       ChatPage(),
       SettingPage(),
-      ProfilePage(),
     ],
   );
 }

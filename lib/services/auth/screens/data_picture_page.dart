@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as scale;
 
@@ -49,80 +50,84 @@ class _DataPicturePageState extends State<DataPicturePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Last but not least',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              Text(
-                'Show us your smile',
-                style: TextStyle(
-                  fontSize: 12.0,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 64.0),
-              GestureDetector(
-                onTap: () => _showChoices(context),
-                child: Container(
-                  width: 128.0,
-                  height: 128.0,
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(64.0),
-                    child: _image.path == ''
-                        ? Icon(
-                            Icons.lens_blur,
-                            size: 64.0,
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : Image.file(
-                            _image,
-                            width: 128.0,
-                            height: 128.0,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 64.0),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    CustomTextButton(
-                      text: 'Choose a picture',
-                      function: () => _showChoices(context),
-                      color: Theme.of(context).colorScheme.onPrimary,
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: SizedBox(
+              width: SizerUtil.width,
+              height: SizerUtil.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Last but not least',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    CustomTextButton(
-                      text: 'Finish registration',
-                      function: () => _uploadPicture(),
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    )
-                  ],
-                ),
+                  ),
+                  Text(
+                    'Show us your smile',
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 64.0),
+                  GestureDetector(
+                    onTap: () => _showChoices(context),
+                    child: Container(
+                      width: 128.0,
+                      height: 128.0,
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(64.0),
+                        child: _image.path == ''
+                            ? Icon(
+                                Icons.lens_blur,
+                                size: 64.0,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
+                            : Image.file(
+                                _image,
+                                width: 128.0,
+                                height: 128.0,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 64.0),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        CustomTextButton(
+                          text: 'Choose a picture',
+                          function: () => _showChoices(context),
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        CustomTextButton(
+                          text: 'Finish registration',
+                          function: () => _uploadPicture(),
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -258,8 +263,8 @@ class _DataPicturePageState extends State<DataPicturePage> {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.225,
+        width: SizerUtil.width,
+        height: SizerUtil.height * 0.225,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: const BorderRadius.only(

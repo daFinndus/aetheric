@@ -1,4 +1,4 @@
-import 'package:aetheric/services/auth/screens/data_birthday_page.dart';
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/elements/custom_text_field.dart';
 import 'package:aetheric/elements/custom_text_button.dart';
+import 'package:aetheric/services/auth/screens/data_birthday_page.dart';
 
 class DataPersonalNamePage extends StatefulWidget {
   const DataPersonalNamePage({super.key});
@@ -24,85 +25,91 @@ class _DataPersonalNamePageState extends State<DataPersonalNamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: ListView(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.875,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "What's your name?",
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Scaffold(
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                width: SizerUtil.width,
+                height: SizerUtil.height,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      width: SizerUtil.width,
+                      height: SizerUtil.height * 0.875,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "What's your name?",
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 64.0),
+                          Container(
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Column(
+                              children: [
+                                CustomTextField(
+                                  icon: Icons.person,
+                                  hintText: 'First Name',
+                                  isPassword: false,
+                                  obscureText: false,
+                                  controller: _firstNameController,
+                                ),
+                                const SizedBox(height: 8.0),
+                                CustomTextField(
+                                  icon: Icons.person_outline,
+                                  hintText: 'Last Name',
+                                  isPassword: false,
+                                  obscureText: false,
+                                  controller: _lastNameController,
+                                ),
+                                const SizedBox(height: 64.0),
+                                CustomTextButton(
+                                  text: 'Next',
+                                  function: () => _saveDataAndNavigate(context),
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 64.0),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Column(
-                          children: [
-                            CustomTextField(
-                              icon: Icons.person,
-                              hintText: 'First Name',
-                              isPassword: false,
-                              obscureText: false,
-                              controller: _firstNameController,
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.lock, size: 16.0),
+                          SizedBox(width: 8.0),
+                          Text(
+                            'This data is for internal use only',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 8.0),
-                            CustomTextField(
-                              icon: Icons.person_outline,
-                              hintText: 'Last Name',
-                              isPassword: false,
-                              obscureText: false,
-                              controller: _lastNameController,
-                            ),
-                            const SizedBox(height: 64.0),
-                            CustomTextButton(
-                              text: 'Next',
-                              function: () => _saveDataAndNavigate(context),
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: 16.0)
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.lock, size: 16.0),
-                      SizedBox(width: 8.0),
-                      Text(
-                        'This data is for internal use only',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 16.0)
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

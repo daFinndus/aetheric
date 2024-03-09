@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,33 +23,37 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              radius: 22.0,
-              child: Icon(Icons.feedback),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 22.0,
+                  child: Icon(Icons.feedback),
+                ),
+                SizedBox(width: 20.0),
+                Text('Feedback'),
+              ],
             ),
-            SizedBox(width: 20.0),
-            Text('Feedback'),
-          ],
-        ),
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            children: [
-              const SizedBox(height: 16.0),
-              _buildFeedbackInput(context),
-            ],
           ),
-        ),
-      ),
+          body: SizedBox(
+            width: SizerUtil.width,
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16.0),
+                  _buildFeedbackInput(context),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -78,7 +83,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width - 80.0,
+              width: SizerUtil.width - 80.0,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onPrimary,

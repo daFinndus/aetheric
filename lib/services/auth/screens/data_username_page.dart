@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,70 +24,67 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'How should we call you?',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                Text(
-                  'The username will be your identity',
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 64.0),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        icon: Icons.person,
-                        hintText: 'Username',
-                        isPassword: false,
-                        obscureText: false,
-                        controller: _usernameController,
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Scaffold(
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                width: SizerUtil.width,
+                height: SizerUtil.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'How should we call you?',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      const SizedBox(height: 64.0),
-                      CustomTextButton(
-                        text: "Let's head to the last step",
-                        function: () => _saveDataAndNavigate(context),
-                        color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    Text(
+                      'The username will be your identity',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 64.0),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            icon: Icons.person,
+                            hintText: 'Username',
+                            isPassword: false,
+                            obscureText: false,
+                            controller: _usernameController,
+                          ),
+                          const SizedBox(height: 64.0),
+                          CustomTextButton(
+                            text: "Let's head to the last step",
+                            function: () => _saveDataAndNavigate(context),
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   bool _checkData(String username) {
     if (username.isNotEmpty) {
-      return true;
-    }
-    return false;
-  }
-
-  bool _checkForWhitespace(String username) {
-    if (username.contains(' ')) {
       return true;
     }
     return false;
@@ -101,7 +99,7 @@ class _DataUsernamePageState extends State<DataUsernamePage> {
       return;
     }
 
-    if (_checkForWhitespace(username)) {
+    if (_app.checkForWhitespace(username)) {
       _app.showErrorFlushbar(context, 'Username cannot contain whitespace');
       return;
     }

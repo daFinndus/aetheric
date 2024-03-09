@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:aetheric/popups/profile_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/services/app/notifications.dart';
 import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';
 import 'package:aetheric/popups/confirm_deletion_page.dart';
@@ -19,32 +19,23 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  final preferences = SharedPreferences.getInstance();
-
   final Auth _auth = Auth();
   final AppFeatures _app = AppFeatures();
-  final NotificationService _notification = NotificationService();
-
-  @override
-  void initState() {
-    super.initState();
-
-    NotificationService().init();
-  }
+  final preferences = SharedPreferences.getInstance();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 64.0),
             CustomIconButton(
-              icon: Icons.notifications,
-              text: 'Trigger notification',
-              function: () => _notification.showNotification(
-                title: 'Aetheric',
-                body: 'This is a debug notification',
+              icon: Icons.person,
+              text: 'Edit profile',
+              function: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
               ),
             ),
             CustomIconButton(
@@ -87,7 +78,15 @@ class _SettingPageState extends State<SettingPage> {
     final prefs = await preferences;
     final marquee = prefs.getBool('marquee') ?? false;
 
-    await prefs.setBool('marquee', !marquee);
+    try {
+      await prefs.setBool('marquee', !marquee);
+    } catch (e) {
+      debugPrint('Error: $e');
+
+      if (mounted) {
+        _app.showErrorFlushbar(context, 'Error toggling marquee');
+      }
+    }
 
     if (mounted) {
       if (marquee) {

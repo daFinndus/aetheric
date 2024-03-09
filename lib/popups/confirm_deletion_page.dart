@@ -1,3 +1,4 @@
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:slide_to_act/slide_to_act.dart';
@@ -22,39 +23,45 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.25,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 32.0),
-            Container(
-              margin: const EdgeInsets.only(top: 32.0, left: 58.0, right: 58.0),
-              child: SlideAction(
-                text: 'Slide to delete',
-                textStyle: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                textColor: Colors.white,
-                innerColor: Colors.red,
-                outerColor: Colors.redAccent,
-                sliderButtonIcon: const Icon(Icons.delete, color: Colors.white),
-                submittedIcon: const Icon(Icons.check, color: Colors.white),
-                onSubmit: () => _deleteAccount(context),
-              ),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return Container(
+          width: SizerUtil.width,
+          height: SizerUtil.height * 0.25,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
             ),
-          ],
-        ),
-      ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 32.0),
+                Container(
+                  margin:
+                      const EdgeInsets.only(top: 32.0, left: 58.0, right: 58.0),
+                  child: SlideAction(
+                    text: 'Slide to delete',
+                    textStyle: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textColor: Colors.white,
+                    innerColor: Colors.red,
+                    outerColor: Colors.redAccent,
+                    sliderButtonIcon:
+                        const Icon(Icons.delete, color: Colors.white),
+                    submittedIcon: const Icon(Icons.check, color: Colors.white),
+                    onSubmit: () => _deleteAccount(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -77,7 +84,7 @@ class _ConfirmDeletionPageState extends State<ConfirmDeletionPage> {
       } else {
         debugPrint("Error was caught: ${e.toString()}");
         if (context.mounted) {
-          _app.showErrorFlushbar(context, e.toString());
+          _app.showErrorFlushbar(context, 'Oh no, an error occured');
         }
       }
     }

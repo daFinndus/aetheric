@@ -13,6 +13,13 @@ class AppFeatures {
     return names.join(" ");
   }
 
+  bool checkForWhitespace(String username) {
+    if (username.contains(' ')) {
+      return true;
+    }
+    return false;
+  }
+
   // Function for showing a bottom sheet
   showBottomSheet(BuildContext context, page) {
     showModalBottomSheet(
@@ -28,10 +35,11 @@ class AppFeatures {
   showSuccessFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
-      margin: const EdgeInsets.only(right: 16.0, bottom: 24.0, left: 16.0),
+      margin: const EdgeInsets.only(right: 16.0, bottom: 20.0, left: 16.0),
       duration: const Duration(seconds: 5),
       borderRadius: BorderRadius.circular(8.0),
       backgroundColor: const Color.fromARGB(255, 30, 145, 50),
+      isDismissible: true,
     ).show(context);
   }
 
@@ -39,10 +47,11 @@ class AppFeatures {
   showErrorFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
-      margin: const EdgeInsets.only(right: 16.0, bottom: 24.0, left: 16.0),
+      margin: const EdgeInsets.only(right: 16.0, bottom: 20.0, left: 16.0),
       duration: const Duration(seconds: 5),
       borderRadius: BorderRadius.circular(8.0),
       backgroundColor: const Color.fromARGB(255, 230, 50, 50),
+      isDismissible: true,
     ).show(context);
   }
 }
