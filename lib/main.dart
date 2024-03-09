@@ -11,13 +11,6 @@ import 'package:aetheric/colors/theme_data.dart';
 import 'package:aetheric/services/auth/screens/greet_page.dart';
 import 'package:aetheric/services/auth/screens/data_personal_name_page.dart';
 
-// FIXME: Notifications only local for now, implement push notifications later
-// TODO: Manage contacts by user id
-// TODO: Audio messages
-// TODO: Lock app with fingerprint or face recognition
-// TODO: Homepage should be a feed of the user's contacts and more
-// TODO: Look at spotify api to show what the user is listening to
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
