@@ -52,10 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Profile'),
-            centerTitle: true,
-          ),
           body: StreamBuilder(
             stream: _userColl.doc(uid).snapshots(),
             builder: (context, snapshot) {
@@ -83,10 +79,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return SingleChildScrollView(
       child: SizedBox(
         width: SizerUtil.width,
+        height: SizerUtil.height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 32.0),
             GestureDetector(
               onTap: () => _showChoices(context),
               child: Container(
@@ -254,39 +250,39 @@ class _ProfilePageState extends State<ProfilePage> {
           _app.showErrorFlushbar(context, 'Username cannot contain whitespace');
         }
       }
+    }
 
-      if (_firstNameController.text.isNotEmpty) {
-        dataEdited = true;
-        String firstName = _app.capitalizeName(_firstNameController.text);
+    if (_firstNameController.text.isNotEmpty) {
+      dataEdited = true;
+      String firstName = _app.capitalizeName(_firstNameController.text);
 
-        await _userDoc.set({
-          'personal_data': {'first_name': firstName},
-        }, SetOptions(merge: true));
-      }
+      await _userDoc.set({
+        'personal_data': {'first_name': firstName},
+      }, SetOptions(merge: true));
+    }
 
-      if (_lastNameController.text.isNotEmpty) {
-        dataEdited = true;
-        String lastName = _app.capitalizeName(_lastNameController.text);
+    if (_lastNameController.text.isNotEmpty) {
+      dataEdited = true;
+      String lastName = _app.capitalizeName(_lastNameController.text);
 
-        await _userDoc.set({
-          'personal_data': {'last_name': lastName}
-        }, SetOptions(merge: true));
-      }
+      await _userDoc.set({
+        'personal_data': {'last_name': lastName}
+      }, SetOptions(merge: true));
+    }
 
-      if (_image.path.isNotEmpty) {
-        dataEdited = true;
-        await _updatePicture();
-        await _userDoc.set({
-          'personal_data': {'imageUrl': _imageUrl}
-        }, SetOptions(merge: true));
-      }
+    if (_image.path.isNotEmpty) {
+      dataEdited = true;
+      await _updatePicture();
+      await _userDoc.set({
+        'personal_data': {'imageUrl': _imageUrl}
+      }, SetOptions(merge: true));
+    }
 
-      if (mounted) {
-        if (dataEdited) {
-          _app.showSuccessFlushbar(context, 'Successfully updated your data');
-        } else {
-          _app.showErrorFlushbar(context, 'No data to update');
-        }
+    if (mounted) {
+      if (dataEdited) {
+        _app.showSuccessFlushbar(context, 'Successfully updated your data');
+      } else {
+        _app.showErrorFlushbar(context, 'No data to update');
       }
     }
   }

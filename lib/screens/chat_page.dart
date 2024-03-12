@@ -37,12 +37,50 @@ class _ChatPageState extends State<ChatPage> {
               future: _checkPendingInvites(),
               builder: (context, snapshot) {
                 if (snapshot.data == true) {
-                  return IconButton(
-                    tooltip: 'Manage your invites',
-                    icon: const Icon(Icons.mail),
-                    onPressed: () => _app.showBottomSheet(
-                      context,
-                      const InvitePage(),
+                  return GestureDetector(
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            IconButton(
+                              tooltip: 'Manage your invites',
+                              icon: const Icon(Icons.mail),
+                              onPressed: () => _app.showBottomSheet(
+                                context,
+                                const InvitePage(),
+                              ),
+                            ),
+                            Positioned(
+                              right: 8.0,
+                              top: 20.0,
+                              child: Container(
+                                width: 12.0,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: FutureBuilder(
+                                  future: _returnPendingInvites(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data != null) {
+                                      return Center(
+                                        child: Text(
+                                          snapshot.data.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10.0,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   );
                 } else {
@@ -88,10 +126,10 @@ class _ChatPageState extends State<ChatPage> {
             height: SizerUtil.height,
             child: Column(
               children: [
-                const FeedbackTile(),
                 Expanded(
                   child: _buildContactList(),
                 ),
+                const FeedbackTile(),
               ],
             ),
           ),
@@ -107,28 +145,15 @@ class _ChatPageState extends State<ChatPage> {
     return uids.join('');
   }
 
-  // This function checks if there are any pending invites
-  Future<bool> _checkPendingInvites() async {
-    bool data = false;
-
-    final invRecvRef = userRef.collection('invites_recv');
-    final invRecvSnapshot = await invRecvRef.get();
-
-    if (invRecvSnapshot.docs.isNotEmpty) {
-      data = true;
-    }
-
-    return data;
-  }
-
   // This function returns true if someone of every user available is not in our contacts
   // Or the user isn't the current user or in our invite collections
   // This function could be optimized
   Future<bool> _checkAvailableUsers() async {
+    debugPrint('Checking available users..');
     bool data = false;
 
-    final invSentRef = userRef.collection('invites_sent').get();
-    final invRecvRef = userRef.collection('invites_recv').get();
+    final invSentRef = userRef.collection('invite_sent').get();
+    final invRecvRef = userRef.collection('invite_recv').get();
     final contactRef = userRef.collection('contacts').get();
 
     final userSnapshot = await _firestore.collection('users').get();
@@ -138,30 +163,54 @@ class _ChatPageState extends State<ChatPage> {
 
     final Set<String> unavailableUsers = {};
 
-    for (var document in invSentSnapshot.docs) {
-      unavailableUsers.add(document.id);
+    for (var inviteSent in invSentSnapshot.docs) {
+      unavailableUsers.add(inviteSent.id);
     }
 
-    for (var document in invRecvSnapshot.docs) {
-      unavailableUsers.add(document.id);
+    for (var inviteRecv in invRecvSnapshot.docs) {
+      unavailableUsers.add(inviteRecv.id);
     }
 
-    for (var document in contactSnapshot.docs) {
-      unavailableUsers.add(document.id);
+    for (var contact in contactSnapshot.docs) {
+      unavailableUsers.add(contact.id);
     }
 
-    // Check if we already have the user in our contacts or invites
-    // Or if we are the user that is being checked out
-    for (var document in userSnapshot.docs) {
-      for (var user in unavailableUsers) {
-        if (document.id == user || document.id == uid) {
-          data = false;
-        } else {
-          data = true;
-        }
+    // Check if we are the user or if the user is in our contacts
+    for (var user in userSnapshot.docs) {
+      for (var test in unavailableUsers) {
+        debugPrint(test);
+      }
+      debugPrint('Checking user: ${user.id}');
+      if (user.id != uid && !unavailableUsers.contains(user.id)) {
+        debugPrint('Found following user: ${user.id}');
+        data = true;
+        break;
       }
     }
+
     return data;
+  }
+
+  // This function checks if there are any pending invites
+  Future<bool> _checkPendingInvites() async {
+    bool data = false;
+
+    final invRecvRef = userRef.collection('invite_recv');
+    final invRecvSnapshot = await invRecvRef.get();
+
+    if (invRecvSnapshot.docs.isNotEmpty) {
+      data = true;
+    }
+
+    return data;
+  }
+
+  // This function returns the amount of pending invites
+  Future<int> _returnPendingInvites() async {
+    final invRecvRef = userRef.collection('invite_recv');
+    final invRecvSnapshot = await invRecvRef.get();
+
+    return invRecvSnapshot.docs.length;
   }
 
   // Build the entire contact list
@@ -222,22 +271,13 @@ class _ChatPageState extends State<ChatPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'No contacts yet 😢\n',
+            'No contacts yet 😢',
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          Text(
-            'Try adding someone by clicking\nthe button in the top right corner.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          )
         ],
       ),
     );

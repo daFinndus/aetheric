@@ -18,7 +18,10 @@ class _FeedbackTileState extends State<FeedbackTile> {
         radius: 24.0,
         child: Icon(Icons.feedback),
       ),
-      title: const Text('Feedback'),
+      title: const Text(
+        'Feedback',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: const Text('Send us your thoughts'),
     );
   }

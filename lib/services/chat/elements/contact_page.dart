@@ -248,7 +248,7 @@ class _ContactPageState extends State<ContactPage> {
               ),
               child: TextFormField(
                 controller: _messageController,
-                cursorColor: Theme.of(context).colorScheme.onPrimary,
+                cursorColor: Theme.of(context).colorScheme.onSecondary,
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
@@ -283,7 +283,7 @@ class _ContactPageState extends State<ContactPage> {
         width: SizerUtil.width,
         height: SizerUtil.height * 0.5,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
@@ -308,7 +308,7 @@ class _ContactPageState extends State<ContactPage> {
               function: () => {},
             ),
             Divider(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onSecondary,
               thickness: 1.0,
               indent: 16.0,
               endIndent: 16.0,

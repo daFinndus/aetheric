@@ -28,15 +28,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            title: const Row(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 22.0,
                   child: Icon(Icons.feedback),
                 ),
-                SizedBox(width: 20.0),
-                Text('Feedback'),
+                const SizedBox(width: 20.0),
+                Text(
+                  'Feedback',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
               ],
             ),
           ),
@@ -91,7 +98,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
               ),
               child: TextFormField(
                 controller: _feedbackController,
-                cursorColor: Theme.of(context).colorScheme.onPrimary,
+                cursorColor: Theme.of(context).colorScheme.onSecondary,
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 25,

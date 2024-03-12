@@ -264,7 +264,7 @@ class _DataPicturePageState extends State<DataPicturePage> {
       context: context,
       builder: (context) => Container(
         width: SizerUtil.width,
-        height: SizerUtil.height * 0.225,
+        height: SizerUtil.height * 0.1,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: const BorderRadius.only(

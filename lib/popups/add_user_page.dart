@@ -48,6 +48,7 @@ class _AddUserPageState extends State<AddUserPage> {
     );
   }
 
+  // FIXME: No loading indicator while fetching data
   // Build user list from the database with user tiles
   _buildUserList() {
     return StreamBuilder(

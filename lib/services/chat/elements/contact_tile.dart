@@ -58,13 +58,11 @@ class _ContactTileState extends State<ContactTile> {
 
           if (querySnapshot.data != null) {
             if (messages.isNotEmpty) {
-              final messageData = messages.first.data() as Map<String, dynamic>;
-              final messageUid = messageData['uid']!;
-              final messageText = messageData['message']!;
-              final messageTime = DateTime.parse(messageData['datetime']!);
+              final data = messages.first.data() as Map<String, dynamic>;
+              final messageUid = data['uid']!;
+              final messageText = data['message']!;
+              final messageTime = DateTime.parse(data['datetime']!).toLocal();
 
-              // This does work, but it's hella useless as the notification is already shown
-              // And the user cannot receive any notifications without being in the chat page
               return _buildTile(
                 context,
                 messageText,
@@ -126,9 +124,7 @@ class _ContactTileState extends State<ContactTile> {
                     : 'No messages yet',
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: sender
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,9 +139,7 @@ class _ContactTileState extends State<ContactTile> {
                     : 'No messages yet',
                 style: TextStyle(
                   fontSize: 14.0,
-                  color: sender
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
       ),
