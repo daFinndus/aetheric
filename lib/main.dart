@@ -20,6 +20,8 @@ void main() async {
 // TODO: Fix contact tile
 // TODO: Fix profile page
 // FIXME: There are some issues with SizerUtil
+// TODO: Add send image and audio function
+// TODO: Implement push notifications
 // TODO: Implement spotify API
 
 class MainApp extends StatefulWidget {
