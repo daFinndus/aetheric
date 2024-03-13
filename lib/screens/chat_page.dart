@@ -240,7 +240,7 @@ class _ChatPageState extends State<ChatPage> {
                         return _buildContactListItem(userSnapshot.data!);
                       }
                     }
-                    return const Center(child: CircularProgressIndicator());
+                    return const SizedBox();
                   },
                 );
               },

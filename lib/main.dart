@@ -17,7 +17,6 @@ void main() async {
   runApp(const MainApp());
 }
 
-// TODO: Fix contact tile
 // TODO: Fix profile page
 // FIXME: There are some issues with SizerUtil
 // TODO: Add send image and audio function

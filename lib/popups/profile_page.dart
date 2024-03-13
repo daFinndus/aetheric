@@ -233,6 +233,9 @@ class _ProfilePageState extends State<ProfilePage> {
     await picRef.child(uid).putFile(scaledImage);
 
     _imageUrl = await picRef.child(uid).getDownloadURL();
+    await _userDoc.set({
+      'technical_data': {'imageUrl': _imageUrl}
+    }, SetOptions(merge: true));
   }
 
   // Function for updating our personal data
@@ -273,9 +276,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image.path.isNotEmpty) {
       dataEdited = true;
       await _updatePicture();
-      await _userDoc.set({
-        'personal_data': {'imageUrl': _imageUrl}
-      }, SetOptions(merge: true));
     }
 
     if (mounted) {

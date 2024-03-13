@@ -38,6 +38,9 @@ class _ContactPageState extends State<ContactPage> {
   final TextEditingController _messageController = TextEditingController();
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference chatRef = _firestore.collection('chats');
+  late final messageRef = chatRef.doc(widget.chatId).collection('messages');
   late final MessageFunctions _messageFunctions = MessageFunctions(
     chatId: widget.chatId,
   );
@@ -96,19 +99,31 @@ class _ContactPageState extends State<ContactPage> {
               )
             ],
           ),
-          body: SizedBox(
-            width: SizerUtil.width,
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Column(
-                children: [
-                  const SizedBox(height: 8.0),
-                  Expanded(child: _buildMessageList(context)),
-                  const SizedBox(height: 16.0),
-                  _buildMessageInput(context),
-                ],
-              ),
-            ),
+          body: StreamBuilder(
+            stream: messageRef.snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.data != null) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                } else {
+                  return SizedBox(
+                    width: SizerUtil.width,
+                    child: GestureDetector(
+                      onTap: () => FocusScope.of(context).unfocus(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8.0),
+                          Expanded(child: _buildMessageList(context)),
+                          const SizedBox(height: 16.0),
+                          _buildMessageInput(context),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
           ),
         );
       },
@@ -199,12 +214,11 @@ class _ContactPageState extends State<ContactPage> {
             shrinkWrap: true,
             itemCount: messages.length,
             itemBuilder: (context, index) {
-              final messageData =
-                  messages[index].data() as Map<String, dynamic>;
+              final data = messages[index].data() as Map<String, dynamic>;
 
-              String messageText = messageData['message'];
-              String messageTime = messageData['datetime'];
-              String messageUid = messageData['uid'];
+              String messageText = data['message'];
+              String messageTime = data['datetime'];
+              String messageUid = data['uid'];
 
               // Check if the message is sent by the user or the receiver
               if (messageUid == _firebaseAuth.currentUser!.uid) {

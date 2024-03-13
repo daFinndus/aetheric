@@ -16,14 +16,7 @@ class MessageSender extends StatefulWidget {
 }
 
 class _MessageSenderState extends State<MessageSender> {
-  late DateTime _datetime = DateTime.parse(widget.datetime);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _datetime = _datetime.toLocal();
-  }
+  late final DateTime _datetime = DateTime.parse(widget.datetime).toLocal();
 
   @override
   Widget build(BuildContext context) {
