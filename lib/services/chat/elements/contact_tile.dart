@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:aetheric/services/chat/elements/contact_page.dart';
+import 'package:aetheric/services/chat/screens/contact_page.dart';
 
 // This is the tile displayed for each contact in the chat page
 class ContactTile extends StatefulWidget {

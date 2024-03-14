@@ -292,8 +292,8 @@ class _ProfilePageState extends State<ProfilePage> {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
-        width: SizerUtil.width,
-        height: SizerUtil.height * 0.225,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.225,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: const BorderRadius.only(

@@ -35,6 +35,7 @@ class AppFeatures {
   showSuccessFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
+      messageColor: Colors.white,
       margin: const EdgeInsets.only(right: 16.0, bottom: 20.0, left: 16.0),
       duration: const Duration(seconds: 5),
       borderRadius: BorderRadius.circular(8.0),
@@ -43,10 +44,23 @@ class AppFeatures {
     ).show(context);
   }
 
+  showFlushbar(BuildContext context, String message) {
+    Flushbar(
+      message: message,
+      messageColor: Theme.of(context).colorScheme.primary,
+      margin: const EdgeInsets.only(right: 16.0, bottom: 20.0, left: 16.0),
+      duration: const Duration(seconds: 5),
+      borderRadius: BorderRadius.circular(8.0),
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      isDismissible: true,
+    ).show(context);
+  }
+
   // Function for showing a flushbar in red
   showErrorFlushbar(BuildContext context, String message) {
     Flushbar(
       message: message,
+      messageColor: Colors.white,
       margin: const EdgeInsets.only(right: 16.0, bottom: 20.0, left: 16.0),
       duration: const Duration(seconds: 5),
       borderRadius: BorderRadius.circular(8.0),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:aetheric/popups/profile_page.dart';
+import 'package:aetheric/services/chat/screens/profile_page.dart';
 import 'package:aetheric/services/app/features.dart';
 import 'package:aetheric/elements/custom_icon_button.dart';
 import 'package:aetheric/services/auth/functions/auth.dart';

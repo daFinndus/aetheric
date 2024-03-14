@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:aetheric/popups/invite_page.dart';
+import 'package:aetheric/services/chat/screens/invite_page.dart';
 import 'package:aetheric/services/app/features.dart';
-import 'package:aetheric/popups/add_user_page.dart';
+import 'package:aetheric/services/chat/screens/add_user_page.dart';
 import 'package:aetheric/services/chat/elements/contact_tile.dart';
 import 'package:aetheric/services/chat/elements/feedback_tile.dart';
 
@@ -87,7 +87,7 @@ class _ChatPageState extends State<ChatPage> {
                   return IconButton(
                     tooltip: 'Manage your invites',
                     icon: const Icon(Icons.mail),
-                    onPressed: () => _app.showErrorFlushbar(
+                    onPressed: () => _app.showFlushbar(
                       context,
                       'No pending invites',
                     ),
@@ -112,7 +112,7 @@ class _ChatPageState extends State<ChatPage> {
                   return IconButton(
                     tooltip: 'Add a new contact',
                     icon: const Icon(Icons.person_add),
-                    onPressed: () => _app.showErrorFlushbar(
+                    onPressed: () => _app.showFlushbar(
                       context,
                       'No users available to add',
                     ),
