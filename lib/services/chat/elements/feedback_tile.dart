@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:aetheric/services/chat/screens/feedback_page.dart';
+import 'package:aetheric/screens/feedback_page.dart';
 
 class FeedbackTile extends StatefulWidget {
   const FeedbackTile({super.key});

@@ -129,7 +129,6 @@ class _ChatPageState extends State<ChatPage> {
                 Expanded(
                   child: _buildContactList(),
                 ),
-                const FeedbackTile(),
               ],
             ),
           ),
