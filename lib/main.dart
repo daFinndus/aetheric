@@ -17,7 +17,7 @@ void main() async {
   runApp(const MainApp());
 }
 
-// TODO: Fix profile page
+// TODO: Fix profile page -- crashes after updating profile
 // FIXME: There are some issues with SizerUtil
 // TODO: Add send image and audio function
 // TODO: Implement push notifications
